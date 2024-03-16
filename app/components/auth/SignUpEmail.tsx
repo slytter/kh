@@ -2,6 +2,7 @@ import { Form } from "@remix-run/react";
 import { AuthError } from "@supabase/supabase-js";
 import { useState } from "react";
 import { ProviderProps } from "./types";
+import { Button, Input } from "@nextui-org/react";
 
 export const SignUpSection = (props: ProviderProps) => {
   const { setError, email, password, setEmail, setPassword, auth } = props;
@@ -52,33 +53,32 @@ export const SignUpSection = (props: ProviderProps) => {
     <Form onSubmit={handleSubmit}>
       <div className="flex flex-col space-y-4">
         <h1 className="text-2xl font-bold">Ny bruger</h1>
-        <input
+        <Input
           type="text"
           name="name"
-          placeholder="Navn"
-          className="input input-primary"
+          label="Navn"
           value={dispayName}
           onChange={(e) => setDisplayName(e.target.value)}
         />
-        <input
+        <Input
+          size="md"
           type="email"
           name="email"
-          placeholder="Email"
-          className="input input-primary"
+          isRequired
+          label="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <input
+        <Input
           type="password"
           name="password"
-          placeholder="Password"
-          className="input input-primary"
+          label="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit" className="btn btn-primary btn-wide">
+        <Button type="submit" color="primary">
           Sign up
-        </button>
+        </Button>
       </div>
     </Form>
   );

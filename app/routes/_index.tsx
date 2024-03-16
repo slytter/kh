@@ -1,36 +1,32 @@
+import { Button } from "@nextui-org/react";
 import type { MetaFunction } from "@remix-run/node";
-import { useOutletContext } from "@remix-run/react";
-import { Header } from "~/components/Header";
-import { Login } from "~/components/auth/Login";
-import { OutletContext } from "~/types";
+import { Container } from "~/components/Container";
+import Notification from "../assets/notification.svg";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
+    { title: "kh.dk" },
+    { name: "description", content: "Et billede hver dag til én du holder af" },
   ];
 };
 
 export default function Index() {
-  const { session, supabase } = useOutletContext<OutletContext>();
-
   return (
-    <div className="container mx-auto h-screen md:w-[800px]">
-      <Header />
-      {!session?.user ? (
-        <Login />
-      ) : (
-        <>
-          <h1>Welcome to Remix {session.user.user_metadata.name}</h1>
-          {/* <button className="btn btn-square" onClick={() => supabase.auth.signOut()}>Logout</a> */}
-          <button
-            className="btn btn-secondary btn-wide"
-            onClick={() => supabase.auth.signOut()}
-          >
-            Log ud
-          </button>
-        </>
-      )}
-    </div>
+    <Container>
+      <div className="flex w-full flex-col content-center justify-between pb-8">
+        <div />
+        <h1 className="text-center text-4xl font-bold md:text-7xl">
+          Et billede hver dag <br /> til én du holder af
+        </h1>
+        <img src={Notification} alt="Notification" className="mx-auto" />
+        <p className="text-md text-balance text-center md:text-xl">
+          Med <b>kh</b>, kan du planlægge daglige eller ugentlige
+          billedeoverraskelser til dine nærmeste.
+        </p>
+        <Button color="primary" size="lg" className="mx-auto" prefix="">
+          Vælg fotos
+        </Button>
+      </div>
+    </Container>
   );
 }

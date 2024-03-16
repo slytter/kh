@@ -1,134 +1,91 @@
-import { PersonIcon } from "@radix-ui/react-icons";
-
+import { LogOut, Mail, User } from "lucide-react";
 import {
-  Cloud,
-  CreditCard,
-  Github,
-  Keyboard,
-  LifeBuoy,
-  LogOut,
-  Mail,
-  MessageSquare,
-  Plus,
-  PlusCircle,
-  Settings,
-  User,
-  UserPlus,
-  Users,
-} from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-import {
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+  Link,
+  Button,
   DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  DropdownItem,
+  DropdownTrigger,
+  Avatar,
+  Dropdown,
+} from "@nextui-org/react";
+import { useOutletContext } from "@remix-run/react";
+import { OutletContext } from "~/types";
+import { useEffect, useState } from "react";
+import { LoginModal } from "./auth/LoginModal";
 
 function DropdownMenuDemo() {
+  const { session, supabase } = useOutletContext<OutletContext>();
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline">Open</Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <User className="mr-2 h-4 w-4" />
-            <span>Profile</span>
-            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <CreditCard className="mr-2 h-4 w-4" />
-            <span>Billing</span>
-            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Settings className="mr-2 h-4 w-4" />
-            <span>Settings</span>
-            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Keyboard className="mr-2 h-4 w-4" />
-            <span>Keyboard shortcuts</span>
-            <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <Users className="mr-2 h-4 w-4" />
-            <span>Team</span>
-          </DropdownMenuItem>
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger>
-              <UserPlus className="mr-2 h-4 w-4" />
-              <span>Invite users</span>
-            </DropdownMenuSubTrigger>
-            <DropdownMenuPortal>
-              <DropdownMenuSubContent>
-                <DropdownMenuItem>
-                  <Mail className="mr-2 h-4 w-4" />
-                  <span>Email</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <MessageSquare className="mr-2 h-4 w-4" />
-                  <span>Message</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <PlusCircle className="mr-2 h-4 w-4" />
-                  <span>More...</span>
-                </DropdownMenuItem>
-              </DropdownMenuSubContent>
-            </DropdownMenuPortal>
-          </DropdownMenuSub>
-          <DropdownMenuItem>
-            <Plus className="mr-2 h-4 w-4" />
-            <span>New Team</span>
-            <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <Github className="mr-2 h-4 w-4" />
-          <span>GitHub</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <LifeBuoy className="mr-2 h-4 w-4" />
-          <span>Support</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem disabled>
-          <Cloud className="mr-2 h-4 w-4" />
-          <span>API</span>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <LogOut className="mr-2 h-4 w-4" />
-          <span>Log out</span>
-          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Dropdown placement="bottom-end">
+      <DropdownTrigger>
+        <Avatar
+          isBordered
+          as="button"
+          className="transition-transform"
+          color="secondary"
+          name="Jason Hughes"
+          size="sm"
+          src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+        />
+      </DropdownTrigger>
+      <DropdownMenu aria-label="Profile Actions" variant="flat">
+        <DropdownItem key="profile" className="h-14 gap-2">
+          <p className="font-semibold">Signed in as</p>
+          <p className="font-semibold">{session.user.email}</p>
+        </DropdownItem>
+        <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
+        <DropdownItem
+          key="logout"
+          color="danger"
+          onClick={() => supabase.auth.signOut()}
+        >
+          Log Out
+        </DropdownItem>
+      </DropdownMenu>
+    </Dropdown>
   );
 }
 
 export const Header = () => {
+  const { session } = useOutletContext<OutletContext>();
+  const isAuthed = !!session?.user;
+
+  const [showLogin, setShowLogin] = useState(false);
+
+  useEffect(() => {
+    if (session?.user) {
+      setShowLogin(false);
+    }
+  }, [session?.user]);
+
   return (
-    <div className="flex flex-row items-center justify-between p-4">
-      <h1 className="text-3xl font-bold">kh</h1>
-      <DropdownMenuDemo />
-      <PersonIcon className="align-middle" />
-    </div>
+    <Navbar shouldHideOnScroll>
+      <NavbarBrand>
+        <p className="text-2xl font-bold">kh</p>
+      </NavbarBrand>
+      <NavbarContent justify="end">
+        <NavbarItem>
+          {isAuthed ? (
+            <DropdownMenuDemo />
+          ) : (
+            <Button
+              onClick={() => setShowLogin(true)}
+              as={Link}
+              color="default"
+              href="#"
+              variant="flat"
+            >
+              Login
+            </Button>
+          )}
+        </NavbarItem>
+      </NavbarContent>
+      <LoginModal isOpen={showLogin} onOpenChange={setShowLogin} />
+    </Navbar>
   );
 };

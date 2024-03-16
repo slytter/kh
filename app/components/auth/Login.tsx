@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { OutletContext } from "~/types";
 import { SignInSection } from "./SignInEmail";
 import { SignUpSection } from "./SignUpEmail";
+import { Button } from "@nextui-org/react";
 
 export const Login = () => {
   const { supabase } = useOutletContext<OutletContext>();
@@ -12,14 +13,14 @@ export const Login = () => {
   const [password, setPassword] = useState("");
   const [signState, setSignState] = useState<"login" | "signup">("login");
 
-  const googleLogin = () => {
-    supabase.auth.signInWithOAuth({
-      provider: "google",
-    });
-    supabase.auth.onAuthStateChange((event, session) => {
-      console.log({ event, session });
-    });
-  };
+  // const googleLogin = () => {
+  //   supabase.auth.signInWithOAuth({
+  //     provider: "google",
+  //   });
+  //   supabase.auth.onAuthStateChange((event, session) => {
+  //     console.log({ event, session });
+  //   });
+  // };
 
   const switchSignState = () => {
     setPassword("");
@@ -27,8 +28,8 @@ export const Login = () => {
   };
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center space-y-4">
-      <div className="flex flex-col space-y-4">
+    <div className="flex h-full w-full flex-col items-center justify-center space-y-4 pb-4 pt-4">
+      <div className="flex w-full flex-col space-y-4">
         {signState === "login" ? (
           <SignInSection
             auth={supabase.auth}
@@ -48,18 +49,18 @@ export const Login = () => {
             setPassword={setPassword}
           />
         )}
-        <button
+        <Button
           type="button"
           onClick={switchSignState}
           className="btn btn-ghost btn-sm"
         >
           {signState === "login" ? "Ingen bruger?" : "Allerede bruger?"}
-        </button>
+        </Button>
       </div>
 
-      <button className="btn btn-secondary btn-wide" onClick={googleLogin}>
+      {/* <button className="btn btn-secondary btn-wide" onClick={googleLogin}>
         Google (Need auth keys to work)
-      </button>
+      </button> */}
       <div className="text-red-500">{error?.message}</div>
     </div>
   );

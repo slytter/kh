@@ -15,6 +15,9 @@ import {
 import { useEffect, useState } from "react";
 import { createBrowserClient } from "@supabase/auth-helpers-remix";
 import stylesheet from "~/tailwind.css";
+import { Header } from "./components/Header";
+import { NextUIProvider } from "@nextui-org/react";
+import { Container } from "./components/Container";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const env = {
@@ -65,15 +68,23 @@ export default function App() {
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1"
+        />
+
         <Meta />
         <Links />
       </head>
       <body>
-        <Outlet context={{ supabase, session }} />
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload />
+        <NextUIProvider>
+          <main className="text-foreground bg-background dark">
+            <Outlet context={{ supabase, session }} />
+            <ScrollRestoration />
+            <Scripts />
+            <LiveReload />
+          </main>
+        </NextUIProvider>
       </body>
     </html>
   );
