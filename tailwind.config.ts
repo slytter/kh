@@ -9,7 +9,7 @@ export default {
   ],
   plugins: [require("daisyui"), nextui()],
   daisyui: {
-    themes: ["light"],
+    themes: ["light", "dark"],
   },
   darkMode: "class",
 } satisfies Config;

@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+.my-config {
+    --darkmode: 0;
+    --h-accent: 223;
+    --s-accent: 100%;
+    --l-accent: 61%;
+    width: inherit !important;
+}

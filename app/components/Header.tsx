@@ -12,7 +12,7 @@ import {
   Avatar,
   Dropdown,
 } from "@nextui-org/react";
-import { useOutletContext } from "@remix-run/react";
+import { useNavigate, useOutletContext } from "@remix-run/react";
 import { OutletContext } from "~/types";
 import { useEffect, useState } from "react";
 import { LoginModal } from "./auth/LoginModal";
@@ -57,6 +57,8 @@ export const Header = () => {
 
   const [showLogin, setShowLogin] = useState(false);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (session?.user) {
       setShowLogin(false);
@@ -65,7 +67,7 @@ export const Header = () => {
 
   return (
     <Navbar shouldHideOnScroll>
-      <NavbarBrand>
+      <NavbarBrand onClick={() => navigate("/")} className="cursor-pointer">
         <p className="text-2xl font-bold">kh</p>
       </NavbarBrand>
       <NavbarContent justify="end">

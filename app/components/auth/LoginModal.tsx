@@ -1,11 +1,4 @@
-import {
-  Button,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-} from "@nextui-org/react";
+import { Modal, ModalBody, ModalContent } from "@nextui-org/react";
 import { Login } from "./Login";
 
 type Props = {
@@ -18,7 +11,6 @@ export const LoginModal = (props: Props) => {
 
   return (
     <Modal
-      width="sm"
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       isDismissable={true}
