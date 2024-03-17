@@ -1,35 +1,46 @@
-import { Card, CardBody, CardHeader, ScrollShadow } from "@nextui-org/react";
+import { ScrollShadow } from "@nextui-org/react";
 import { useProjectStore } from "~/store/store";
 
 export const HorizontalPhotoOverview = () => {
   const photos = useProjectStore((store) => store.draft.photos);
+  const removePhoto = useProjectStore((store) => store.removePhoto);
 
   return (
-    <Card className="mt-4 p-2">
-      <CardHeader className="flex-col items-start px-4 pb-0 pt-2">
-        <p className="text-tiny font-bold uppercase">Fotos</p>
-      </CardHeader>
-      <CardBody className="overflow-visible py-2">
-        <ScrollShadow
-          hideScrollBar
-          offset={100}
-          orientation="horizontal"
-          className="flex max-h-[300px] overflow-x-auto scroll-smooth"
-        >
-          {photos.map((photo) => (
+    <div>
+      {photos.length > 0 && (
+        <p className="text-tiny mb-2 uppercase">Uploadede fotos</p>
+      )}
+      <ScrollShadow
+        hideScrollBar
+        offset={10}
+        orientation="horizontal"
+        className="flex space-x-1 overflow-x-auto "
+      >
+        {photos.map((photo) => (
+          <div
+            key={photo.id}
+            onClick={() => removePhoto(photo.id)}
+            className="relative flex-shrink-0 cursor-pointer overflow-hidden first:rounded-bl-xl first:rounded-tl-xl last:rounded-br-xl last:rounded-tr-xl"
+          >
             <img
-              className={
-                "ml-2 h-[120px] w-[120px] rounded-md object-cover first:ml-0"
-              }
+              src={`${photo.url}/-/preview/-/resize/x200/`}
+              width="100"
+              height="100"
               key={photo.id}
-              src={`${photo.url}/-/preview/-/resize/x400/`}
-              width="200"
-              height="200"
+              className={"h-[100px] w-[70px]  object-cover "}
               alt={"file.fileInfo.originalFilename" || ""}
             />
-          ))}
-        </ScrollShadow>
-      </CardBody>
-    </Card>
+            {/* <div className="absolute right-2 top-2">
+              <button
+                onClick={() => removePhoto(photo.id)}
+                className="h-8 w-8 rounded-lg bg-white p-1"
+              >
+                🗑
+              </button>
+            </div> */}
+          </div>
+        ))}
+      </ScrollShadow>
+    </div>
   );
 };

@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import _ from "lodash";
 
 export type Photos = {
   id: string;
@@ -12,7 +13,7 @@ type Project = {
   id: string;
   photos: Photos[];
   name: string;
-  owner: string;
+  owner: string | null;
   created_at: string;
   receivers: string[];
 };
@@ -51,6 +52,7 @@ export const useProjectStore = create(
         });
       },
       removePhoto: (id: string) => {
+        // todo: remove photo from server
         set((state) => {
           return {
             draft: {
@@ -75,7 +77,7 @@ export const useProjectStore = create(
           return {
             draft: {
               ...state.draft,
-              photos: [...state.draft.photos, ...photos],
+              photos: _.uniqBy([...state.draft.photos, ...photos], "id"),
             },
           };
         });

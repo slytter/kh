@@ -17,6 +17,7 @@ import { createBrowserClient } from "@supabase/auth-helpers-remix";
 import stylesheet from "~/tailwind.css";
 import { NextUIProvider } from "@nextui-org/react";
 import * as LR from "@uploadcare/blocks";
+import { useProjectStore } from "./store/store";
 
 LR.registerBlocks(LR);
 
@@ -59,6 +60,8 @@ export default function App() {
       if (session?.access_token !== serverAccessToken) {
         revalidate();
       }
+      const uid = session?.user.id;
+      useProjectStore.getState().setOwner(uid || null);
     });
     return () => {
       subscription.unsubscribe();

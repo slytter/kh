@@ -5,13 +5,15 @@ type NavButtonProps = {
   route: string;
   onClick?: () => void;
   title: string;
+  disabled?: boolean;
 };
 
 export const NavBotton = (props: NavButtonProps) => {
-  const { route, onClick, title } = props;
+  const { route, onClick, title, disabled } = props;
   const navigate = useNavigate();
 
   const handleClick = () => {
+    if (disabled) return;
     onClick?.();
     navigate(route);
   };
@@ -21,8 +23,9 @@ export const NavBotton = (props: NavButtonProps) => {
       color="primary"
       size="lg"
       href="/create"
+      disabled={disabled}
       onClick={handleClick}
-      className="mx-auto font-bold"
+      className="mx-auto font-bold disabled:cursor-wait disabled:opacity-20"
     >
       {title}
     </Button>
