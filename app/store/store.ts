@@ -5,8 +5,17 @@ import _ from "lodash";
 export type Photos = {
   id: string;
   url: string;
-  created_at: string;
-  send_at?: string;
+  created_at: number;
+  send_at?: number;
+};
+
+type TimeGenerationProps = {
+  interval: "weekly" | "daily";
+  startDate: number;
+  startTime: number;
+  minute: number;
+  hour: number;
+  day?: number;
 };
 
 type Project = {
@@ -14,8 +23,9 @@ type Project = {
   photos: Photos[];
   name: string;
   owner: string | null;
-  created_at: string;
+  created_at: number;
   receivers: string[];
+  generationProps: TimeGenerationProps;
 };
 
 const generateId = () => {
@@ -38,9 +48,16 @@ export const useProjectStore = create(
         id: generateId(),
         photos: [],
         name: "Project 1",
-        owner: "",
-        created_at: Date.now().toString(),
+        owner: null,
+        created_at: Date.now(),
         receivers: [],
+        generationProps: {
+          interval: "daily",
+          startDate: Date.now(),
+          startTime: Date.now(),
+          minute: 0,
+          hour: 8,
+        },
       },
       isUploading: false,
       setIsUploading: (isUploading: boolean) => {
@@ -78,6 +95,22 @@ export const useProjectStore = create(
             draft: {
               ...state.draft,
               photos: _.uniqBy([...state.draft.photos, ...photos], "id"),
+            },
+          };
+        });
+      },
+      editGenerationProps: (
+        someGenerationProps: Partial<TimeGenerationProps>,
+      ) => {
+        set((state) => {
+          return {
+            ...state,
+            draft: {
+              ...state.draft,
+              generationProps: {
+                ...state.draft.generationProps,
+                ...someGenerationProps,
+              },
             },
           };
         });

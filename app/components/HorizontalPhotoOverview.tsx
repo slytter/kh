@@ -1,5 +1,6 @@
 import { ScrollShadow } from "@nextui-org/react";
 import { useProjectStore } from "~/store/store";
+import { LilHeader } from "./LilHeader";
 
 export const HorizontalPhotoOverview = () => {
   const photos = useProjectStore((store) => store.draft.photos);
@@ -7,9 +8,7 @@ export const HorizontalPhotoOverview = () => {
 
   return (
     <div>
-      {photos.length > 0 && (
-        <p className="text-tiny mb-2 uppercase">Uploadede fotos</p>
-      )}
+      {photos.length > 0 && <LilHeader>Uploadede fotos</LilHeader>}
       <ScrollShadow
         hideScrollBar
         offset={10}
