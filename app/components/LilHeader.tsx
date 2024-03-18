@@ -3,5 +3,7 @@ type LilHeaderProps = {
 };
 
 export const LilHeader = (props: LilHeaderProps) => {
-  return <h3 className="mb-2 text-sm uppercase">{props.children}</h3>;
+  return (
+    <h3 className="mb-2 text-sm uppercase opacity-60">{props.children}</h3>
+  );
 };

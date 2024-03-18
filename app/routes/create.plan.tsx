@@ -4,17 +4,32 @@ import { LilHeader } from "~/components/LilHeader";
 import { useProjectStore } from "~/store/store";
 
 export default function CreatePlan() {
-  const store = useProjectStore((store) => store.draft);
+  const generationProps = useProjectStore(
+    (store) => store.draft.generationProps,
+  );
+
+  const { editGenerationProps } = useProjectStore();
 
   return (
     <Container>
       <LilHeader>Interval</LilHeader>
       <div className="flex w-full flex-col">
-        <Tabs aria-label="Options" color="primary" size="lg">
+        <Tabs
+          aria-label="Options"
+          color="primary"
+          size="lg"
+          selectedKey={generationProps.interval}
+          onSelectionChange={(key) => {
+            if (key !== undefined) {
+              editGenerationProps({ interval: key });
+            }
+          }}
+        >
           <Tab key="daily" title="Daglig" />
           <Tab key="weekly" title="Ugenlig" />
         </Tabs>
       </div>
+      {JSON.stringify(generationProps)}
     </Container>
   );
 }

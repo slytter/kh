@@ -39,6 +39,9 @@ type ProjectStore = {
   setOwner: (owner: string) => void;
   addPhotos: (photos: Photos[]) => void;
   removePhoto: (id: string) => void;
+  editGenerationProps: (
+    someGenerationProps: Partial<TimeGenerationProps>,
+  ) => void;
 };
 
 export const useProjectStore = create(
