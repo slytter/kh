@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import _ from "lodash";
 
+// todo change to non-pural anme
 export type Photos = {
   id: string;
   url: string;

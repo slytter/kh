@@ -22,7 +22,7 @@
 }
 
 .rdp-day_selected {
-    background-color: var(--rdp-accent-color);
+    /* background-color: var(--rdp-accent-color); */
 }
 
 .rdp-cell {

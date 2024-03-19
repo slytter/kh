@@ -9,10 +9,10 @@ import {
 } from "@nextui-org/react";
 import { Container } from "~/components/Container";
 import { LilHeader } from "~/components/LilHeader";
-import { TimeGenerationProps, useProjectStore } from "~/store/store";
+import { Photos, TimeGenerationProps, useProjectStore } from "~/store/store";
 import dayjs from "dayjs";
-import { useState } from "react";
-import { DayPicker } from "react-day-picker";
+import { useRef, useState } from "react";
+import { Button, DayPicker, DayProps, useDayRender } from "react-day-picker";
 import { da } from "date-fns/locale";
 import { Key } from "lucide-react";
 
@@ -92,14 +92,42 @@ const planImageSchedule = (
 type CalenderPlannerProps = {
   generationProps: TimeGenerationProps;
   setSelectedDay: (date: Date) => void;
-  numImages: number;
+  photos: Photos[];
 };
 
+function DayWithShiftKey(props: DayProps) {
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const dayRender = useDayRender(props.date, props.displayMonth, buttonRef);
+
+  const index = dayRender.selectedDays?.findIndex((date) =>
+    dayjs(date).isSame(props.date, "day"),
+  );
+  const photo = useProjectStore((state) => state.draft.photos[index]);
+
+  if (!dayRender.isButton) {
+    return <div {...dayRender.divProps} />;
+  }
+
+  return (
+    <div className="relative">
+      {dayRender.activeModifiers.selected && (
+        <img
+          // src={"https://ucarecdn.com/7661c913-13ea-4b32-bc80-691d78c49a4c/-/preview/100x100/"}
+          src={photo?.url + "/-/preview/100x100/"}
+          alt=""
+          className="absolute left-0 top-0 h-10 w-10 rounded-full brightness-75 filter"
+        />
+      )}
+      <Button {...dayRender.buttonProps} ref={buttonRef} />
+    </div>
+  );
+}
+
 const CalenderPlanner = (props: CalenderPlannerProps) => {
-  const { generationProps, setSelectedDay, numImages } = props;
+  const { generationProps, setSelectedDay, photos } = props;
 
   const { interval, startDate, sendHour } = generationProps;
-  const plan = planImageSchedule(generationProps, numImages);
+  const plan = planImageSchedule(generationProps, photos.length);
 
   const lastDate = plan[plan.length - 1];
 
@@ -126,6 +154,26 @@ const CalenderPlanner = (props: CalenderPlannerProps) => {
         fixedWeeks
         pagedNavigation={false}
         showOutsideDays
+        components={{
+          Day: (props) => <DayWithShiftKey {...props} startDate={startDate} />,
+          // Day: ({ displayMonth, date, selected }) => {
+          //   const buttonRef = useRef<HTMLButtonElement>(null);
+
+          //   const dayRender = useDayRender(date, displayMonth, buttonRef);
+
+          //   return (
+          //     <button
+          //       ref={buttonRef}
+          //       onClick={dayRender.buttonProps?.onClick}
+          //       className={`${
+          //         selected ? "bg-primary-500" : "bg-primary-100"
+          //       } h-10 w-10 cursor-pointer rounded-full p-2 `}
+          //     >
+          //       {dayjs(date).format("D")}
+          //     </button>
+          //   );
+          // },
+        }}
         // onSelect={(day) => setSelectedDay(dayjs(day).toDate())}
         footer={footer}
         onDayClick={(day) => setSelectedDay(dayjs(day).toDate())}
@@ -138,6 +186,7 @@ export default function CreatePlan() {
   const generationProps = useProjectStore(
     (store) => store.draft.generationProps,
   );
+  const photos = useProjectStore((store) => store.draft.photos);
 
   const { editGenerationProps } = useProjectStore();
 
@@ -180,7 +229,7 @@ export default function CreatePlan() {
         <div>
           <LilHeader>Start dato </LilHeader>
           <CalenderPlanner
-            numImages={100}
+            photos={photos}
             generationProps={generationProps}
             setSelectedDay={(date) => editGenerationProps({ startDate: date })}
           />
