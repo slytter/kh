@@ -9,13 +9,10 @@ export type Photos = {
   send_at?: number;
 };
 
-type TimeGenerationProps = {
+export type TimeGenerationProps = {
   interval: "weekly" | "daily";
-  startDate: number;
-  startTime: number;
-  minute: number;
-  hour: number;
-  day?: number;
+  startDate: Date;
+  sendHour: number;
 };
 
 type Project = {
@@ -56,10 +53,8 @@ export const useProjectStore = create(
         receivers: [],
         generationProps: {
           interval: "daily",
-          startDate: Date.now(),
-          startTime: Date.now(),
-          minute: 0,
-          hour: 8,
+          startDate: new Date(),
+          sendHour: 8,
         },
       },
       isUploading: false,

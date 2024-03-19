@@ -18,7 +18,7 @@ import stylesheet from "~/tailwind.css";
 import { NextUIProvider } from "@nextui-org/react";
 import * as LR from "@uploadcare/blocks";
 import { useProjectStore } from "./store/store";
-
+import "react-day-picker/dist/style.css";
 LR.registerBlocks(LR);
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
