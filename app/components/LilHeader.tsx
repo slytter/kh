@@ -1,5 +1,7 @@
+import { ReactNode } from "react";
+
 type LilHeaderProps = {
-  children: string;
+  children: ReactNode;
 };
 
 export const LilHeader = (props: LilHeaderProps) => {

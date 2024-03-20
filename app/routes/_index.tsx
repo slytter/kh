@@ -6,7 +6,7 @@ import { NavBotton } from "~/components/Button";
 export const meta: MetaFunction = () => {
   return [
     { title: "kh.dk" },
-    { name: "description", content: "Et billede hver dag til én du holder af" },
+    { name: "description", content: "Et minde hver dag til én du holder af" },
   ];
 };
 
@@ -16,7 +16,7 @@ export default function Index() {
       <div className="flex h-full flex-1 flex-col content-center justify-between pb-8">
         <div />
         <h1 className="text-center text-4xl font-bold md:text-7xl">
-          Et billede hver dag <br /> til én du holder af
+          Et minde hver dag <br /> til én du holder af
         </h1>
         <div className="flex flex-col gap-6">
           <img

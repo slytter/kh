@@ -12,7 +12,7 @@ export type Photos = {
 
 export type TimeGenerationProps = {
   interval: "weekly" | "daily";
-  startDate: Date;
+  startDate: Date | null;
   sendHour: number;
 };
 
@@ -34,7 +34,7 @@ type ProjectStore = {
   draft: Project;
   isUploading: boolean;
   setIsUploading: (isUploading: boolean) => void;
-  setOwner: (owner: string) => void;
+  setOwner: (owner: string | null) => void;
   addPhotos: (photos: Photos[]) => void;
   removePhoto: (id: string) => void;
   editGenerationProps: (
@@ -54,7 +54,7 @@ export const useProjectStore = create(
         receivers: [],
         generationProps: {
           interval: "daily",
-          startDate: new Date(),
+          startDate: null,
           sendHour: 8,
         },
       },

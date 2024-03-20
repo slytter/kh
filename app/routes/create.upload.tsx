@@ -5,6 +5,7 @@ import { Photos, useProjectStore } from "~/store/store";
 import { NavBotton } from "~/components/Button";
 import { HorizontalPhotoOverview } from "~/components/HorizontalPhotoOverview";
 import { Card } from "@nextui-org/react";
+import { BottomNav } from "~/components/BottomNav";
 
 export default function UploadImages() {
   const ctxProviderRef = useRef<InstanceType<LR.UploadCtxProvider>>(null);
@@ -73,13 +74,11 @@ export default function UploadImages() {
           />
         </div>
       </Card>
-      <div className="sticky bottom-0 flex w-full p-8  ">
-        <NavBotton
-          disabled={isUploading || numPhotos === 0}
-          route="/create/plan"
-          title={"Planlæg afsendelse"}
-        />
-      </div>
+      <BottomNav
+        disabled={isUploading || numPhotos === 0}
+        route="/create/plan"
+        title={"Planlæg afsendelse"}
+      />
     </Container>
   );
 }
