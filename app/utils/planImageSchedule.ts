@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { TimeGenerationProps } from "~/store/store";
+import { TimeGenerationProps } from "../store/store";
 
 // Takes in the generationProps and the number of images to be sent
 // returns an array of dates for when the images will be sent

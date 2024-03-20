@@ -1,9 +1,7 @@
-import { Container } from "~/components/Container";
+import { Container } from "../components/Container.js";
 
 export default function CreateOverview() {
   return (
-    <Container>
-      <h1>Overview</h1>
-    </Container>
+    <h1>Overview</h1>
   );
 }

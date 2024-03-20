@@ -1,7 +1,7 @@
 import type { MetaFunction } from "@remix-run/node";
-import { Container } from "~/components/Container";
+import { Container } from "../components/Container";
 import Notification from "../assets/notification.svg";
-import { NavBotton } from "~/components/Button";
+import { NavBotton } from "../components/Button";
 
 export const meta: MetaFunction = () => {
   return [

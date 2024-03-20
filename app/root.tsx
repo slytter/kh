@@ -14,7 +14,7 @@ import {
 } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import { createBrowserClient } from "@supabase/auth-helpers-remix";
-import stylesheet from "~/tailwind.css";
+import stylesheet from "./tailwind.css";
 import { NextUIProvider } from "@nextui-org/react";
 import * as LR from "@uploadcare/blocks";
 import { useProjectStore } from "./store/store";

@@ -1,5 +1,5 @@
 import { ScrollShadow } from "@nextui-org/react";
-import { useProjectStore } from "~/store/store";
+import { useProjectStore } from "../store/store";
 import { LilHeader } from "./LilHeader";
 
 export const HorizontalPhotoOverview = () => {

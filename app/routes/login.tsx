@@ -1,6 +1,6 @@
 import { useOutletContext } from "@remix-run/react";
-import { Container } from "~/components/Container";
-import { OutletContext } from "~/types";
+import { Container } from "../components/Container";
+import { OutletContext } from "../types";
 
 export default function Login() {
   const { session, supabase } = useOutletContext<OutletContext>();

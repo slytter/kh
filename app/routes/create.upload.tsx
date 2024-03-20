@@ -1,11 +1,9 @@
 import { useEffect, useRef } from "react";
-import { Container } from "~/components/Container";
 import * as LR from "@uploadcare/blocks";
-import { Photos, useProjectStore } from "~/store/store";
-import { NavBotton } from "~/components/Button";
-import { HorizontalPhotoOverview } from "~/components/HorizontalPhotoOverview";
+import { Photos, useProjectStore } from "../store/store.js";
+import { HorizontalPhotoOverview } from "../components/HorizontalPhotoOverview.js";
 import { Card } from "@nextui-org/react";
-import { BottomNav } from "~/components/BottomNav";
+import { BottomNav } from "../components/BottomNav.js";
 
 export default function UploadImages() {
   const ctxProviderRef = useRef<InstanceType<LR.UploadCtxProvider>>(null);
@@ -49,7 +47,7 @@ export default function UploadImages() {
   }, []);
 
   return (
-    <Container>
+    <>
       <div className="mb-4">
         <HorizontalPhotoOverview />
       </div>
@@ -79,6 +77,6 @@ export default function UploadImages() {
         route="/create/plan"
         title={"Planlæg afsendelse"}
       />
-    </Container>
+    </>
   );
 }

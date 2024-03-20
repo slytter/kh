@@ -1,7 +1,7 @@
 import { useOutletContext } from "@remix-run/react";
 import { AuthError } from "@supabase/supabase-js";
 import { useState } from "react";
-import type { OutletContext } from "~/types";
+import type { OutletContext } from "../../types";
 import { SignInSection } from "./SignInEmail";
 import { SignUpSection } from "./SignUpEmail";
 import { Button } from "@nextui-org/react";

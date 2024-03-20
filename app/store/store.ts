@@ -32,6 +32,7 @@ const generateId = () => {
 
 type ProjectStore = {
   draft: Project;
+  setReceivers: (receivers: string[]) => void;
   isUploading: boolean;
   setIsUploading: (isUploading: boolean) => void;
   setOwner: (owner: string | null) => void;
@@ -59,7 +60,7 @@ export const useProjectStore = create(
         },
       },
       isUploading: false,
-      setIsUploading: (isUploading: boolean) => {
+      setIsUploading: (isUploading) => {
         set((state) => {
           return {
             ...state,
@@ -67,7 +68,7 @@ export const useProjectStore = create(
           };
         });
       },
-      removePhoto: (id: string) => {
+      removePhoto: (id) => {
         // todo: remove photo from server
         set((state) => {
           return {
@@ -78,7 +79,7 @@ export const useProjectStore = create(
           };
         });
       },
-      setOwner: (owner: string) => {
+      setOwner: (owner) => {
         set((state) => {
           return {
             draft: {
@@ -88,7 +89,17 @@ export const useProjectStore = create(
           };
         });
       },
-      addPhotos: (photos: Photos[]) => {
+      setReceivers: (receivers) => {
+        set((state) => {
+          return {
+            draft: {
+              ...state.draft,
+              receivers,
+            },
+          };
+        });
+      },
+      addPhotos: (photos) => {
         set((state) => {
           return {
             draft: {

@@ -24,7 +24,6 @@ function DayImageViewer(props: DayProps) {
 		<div className="relative">
 			{dayRender.activeModifiers.selected && (
 				<img
-					// src={"https://ucarecdn.com/7661c913-13ea-4b32-bc80-691d78c49a4c/-/preview/100x100/"}
 					src={photo?.url + "/-/preview/100x100/"}
 					alt=""
 					className="absolute left-0 top-0 h-10 w-10 rounded-full brightness-75 filter"

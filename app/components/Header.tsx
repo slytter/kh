@@ -13,7 +13,7 @@ import {
   Dropdown,
 } from "@nextui-org/react";
 import { useNavigate, useOutletContext } from "@remix-run/react";
-import { OutletContext } from "~/types";
+import { OutletContext } from "../types";
 import { useEffect, useState } from "react";
 import { LoginModal } from "./auth/LoginModal";
 
@@ -79,7 +79,6 @@ export const Header = () => {
               onClick={() => setShowLogin(true)}
               as={Link}
               color="default"
-              href="#"
               variant="flat"
             >
               Login
