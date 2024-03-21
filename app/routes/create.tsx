@@ -4,7 +4,7 @@ import { Container } from "../components/Container.js";
 export default function Create () {
 	return (
 		<Container>
-			<div className="flex max-w-sm flex-col gap-8">
+			<div className="flex min-h-dvh flex-col gap-8">
 				<Outlet />
 			</div>
 		</Container>

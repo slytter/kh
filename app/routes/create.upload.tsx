@@ -1,18 +1,17 @@
 import { useEffect, useRef } from "react";
 import * as LR from "@uploadcare/blocks";
-import { Photos, useProjectStore } from "../store/store.js";
+import { Photo, useProjectStore } from "../store/store.js";
 import { HorizontalPhotoOverview } from "../components/HorizontalPhotoOverview.js";
 import { Card } from "@nextui-org/react";
 import { BottomNav } from "../components/BottomNav.js";
 
-export default function UploadImages() {
+
+const ImageUploader = () => {
   const ctxProviderRef = useRef<InstanceType<LR.UploadCtxProvider>>(null);
 
   const addPhotos = useProjectStore((store) => store.addPhotos);
   const removePhoto = useProjectStore((store) => store.removePhoto);
   const setIsUploading = useProjectStore((store) => store.setIsUploading);
-  const isUploading = useProjectStore((store) => store.isUploading);
-  const numPhotos = useProjectStore((store) => store.draft.photos.length);
 
   useEffect(() => {
     const ctxProvider = ctxProviderRef.current;
@@ -23,10 +22,10 @@ export default function UploadImages() {
       setIsUploading(e.detail.isUploading);
 
       const successEntries = e.detail.successEntries;
-      const asPhotos: Photos[] = successEntries.map((f) => ({
+      const asPhotos: Photo[] = successEntries.map((f) => ({
         id: f.uuid,
         url: f.cdnUrl,
-        created_at: new Date().toISOString(),
+        created_at: Date.now(),
       }));
 
       addPhotos(asPhotos);
@@ -40,38 +39,50 @@ export default function UploadImages() {
     // There plenty of events you may use. See more: https://uploadcare.com/docs/file-uploader/events/
     ctxProvider.addEventListener("change", handleChangeEvent);
     ctxProvider.addEventListener("file-removed", removePhotoEvent);
+
     return () => {
       ctxProvider.removeEventListener("change", handleChangeEvent);
       ctxProvider.removeEventListener("file-removed", removePhotoEvent);
     };
   }, []);
 
-  return (
-    <>
-      <div className="mb-4">
-        <HorizontalPhotoOverview />
-      </div>
-      <Card className="flex h-full w-full flex-grow flex-row">
-        <div className="flex h-auto w-full flex-grow flex-row">
-          <lr-config
+
+    return (
+      <Card className="flex h-full w-full flex-grow flex-row mb-4">
+        <div className="flex w-full flex-grow flex-row">
+        <lr-config
             ctx-name="my-uploader"
             pubkey="3b9243eaa4a4ae623c19"
             maxLocalFileSizeBytes={10000000}
             imgOnly={true}
             sourceList="local, dropbox, gdrive, gphotos"
-          />
-          <lr-file-uploader-inline
+        />
+        <lr-file-uploader-inline
             css-src="https://cdn.jsdelivr.net/npm/@uploadcare/blocks@0.35.2/web/lr-file-uploader-regular.min.css"
             ctx-name="my-uploader"
             class="my-config "
-          />
-          <lr-upload-ctx-provider
+        />
+        <lr-upload-ctx-provider
             ctx-name="my-uploader"
             class="p-0"
             ref={ctxProviderRef}
-          />
+        />
         </div>
       </Card>
+    );
+}
+
+export default function UploadImages() {
+  const isUploading = useProjectStore((store) => store.isUploading);
+  const numPhotos = useProjectStore((store) => store.draft.photos.length);
+
+
+  return (
+    <>
+      <div className="mb-2">
+        <HorizontalPhotoOverview />
+      </div>
+      <ImageUploader />
       <BottomNav
         disabled={isUploading || numPhotos === 0}
         route="/create/plan"

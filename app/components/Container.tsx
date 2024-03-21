@@ -1,4 +1,3 @@
-import { ScrollShadow } from "@nextui-org/react";
 import { Header } from "./Header";
 
 type ContainerProps = {

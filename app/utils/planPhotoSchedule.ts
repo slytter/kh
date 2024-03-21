@@ -1,9 +1,9 @@
 import dayjs from "dayjs";
-import { TimeGenerationProps } from "../store/store";
+import {Photo, TimeGenerationProps} from "../store/store";
 
 // Takes in the generationProps and the number of images to be sent
 // returns an array of dates for when the images will be sent
-export const planImageSchedule = (
+export const planPhotoSchedule = (
   generationProps: TimeGenerationProps,
   numImages: number,
 ): Date[] => {
@@ -22,3 +22,14 @@ export const planImageSchedule = (
   }
   return dates;
 };
+
+
+export const addSendDatesToPhotos = (photos: Photo[], generationProps: TimeGenerationProps): Photo[] => {
+    const sendDates = planPhotoSchedule(generationProps, photos.length);
+    return photos.map((photo, index) => {
+        return {
+            ...photo,
+            send_at: sendDates[index].valueOf(),
+        };
+    });
+}

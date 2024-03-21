@@ -1,17 +1,18 @@
 import {Tab, Tabs} from "@nextui-org/react";
 import {BottomNav} from "../components/BottomNav.js";
-import {Container} from "../components/Container.js";
 import {LilHeader} from "../components/LilHeader.js";
 import {CalenderPlanner} from "../components/planning/CalenderPlanner.js";
 import {TimePicker} from "../components/planning/TimePicker.js";
 import {useProjectStore} from "../store/store.js";
+import dayjs from "dayjs";
+
+const weekDays = ["søndag", "mandag", "tirsdag", "onsdag", "torsdag", "fredag", "lørdag"];
 
 export default function CreatePlan() {
   const generationProps = useProjectStore(
     (store) => store.draft.generationProps,
   );
   const photos = useProjectStore((store) => store.draft.photos);
-
   const { editGenerationProps } = useProjectStore();
 
   const canContinue = generationProps.startDate !== undefined
@@ -30,7 +31,7 @@ export default function CreatePlan() {
   }
 
   return (
-    <>
+    <div className={"min-h-dvh flex flex-col justify-between"}>
       <div className="flex max-w-sm flex-col gap-8">
         <div>
           <LilHeader>Send ét foto</LilHeader>
@@ -64,7 +65,7 @@ export default function CreatePlan() {
         </div>
         <div>
           <LilHeader>
-            Hver {generationProps.interval === "daily" ? "dag" : "uge"} klokken
+            Hver {generationProps.interval === "daily" ? "dag" : weekDays[dayjs(generationProps.startDate).day()] || 'uge'} klokken
           </LilHeader>
           <TimePicker
             selectedTimeKey={generationProps.sendHour}
@@ -73,15 +74,9 @@ export default function CreatePlan() {
             }}
           />
         </div>
-
-        <div>
-          <LilHeader>Til modtager</LilHeader>
-        </div>
-
-
       </div>
 
-      <BottomNav disabled={!canContinue} route="/create/receivers" title={"Overblik"}/>
-    </>
+      <BottomNav disabled={!canContinue} route="/create/receivers" title={"Modtagere"}/>
+    </div>
   );
 }

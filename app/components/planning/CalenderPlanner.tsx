@@ -3,8 +3,8 @@ import {da} from "date-fns/locale";
 import dayjs from "dayjs";
 import {useRef} from "react";
 import {Button, DayPicker, DayProps, useDayRender} from "react-day-picker";
-import {Photos, TimeGenerationProps, useProjectStore} from "../../store/store.js";
-import {planImageSchedule} from "../../utils/planImageSchedule.js";
+import {Photo, TimeGenerationProps, useProjectStore} from "../../store/store.js";
+import {planPhotoSchedule} from "../../utils/planPhotoSchedule.js";
 
 function DayImageViewer(props: DayProps) {
 	const buttonRef = useRef<HTMLButtonElement>(null);
@@ -37,7 +37,7 @@ function DayImageViewer(props: DayProps) {
 type CalenderPlannerProps = {
 	generationProps: TimeGenerationProps;
 	setSelectedDay: (date: Date) => void;
-	photos: Photos[];
+	photos: Photo[];
 };
 
 // todo If no photos, show a message to upload photos or go back to upload photos
@@ -45,7 +45,7 @@ export const CalenderPlanner = (props: CalenderPlannerProps) => {
 	const {generationProps, setSelectedDay, photos} = props;
 
 	const {startDate} = generationProps;
-	const plan = planImageSchedule(generationProps, photos.length);
+	const plan = planPhotoSchedule(generationProps, photos.length);
 
 	const lastDate = plan[plan.length - 1];
 
