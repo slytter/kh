@@ -1,14 +1,14 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as LR from "@uploadcare/blocks";
 import { Photo, useProjectStore } from "../store/store.js";
 import { HorizontalPhotoOverview } from "../components/HorizontalPhotoOverview.js";
 import { Card } from "@nextui-org/react";
 import { BottomNav } from "../components/BottomNav.js";
-
+import { LilHeader } from "../components/LilHeader.js";
+import { PhotoSlider } from "../components/PhotoSlider.js";
 
 const ImageUploader = () => {
   const ctxProviderRef = useRef<InstanceType<LR.UploadCtxProvider>>(null);
-
   const addPhotos = useProjectStore((store) => store.addPhotos);
   const removePhoto = useProjectStore((store) => store.removePhoto);
   const setIsUploading = useProjectStore((store) => store.setIsUploading);
@@ -46,41 +46,56 @@ const ImageUploader = () => {
     };
   }, []);
 
-
-    return (
-      <Card className="flex h-full w-full flex-grow flex-row mb-4">
-        <div className="flex w-full flex-grow flex-row">
+  return (
+    <Card className="mb-4 flex h-full w-full flex-grow flex-row">
+      <div className="flex w-full flex-grow flex-row">
         <lr-config
-            ctx-name="my-uploader"
-            pubkey="3b9243eaa4a4ae623c19"
-            maxLocalFileSizeBytes={10000000}
-            imgOnly={true}
-            sourceList="local, dropbox, gdrive, gphotos"
+          ctx-name="my-uploader"
+          pubkey="3b9243eaa4a4ae623c19"
+          maxLocalFileSizeBytes={10000000}
+          imgOnly={true}
+          sourceList="local, dropbox, gdrive, gphotos"
         />
         <lr-file-uploader-inline
-            css-src="https://cdn.jsdelivr.net/npm/@uploadcare/blocks@0.35.2/web/lr-file-uploader-regular.min.css"
-            ctx-name="my-uploader"
-            class="my-config "
+          css-src="https://cdn.jsdelivr.net/npm/@uploadcare/blocks@0.35.2/web/lr-file-uploader-regular.min.css"
+          ctx-name="my-uploader"
+          class="my-config "
         />
         <lr-upload-ctx-provider
-            ctx-name="my-uploader"
-            class="p-0"
-            ref={ctxProviderRef}
+          ctx-name="my-uploader"
+          class="p-0"
+          ref={ctxProviderRef}
         />
-        </div>
-      </Card>
-    );
-}
+      </div>
+    </Card>
+  );
+};
 
 export default function UploadImages() {
   const isUploading = useProjectStore((store) => store.isUploading);
   const numPhotos = useProjectStore((store) => store.draft.photos.length);
+  const photos = useProjectStore((store) => store.draft.photos);
 
+  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
+  const [isPhotoSliderOpen, setIsPhotoSliderOpen] = useState(false);
 
   return (
     <>
       <div className="mb-2">
-        <HorizontalPhotoOverview />
+        {photos.length > 0 && <LilHeader>Uploadede fotos</LilHeader>}
+        <HorizontalPhotoOverview
+          chosenIndex={currentPhotoIndex}
+          photos={photos}
+          onPhotoPress={(_, index) => {
+            setCurrentPhotoIndex(index);
+            setIsPhotoSliderOpen(true);
+          }}
+        />
+        <PhotoSlider
+          onOpenChange={setIsPhotoSliderOpen}
+          initialIndex={currentPhotoIndex}
+          isOpen={isPhotoSliderOpen}
+        />
       </div>
       <ImageUploader />
       <BottomNav

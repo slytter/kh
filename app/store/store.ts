@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import _ from "lodash";
-import {addSendDatesToPhotos} from "~/utils/planPhotoSchedule";
+import { addSendDatesToPhotos } from "~/utils/planPhotoSchedule";
 
 // todo change to non-pural anme
 export type Photo = {
@@ -56,13 +56,13 @@ export const useProjectStore = create(
         name: "Project 1",
         owner: null,
         created_at: Date.now(),
-        receivers: [''],
+        receivers: [""],
         generationProps: {
           interval: "daily",
           startDate: null,
           sendHour: 8,
         },
-        selfReceive: false
+        selfReceive: false,
       },
       setDraftPhotos: (photos) => {
         set((state) => {
@@ -149,7 +149,10 @@ export const useProjectStore = create(
             draft: {
               ...state.draft,
               generationProps: newGenerationProps,
-              photos: addSendDatesToPhotos(state.draft.photos, newGenerationProps),
+              photos: addSendDatesToPhotos(
+                state.draft.photos,
+                newGenerationProps,
+              ),
             },
           };
         });

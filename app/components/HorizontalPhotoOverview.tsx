@@ -1,32 +1,42 @@
 import { ScrollShadow } from "@nextui-org/react";
-import { useProjectStore } from "../store/store";
+import { Photo, useProjectStore } from "../store/store";
 import { LilHeader } from "./LilHeader";
 
-export const HorizontalPhotoOverview = () => {
-  const photos = useProjectStore((store) => store.draft.photos);
-  const removePhoto = useProjectStore((store) => store.removePhoto);
+type Props = {
+  photos: Photo[];
+  onPhotoPress: (photo: Photo, index: number) => void;
+  chosenIndex?: number;
+  height?: number;
+};
+
+export const HorizontalPhotoOverview = (props: Props) => {
+  const { photos, onPhotoPress, height, chosenIndex } = props;
+  // const photos = useProjectStore((store) => store.draft.photos);
+  // const removePhoto = useProjectStore((store) => store.removePhoto);
 
   return (
     <div>
-      {photos.length > 0 && <LilHeader>Uploadede fotos</LilHeader>}
       <ScrollShadow
         hideScrollBar
         offset={10}
         orientation="horizontal"
-        className="flex space-x-1 overflow-x-auto "
+        className="flex space-x-1 overflow-x-auto"
       >
-        {photos.map((photo) => (
+        {photos.map((photo, index) => (
           <div
             key={photo.id}
-            onClick={() => removePhoto(photo.id)}
-            className="relative flex-shrink-0 cursor-pointer overflow-hidden first:rounded-bl-xl first:rounded-tl-xl last:rounded-br-xl last:rounded-tr-xl"
+            onClick={() => onPhotoPress(photo, index)}
+            className={`relative flex-shrink-0 cursor-pointer overflow-hidden
+            first:rounded-bl-xl first:rounded-tl-xl last:rounded-br-xl last:rounded-tr-xl
+          `}
           >
             <img
               src={`${photo.url}/-/preview/-/resize/x200/`}
               width="100"
-              height="100"
+              height={height || "100"}
               key={photo.id}
-              className={"h-[100px] w-[70px]  object-cover "}
+              className={`h-[${height || "100"}px] w-[70px] object-cover transition-all duration-300 ${chosenIndex === index ? "border-4 border-black" : ""}`}
+              style={{ height: height || "100px" }}
               alt={"file.fileInfo.originalFilename" || ""}
             />
             {/* <div className="absolute right-2 top-2">
