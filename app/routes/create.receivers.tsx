@@ -4,7 +4,6 @@ import { LilHeader } from "../components/LilHeader.js";
 import { BottomNav } from "../components/BottomNav.js";
 import { useProjectStore } from "../store/store.js";
 import { useState } from "react";
-import { PhotoSlider } from "../components/PhotoSlider.js";
 
 const emailValid = (value: string) =>
   value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);

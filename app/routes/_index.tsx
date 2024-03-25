@@ -2,6 +2,7 @@ import type { MetaFunction } from "@remix-run/node";
 import { Container } from "../components/Container";
 import Notification from "../assets/notification.svg";
 import { NavBotton } from "../components/Button";
+import { ImageIcon } from "@radix-ui/react-icons";
 
 export const meta: MetaFunction = () => {
   return [
@@ -12,25 +13,34 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
   return (
-    <Container>
-      <div className="flex h-full flex-1 flex-col content-center justify-between pb-8">
-        <div />
-        <h1 className="text-center text-4xl font-bold md:text-7xl">
-          Et minde hver dag <br /> til én du holder af
-        </h1>
-        <div className="flex flex-col gap-6">
-          <img
-            src={Notification}
-            alt="Notification"
-            className="mx-auto w-full max-w-sm"
+    <div className="">
+      <div className="absolute top-0 -z-10 h-full w-full bg-white">
+        <div className="absolute bottom-auto left-auto right-0 top-0 h-[500px] w-[500px] -translate-x-[30%] translate-y-[20%] rounded-full bg-[rgba(173,109,244,0.5)] opacity-50 blur-[80px]"></div>
+      </div>{" "}
+      <Container>
+        <div className="flex h-full flex-1 flex-col content-center justify-between pb-8">
+          <div />
+          <h1 className="text-center text-4xl font-bold md:text-7xl">
+            Et minde hver dag <br /> til én du holder af
+          </h1>
+          <div className="flex flex-col gap-6">
+            <img
+              src={Notification}
+              alt="Notification"
+              className="mx-auto w-full max-w-sm"
+            />
+            <p className="text-md text-balance text-center md:text-xl">
+              Med <b>kh</b>, kan du planlægge daglige eller ugentlige
+              billedeoverraskelser til dine nærmeste.
+            </p>
+          </div>
+          <NavBotton
+            route="/create/upload"
+            title="Vælg fotos"
+            startContent={<ImageIcon className="h-5 w-5" />}
           />
-          <p className="text-md text-balance text-center md:text-xl">
-            Med <b>kh</b>, kan du planlægge daglige eller ugentlige
-            billedeoverraskelser til dine nærmeste.
-          </p>
         </div>
-        <NavBotton route="/create/upload" title="Vælg fotos" />
-      </div>
-    </Container>
+      </Container>
+    </div>
   );
 }

@@ -6,10 +6,12 @@ type NavButtonProps = {
   onClick?: () => void;
   title: string;
   disabled?: boolean;
+  type?: "submit" | "button";
+  startContent?: React.ReactNode;
 };
 
 export const NavBotton = (props: NavButtonProps) => {
-  const { route, onClick, title, disabled } = props;
+  const { route, onClick, title, disabled, type, startContent } = props;
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -22,10 +24,13 @@ export const NavBotton = (props: NavButtonProps) => {
     <Button
       color="primary"
       size="lg"
-      href="/create"
       disabled={disabled}
+      type={type || "button"}
       onClick={handleClick}
-      className="mx-auto font-bold disabled:cursor-wait disabled:opacity-20"
+      variant="shadow"
+      radius="lg"
+      startContent={startContent}
+      className="mx-auto disabled:cursor-wait disabled:opacity-20"
     >
       {title}
     </Button>

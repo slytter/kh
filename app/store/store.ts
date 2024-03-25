@@ -49,7 +49,7 @@ type ProjectStore = {
 
 export const useProjectStore = create(
   persist<ProjectStore>(
-    (set, get) => ({
+    (set) => ({
       draft: {
         id: generateId(),
         photos: [],
@@ -96,7 +96,6 @@ export const useProjectStore = create(
       removePhoto: (id) => {
         // todo: remove photo from server
         set((state) => {
-          // get().setDraftPhotos(state.draft.photos.filter((photo) => photo.id !== id));
           return {
             draft: {
               ...state.draft,

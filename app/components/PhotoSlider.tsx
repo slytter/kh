@@ -21,13 +21,6 @@ export const PhotoSlider = (props: Props) => {
   const photos = useProjectStore((state) => state.draft.photos);
   const flicking = React.useRef<Flicking>(null);
 
-  useEffect(() => {
-    if (isOpen) {
-      flicking.current?.moveTo(initialIndex);
-      setChosenIndex(initialIndex);
-    }
-  }, [isOpen, initialIndex]);
-
   return (
     <Modal
       backdrop={"blur"}

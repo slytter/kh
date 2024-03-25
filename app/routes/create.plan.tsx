@@ -1,12 +1,27 @@
-import {Tab, Tabs} from "@nextui-org/react";
-import {BottomNav} from "../components/BottomNav.js";
-import {LilHeader} from "../components/LilHeader.js";
-import {CalenderPlanner} from "../components/planning/CalenderPlanner.js";
-import {TimePicker} from "../components/planning/TimePicker.js";
-import {useProjectStore} from "../store/store.js";
+import { Tab, Tabs } from "@nextui-org/react";
+import { BottomNav } from "../components/BottomNav.js";
+import { LilHeader } from "../components/LilHeader.js";
+import { CalenderPlanner } from "../components/planning/CalenderPlanner.js";
+import { TimePicker } from "../components/planning/TimePicker.js";
+import { useProjectStore } from "../store/store.js";
 import dayjs from "dayjs";
+import { ActionFunctionArgs, redirect } from "@remix-run/node";
 
-const weekDays = ["søndag", "mandag", "tirsdag", "onsdag", "torsdag", "fredag", "lørdag"];
+const weekDays = [
+  "søndag",
+  "mandag",
+  "tirsdag",
+  "onsdag",
+  "torsdag",
+  "fredag",
+  "lørdag",
+];
+
+export async function action({ request }: ActionFunctionArgs) {
+  const body = await request.formData();
+
+  return redirect(`/todos/${todo.id}`);
+}
 
 export default function CreatePlan() {
   const generationProps = useProjectStore(
@@ -15,23 +30,24 @@ export default function CreatePlan() {
   const photos = useProjectStore((store) => store.draft.photos);
   const { editGenerationProps } = useProjectStore();
 
-  const canContinue = generationProps.startDate !== undefined
+  const canContinue = generationProps.startDate !== undefined;
 
-  if(photos.length === 0) {
+  if (photos.length === 0) {
     return (
       <>
         <div className="flex flex-col gap-8">
           <p className="text-center">
-            Du har ikke uploadet nogen billeder endnu. Gå tilbage og upload et billede.
+            Du har ikke uploadet nogen billeder endnu. Gå tilbage og upload et
+            billede.
           </p>
         </div>
         <BottomNav route="/create/upload" title={"Upload"} />
       </>
-    )
+    );
   }
 
   return (
-    <div className={"min-h-dvh flex flex-col justify-between"}>
+    <div className={"flex min-h-dvh flex-col justify-between"}>
       <div className="flex max-w-sm flex-col gap-8">
         <div>
           <LilHeader>Send ét foto</LilHeader>
@@ -42,12 +58,12 @@ export default function CreatePlan() {
             selectedKey={generationProps.interval}
             onSelectionChange={(key) => {
               if (key !== undefined && typeof key === "string") {
-                editGenerationProps({interval: key});
+                editGenerationProps({ interval: key });
               }
             }}
           >
-            <Tab key="daily" title="Daglig"/>
-            <Tab key="weekly" title="Ugenlig"/>
+            <Tab key="daily" title="Daglig" />
+            <Tab key="weekly" title="Ugenlig" />
           </Tabs>
         </div>
         <div>
@@ -55,7 +71,7 @@ export default function CreatePlan() {
           <CalenderPlanner
             photos={photos}
             generationProps={generationProps}
-            setSelectedDay={(date) => editGenerationProps({startDate: date})}
+            setSelectedDay={(date) => editGenerationProps({ startDate: date })}
           />
 
           {/* <p className="text-md text-center font-semibold">
@@ -65,18 +81,27 @@ export default function CreatePlan() {
         </div>
         <div>
           <LilHeader>
-            Hver {generationProps.interval === "daily" ? "dag" : weekDays[dayjs(generationProps.startDate).day()] || 'uge'} klokken
+            Hver{" "}
+            {generationProps.interval === "daily"
+              ? "dag"
+              : weekDays[dayjs(generationProps.startDate).day()] || "uge"}{" "}
+            klokken
           </LilHeader>
           <TimePicker
             selectedTimeKey={generationProps.sendHour}
             setSelectedTimeKey={(key) => {
-              editGenerationProps({sendHour: key});
+              editGenerationProps({ sendHour: key });
             }}
           />
         </div>
       </div>
 
-      <BottomNav disabled={!canContinue} route="/create/receivers" title={"Modtagere"}/>
+      <BottomNav
+        // onClick={}
+        disabled={!canContinue}
+        route="/create/receivers"
+        title={"Modtagere"}
+      />
     </div>
   );
 }

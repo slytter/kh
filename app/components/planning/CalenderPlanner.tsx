@@ -1,7 +1,7 @@
 import { Card } from "@nextui-org/react";
 import { da } from "date-fns/locale";
 import dayjs from "dayjs";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button, DayPicker, DayProps, useDayRender } from "react-day-picker";
 import {
   Photo,
@@ -20,6 +20,22 @@ function DayImageViewer(props: DayProps) {
 
   const photo = useProjectStore((state) => state.draft.photos[index]);
 
+  // const [shouldAnimate, setShouldAnimate] = useState(false);
+
+  // useEffect(() => {
+  //   if (index !== -1 && index < 30) {
+  //     setTimeout(
+  //       () => {
+  //         console.log("animate");
+  //         setShouldAnimate(true);
+  //       },
+  //       (index % 42) * 60,
+  //     );
+  //   } else {
+  //     setShouldAnimate(true);
+  //   }
+  // }, [index]);
+
   if (!dayRender.isButton) {
     return <div {...dayRender.divProps} />;
   }
@@ -30,7 +46,10 @@ function DayImageViewer(props: DayProps) {
         <img
           src={photo?.url + "/-/preview/100x100/"}
           alt=""
-          className={`absolute left-0 top-0 h-10 w-10 rounded-full brightness-75 filter ${index === 0 ? "ring-2 " : ""}`}
+          className={`absolute left-0 top-0 h-10 w-10 rounded-full  object-cover brightness-75 filter transition-opacity duration-300
+            ${index === 0 ? "ring-2 ring-black brightness-90" : ""}
+            `}
+          // ${shouldAnimate ? "opacity-1" : "opacity-0"}
         />
       )}
       <Button {...dayRender.buttonProps} ref={buttonRef} />
