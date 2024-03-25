@@ -1,11 +1,12 @@
 import { Tab, Tabs } from "@nextui-org/react";
-import { BottomNav } from "../components/BottomNav.js";
+import { BottomNav } from "../components/BottomNav";
 import { LilHeader } from "../components/LilHeader.js";
 import { CalenderPlanner } from "../components/planning/CalenderPlanner.js";
 import { TimePicker } from "../components/planning/TimePicker.js";
 import { useProjectStore } from "../store/store.js";
 import dayjs from "dayjs";
 import { ActionFunctionArgs, redirect } from "@remix-run/node";
+import { HandHeart } from "lucide-react";
 
 const weekDays = [
   "søndag",
@@ -99,8 +100,9 @@ export default function CreatePlan() {
       <BottomNav
         // onClick={}
         disabled={!canContinue}
+        startContent={<HandHeart />}
         route="/create/receivers"
-        title={"Modtagere"}
+        title={"Vælg modtagere"}
       />
     </div>
   );

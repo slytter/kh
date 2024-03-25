@@ -2,7 +2,7 @@ import { Button } from "@nextui-org/react";
 import { useNavigate } from "@remix-run/react";
 
 type NavButtonProps = {
-  route: string;
+  route?: string;
   onClick?: () => void;
   title: string;
   disabled?: boolean;
@@ -17,7 +17,7 @@ export const NavBotton = (props: NavButtonProps) => {
   const handleClick = () => {
     if (disabled) return;
     onClick?.();
-    navigate(route);
+    route && navigate(route);
   };
 
   return (

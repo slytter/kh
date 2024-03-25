@@ -1,7 +1,7 @@
 import { Input, Switch } from "@nextui-org/react";
-import { MailIcon, TrashIcon } from "lucide-react";
+import { ListChecks, MailIcon, TrashIcon } from "lucide-react";
 import { LilHeader } from "../components/LilHeader.js";
-import { BottomNav } from "../components/BottomNav.js";
+import { BottomNav } from "../components/BottomNav";
 import { useProjectStore } from "../store/store.js";
 import { useState } from "react";
 
@@ -119,6 +119,7 @@ export default function CreateReceivers() {
         disabled={hasInvalidEmail}
         route="/create/overview"
         title={"Overblik"}
+        startContent={<ListChecks />}
       />
     </div>
   );

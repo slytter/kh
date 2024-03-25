@@ -73,11 +73,15 @@ export const CalenderPlanner = (props: CalenderPlannerProps) => {
   const lastDate = plan[plan.length - 1];
 
   const footer = startDate ? (
-    <div className="pt-4">
-      <p>Sender første foto</p>
-      <b>{dayjs(startDate).format("D. MMM YY")}</b>
-      <p className="pt-4">Sender sidste foto</p>
-      <b>{dayjs(lastDate).format("D. MMM YY")}</b>
+    <div className="flex flex-row pt-4 text-sm">
+      <p className="flex-1">
+        Første foto <br />
+        <b>{dayjs(startDate).format("D. MMM YY")}</b>
+      </p>
+      <p className="flex-1">
+        Sidste foto <br />
+        <b>{dayjs(lastDate).format("D. MMM YY")}</b>
+      </p>
     </div>
   ) : (
     <b className="mt-2">Vælg start dato</b>

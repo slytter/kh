@@ -2,7 +2,7 @@ import type { MetaFunction } from "@remix-run/node";
 import { Container } from "../components/Container";
 import Notification from "../assets/notification.svg";
 import { NavBotton } from "../components/Button";
-import { ImageIcon } from "@radix-ui/react-icons";
+import { ImagePlus } from "lucide-react";
 
 export const meta: MetaFunction = () => {
   return [
@@ -21,7 +21,7 @@ export default function Index() {
         <div className="flex h-full flex-1 flex-col content-center justify-between pb-8">
           <div />
           <h1 className="text-center text-4xl font-bold md:text-7xl">
-            Et minde hver dag <br /> til én du holder af
+            Ét minde hver dag <br /> til én du holder af
           </h1>
           <div className="flex flex-col gap-6">
             <img
@@ -37,7 +37,7 @@ export default function Index() {
           <NavBotton
             route="/create/upload"
             title="Vælg fotos"
-            startContent={<ImageIcon className="h-5 w-5" />}
+            startContent={<ImagePlus />}
           />
         </div>
       </Container>

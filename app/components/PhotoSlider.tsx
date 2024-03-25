@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { memo } from "react";
 import { useProjectStore } from "../store/store";
 import Flicking, { MoveEvent } from "@egjs/react-flicking";
@@ -59,7 +59,7 @@ export const PhotoSlider = (props: Props) => {
                 <img
                   className="panel inher border-r-20 w-full object-contain outline-1"
                   style={{ height: "inherit" }}
-                  src={photo.url}
+                  src={`${photo.url}/-/preview/-/resize/x1280/`}
                   alt={"Photo " + index}
                   onDragStart={handleDragStart}
                 />

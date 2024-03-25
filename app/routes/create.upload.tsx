@@ -3,9 +3,10 @@ import * as LR from "@uploadcare/blocks";
 import { Photo, useProjectStore } from "../store/store.js";
 import { HorizontalPhotoOverview } from "../components/HorizontalPhotoOverview.js";
 import { Card } from "@nextui-org/react";
-import { BottomNav } from "../components/BottomNav.js";
+import { BottomNav } from "../components/BottomNav";
 import { LilHeader } from "../components/LilHeader.js";
 import { PhotoSlider } from "../components/PhotoSlider.js";
+import { CalendarIcon } from "lucide-react";
 
 const ImageUploader = () => {
   const ctxProviderRef = useRef<InstanceType<LR.UploadCtxProvider>>(null);
@@ -101,6 +102,7 @@ export default function UploadImages() {
       <BottomNav
         disabled={isUploading || numPhotos === 0}
         route="/create/plan"
+        startContent={<CalendarIcon />}
         title={"Planlæg afsendelse"}
       />
     </>

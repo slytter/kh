@@ -34,7 +34,9 @@ function PhotoDragItem({
               alt={photo.id}
             />
 
-            <div className={"flex flex-1 flex-row justify-between"}>
+            <div
+              className={"flex flex-1 flex-row items-center justify-between"}
+            >
               <div className={"ml-2 items-start text-left "}>
                 <p className={"text-sm"}>
                   Sendes {dayjs(photo.send_at).format("D. MMM YY")}
