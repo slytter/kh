@@ -17,40 +17,71 @@ import { useState } from "react";
 import { OutletContext } from "~/types";
 import dayjs from "dayjs";
 import { Send } from "lucide-react";
-import { PhotoSchema, ProjectSchema } from "~/types/validations";
+import {
+  PhotoArraySchema,
+  PhotoSchema,
+  ProjectSchema,
+} from "~/types/validations";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const formData = await request.formData();
   const response = new Response();
-  const projectData = Object.fromEntries(formData); // Convert formData to a regular object
   const supabase = createSupabaseServerClient({ request, response });
 
+  const formData = await request.formData();
+  const projectData = Object.fromEntries(formData); // Convert formData to a regular object
+
   try {
-    const draftAsJSON = JSON.parse(projectData.draft);
-    const photosAsJSON = JSON.parse(projectData.photos);
+    const draftAsJSON = JSON.parse(projectData.draft.toString());
+    const photosAsJSON = JSON.parse(projectData.photos.toString());
 
     const project = ProjectSchema.parse(draftAsJSON);
-    const images = PhotoSchema.parse(photosAsJSON);
+    let photos = PhotoArraySchema.parse(photosAsJSON);
 
-    const { data, error } = await supabase.from("projects").insert({
-      name: project.name,
-      owner: project.owner,
-      generation_props: project.generationProps,
-      receivers: project.receivers,
-      self_receive: project.selfReceive,
+    const {
+      data: partialProject,
+      error,
+      status,
+    } = await supabase
+      .from("projects")
+      .insert({
+        name: project.name,
+        owner: project.owner,
+        generation_props: project.generationProps,
+        receivers: project.receivers,
+        self_receive: project.selfReceive,
+      })
+      .select("id")
+      .single();
+
+    console.log({ partialProject, status });
+    if (!partialProject) {
+      throw new Error("No project created");
+    }
+
+    photos = photos.map((photo) => {
+      console.log(project.id);
+      return {
+        ...photo,
+        project_id: partialProject.id,
+      };
     });
+
+    const { data: photoData, error: photoError } = await supabase
+      .from("photos")
+      .insert(photos);
 
     // const { error } = await
 
-    if (error) {
-      throw new Error(`Supabase insert error: ${error.message}`);
+    if (error || photoError) {
+      console.error(error || photoError);
+      throw new Error(error || photoError);
     }
 
     return json(data);
   } catch (error) {
     // If there's a validation or Supabase error, handle it here
     // For example, sending a 400 Bad Request response:
-    return new Response(JSON.stringify({ error: error }), {
+    return new Response(JSON.stringify(error), {
       status: 400,
       headers: {
         "Content-Type": "application/json",

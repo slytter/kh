@@ -4,82 +4,93 @@ export type Json =
   | boolean
   | null
   | { [key: string]: Json | undefined }
-  | Json[];
+  | Json[]
 
 export type Database = {
   public: {
     Tables: {
       photos: {
         Row: {
-          created_at: string;
-          id: number;
-          project_id: number | null;
-          send_at: string;
-          url: string;
-        };
+          created_at: number
+          id: string | null
+          key: number
+          project_id: number | null
+          send_at: number | null
+          url: string
+        }
         Insert: {
-          created_at?: string;
-          id?: number;
-          project_id?: number | null;
-          send_at: string;
-          url?: string;
-        };
+          created_at: number
+          id?: string | null
+          key?: number
+          project_id?: number | null
+          send_at?: number | null
+          url?: string
+        }
         Update: {
-          created_at?: string;
-          id?: number;
-          project_id?: number | null;
-          send_at?: string;
-          url?: string;
-        };
-        Relationships: [];
-      };
+          created_at?: number
+          id?: string | null
+          key?: number
+          project_id?: number | null
+          send_at?: number | null
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_photos_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       projects: {
         Row: {
-          created_at: string;
-          generation_props: Json;
-          id: number;
-          name: string | null;
-          owner: string | null;
-          receivers: string[] | null;
-          self_receive: boolean;
-        };
+          created_at: string
+          generation_props: Json
+          id: number
+          name: string | null
+          owner: string | null
+          receivers: string[] | null
+          self_receive: boolean
+        }
         Insert: {
-          created_at?: string;
-          generation_props?: Json;
-          id?: number;
-          name?: string | null;
-          owner?: string | null;
-          receivers?: string[] | null;
-          self_receive?: boolean;
-        };
+          created_at?: string
+          generation_props?: Json
+          id?: number
+          name?: string | null
+          owner?: string | null
+          receivers?: string[] | null
+          self_receive?: boolean
+        }
         Update: {
-          created_at?: string;
-          generation_props?: Json;
-          id?: number;
-          name?: string | null;
-          owner?: string | null;
-          receivers?: string[] | null;
-          self_receive?: boolean;
-        };
-        Relationships: [];
-      };
-    };
+          created_at?: string
+          generation_props?: Json
+          id?: number
+          name?: string | null
+          owner?: string | null
+          receivers?: string[] | null
+          self_receive?: boolean
+        }
+        Relationships: []
+      }
+    }
     Views: {
-      [_ in never]: never;
-    };
+      [_ in never]: never
+    }
     Functions: {
-      [_ in never]: never;
-    };
+      [_ in never]: never
+    }
     Enums: {
-      [_ in never]: never;
-    };
+      [_ in never]: never
+    }
     CompositeTypes: {
-      [_ in never]: never;
-    };
-  };
-};
+      [_ in never]: never
+    }
+  }
+}
 
-type PublicSchema = Database[Extract<keyof Database, "public">];
+type PublicSchema = Database[Extract<keyof Database, "public">]
 
 export type Tables<
   PublicTableNameOrOptions extends
@@ -92,7 +103,7 @@ export type Tables<
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
       Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
-      Row: infer R;
+      Row: infer R
     }
     ? R
     : never
@@ -100,11 +111,11 @@ export type Tables<
         PublicSchema["Views"])
     ? (PublicSchema["Tables"] &
         PublicSchema["Views"])[PublicTableNameOrOptions] extends {
-        Row: infer R;
+        Row: infer R
       }
       ? R
       : never
-    : never;
+    : never
 
 export type TablesInsert<
   PublicTableNameOrOptions extends
@@ -115,17 +126,17 @@ export type TablesInsert<
     : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I;
+      Insert: infer I
     }
     ? I
     : never
   : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
     ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
-        Insert: infer I;
+        Insert: infer I
       }
       ? I
       : never
-    : never;
+    : never
 
 export type TablesUpdate<
   PublicTableNameOrOptions extends
@@ -136,17 +147,17 @@ export type TablesUpdate<
     : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U;
+      Update: infer U
     }
     ? U
     : never
   : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
     ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
-        Update: infer U;
+        Update: infer U
       }
       ? U
       : never
-    : never;
+    : never
 
 export type Enums<
   PublicEnumNameOrOptions extends
@@ -159,4 +170,4 @@ export type Enums<
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
     ? PublicSchema["Enums"][PublicEnumNameOrOptions]
-    : never;
+    : never

@@ -8,6 +8,7 @@ export type Photo = {
   url: string;
   created_at: number;
   send_at?: number;
+  project_id?: number;
 };
 
 export type TimeGenerationProps = {
@@ -17,17 +18,13 @@ export type TimeGenerationProps = {
 };
 
 export type Project = {
-  id: string;
+  id?: string; // id is optional because it is generated on backend submission
   name: string;
   owner: string | null;
   created_at: number;
   receivers: string[];
   selfReceive: boolean;
   generationProps: TimeGenerationProps;
-};
-
-const generateId = () => {
-  return Math.random().toString(36).substr(2, 9);
 };
 
 type ProjectStore = {
@@ -51,8 +48,6 @@ export const useProjectStore = create(
   persist<ProjectStore>(
     (set) => ({
       draftProject: {
-        id: generateId(),
-        photos: [],
         name: "Project 1",
         owner: null,
         created_at: Date.now(),

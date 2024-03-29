@@ -4,9 +4,12 @@ import { z } from "zod";
 export const PhotoSchema = z.object({
   id: z.string(),
   url: z.string(),
+  project_id: z.string().optional(),
   created_at: z.number(),
   send_at: z.number(),
 });
+
+export const PhotoArraySchema = z.array(PhotoSchema);
 
 // Define Zod schema for TimeGenerationProps
 export const TimeGenerationPropsSchema = z.object({
@@ -16,7 +19,7 @@ export const TimeGenerationPropsSchema = z.object({
 });
 
 export const ProjectSchema = z.object({
-  id: z.string(),
+  id: z.number().optional(),
   name: z.string(),
   owner: z.string(),
   created_at: z.number(),
