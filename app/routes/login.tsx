@@ -7,9 +7,8 @@ export default function Login() {
 
   return (
     <Container>
-      {!session?.user ? (
-        <Login />
-      ) : (
+      {!session?.user ? null : (
+        // <Login />
         <>
           <h1>Welcome to Remix {session.user.user_metadata.name}</h1>
           <button

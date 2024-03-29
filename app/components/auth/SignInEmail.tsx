@@ -7,7 +7,6 @@ export const SignInSection = (props: ProviderProps) => {
   const { setError, email, password, setEmail, setPassword, auth } = props;
 
   const emailSignIn = async (email: string, password: string) => {
-    console.log({ email, password });
     try {
       const result = await auth.signInWithPassword({
         email,

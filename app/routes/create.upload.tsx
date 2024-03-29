@@ -10,7 +10,7 @@ import { CalendarIcon } from "lucide-react";
 
 const ImageUploader = () => {
   const ctxProviderRef = useRef<InstanceType<LR.UploadCtxProvider>>(null);
-  const addPhotos = useProjectStore((store) => store.addPhotos);
+  const addPhotos = useProjectStore((store) => store.addDraftPhotos);
   const removePhoto = useProjectStore((store) => store.removePhoto);
   const setIsUploading = useProjectStore((store) => store.setIsUploading);
 
@@ -74,8 +74,8 @@ const ImageUploader = () => {
 
 export default function UploadImages() {
   const isUploading = useProjectStore((store) => store.isUploading);
-  const numPhotos = useProjectStore((store) => store.draft.photos.length);
-  const photos = useProjectStore((store) => store.draft.photos);
+  const photos = useProjectStore((store) => store.draftPhotos);
+  const numPhotos = photos.length;
 
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [isPhotoSliderOpen, setIsPhotoSliderOpen] = useState(false);

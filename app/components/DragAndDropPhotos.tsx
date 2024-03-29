@@ -50,7 +50,6 @@ export const DragAndDropPhotos = (props: Props) => {
         className={"flex flex-shrink-0 flex-col gap-4"}
         onDragEnd={onDragEnd}
         onDragStart={() => {
-          console.log("dragging");
           if (window.navigator.vibrate) {
             window.navigator.vibrate(100);
           }

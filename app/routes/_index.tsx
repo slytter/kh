@@ -1,6 +1,6 @@
 import type { MetaFunction } from "@remix-run/node";
 import { Container } from "../components/Container";
-import Notification from "../assets/notification.svg";
+import Notification from "../assets/email.noti.svg";
 import { NavBotton } from "../components/Button";
 import { ImagePlus } from "lucide-react";
 

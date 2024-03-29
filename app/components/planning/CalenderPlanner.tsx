@@ -14,11 +14,15 @@ function DayImageViewer(props: DayProps) {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const dayRender = useDayRender(props.date, props.displayMonth, buttonRef);
 
+  // console.log(dayRender.selectedDays);
+
   const index = dayRender.selectedDays?.findIndex((date) =>
     dayjs(date).isSame(props.date, "day"),
   );
 
-  const photo = useProjectStore((state) => state.draft.photos[index]);
+  const photo = useProjectStore((state) => state.draftPhotos[index]);
+
+  // console.log("photo", photo);
 
   // const [shouldAnimate, setShouldAnimate] = useState(false);
 
@@ -46,7 +50,7 @@ function DayImageViewer(props: DayProps) {
         <img
           src={photo?.url + "/-/preview/100x100/"}
           alt=""
-          className={`absolute left-0 top-0 h-10 w-10 rounded-full  object-cover brightness-75 filter transition-opacity duration-300
+          className={`absolute left-0 top-0 h-10 w-10 rounded-full object-cover brightness-75 filter transition-opacity duration-300
             ${index === 0 ? "ring-2 ring-black brightness-90" : ""}
             `}
           // ${shouldAnimate ? "opacity-1" : "opacity-0"}
@@ -73,7 +77,7 @@ export const CalenderPlanner = (props: CalenderPlannerProps) => {
   const lastDate = plan[plan.length - 1];
 
   const footer = startDate ? (
-    <div className="flex flex-row pt-4 text-sm">
+    <div className="flex flex-row pt-4 text-sm ">
       <p className="flex-1">
         Første foto <br />
         <b>{dayjs(startDate).format("D. MMM YY")}</b>

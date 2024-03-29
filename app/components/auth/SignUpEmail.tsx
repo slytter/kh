@@ -10,7 +10,6 @@ export const SignUpSection = (props: ProviderProps) => {
   const [dispayName, setDisplayName] = useState("");
 
   const emailSignUp = async (email: string, password: string) => {
-    console.log({ email, password });
     try {
       const result = await auth.signUp({
         email,

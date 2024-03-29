@@ -40,7 +40,7 @@ const EmailInput = ({
       }}
       placeholder="you@example.com"
       startContent={
-        <MailIcon className="text-default-400 pointer-events-none flex-shrink-0 text-2xl" />
+        <MailIcon className="pointer-events-none flex-shrink-0 text-2xl text-default-400" />
       }
       endContent={
         canDelete ? (
@@ -49,7 +49,7 @@ const EmailInput = ({
             type="button"
             onClick={onDelete}
           >
-            <TrashIcon className="text-md text-default-400 pointer-events-none flex-shrink-0" />
+            <TrashIcon className="text-md pointer-events-none flex-shrink-0 text-default-400" />
           </button>
         ) : null
       }
@@ -58,9 +58,11 @@ const EmailInput = ({
 };
 
 export default function CreateReceivers() {
-  const receivers = useProjectStore((state) => state.draft.receivers);
+  const receivers = useProjectStore((state) => state.draftProject.receivers);
   const setReceivers = useProjectStore((state) => state.setReceivers);
-  const selfReceive = useProjectStore((state) => state.draft.selfReceive);
+  const selfReceive = useProjectStore(
+    (state) => state.draftProject.selfReceive,
+  );
   const setSelfReceive = useProjectStore((state) => state.setSelfReceive);
 
   const setReceiver = (index: number, value: string) => {
@@ -85,7 +87,7 @@ export default function CreateReceivers() {
     <div className={"flex min-h-dvh flex-col justify-between"}>
       <div>
         <LilHeader>Modtager{receivers.length > 1 ? "e" : ""}</LilHeader>
-        <p className={"text-default-500 mb-2 px-2 text-sm"}>
+        <p className={"mb-2 px-2 text-sm text-default-500"}>
           Indtast de email adresser som du vil sende fotos til
         </p>
 
@@ -101,7 +103,7 @@ export default function CreateReceivers() {
           ))}
         </div>
 
-        <button onClick={addReceiver} className="text-primary-500 p-4">
+        <button onClick={addReceiver} className="p-4 text-primary-500">
           Tilføj modtager
         </button>
         <div className="gap- flex items-center">

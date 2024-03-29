@@ -18,7 +18,7 @@ export const PhotoSlider = (props: Props) => {
   const { initialIndex, isOpen, onOpenChange } = props;
 
   const [chosenIndex, setChosenIndex] = useState(initialIndex);
-  const photos = useProjectStore((state) => state.draft.photos);
+  const photos = useProjectStore((state) => state.draftPhotos);
   const flicking = React.useRef<Flicking>(null);
 
   return (
@@ -42,7 +42,6 @@ export const PhotoSlider = (props: Props) => {
             deceleration={0.0075}
             onChanged={(e) => {
               setChosenIndex(e.index);
-              console.log(e);
             }}
           >
             {photos.map((photo, index) => (

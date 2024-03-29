@@ -26,9 +26,9 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function CreatePlan() {
   const generationProps = useProjectStore(
-    (store) => store.draft.generationProps,
+    (store) => store.draftProject.generationProps,
   );
-  const photos = useProjectStore((store) => store.draft.photos);
+  const photos = useProjectStore((store) => store.draftPhotos);
   const { editGenerationProps } = useProjectStore();
 
   const canContinue = generationProps.startDate !== undefined;
@@ -72,7 +72,10 @@ export default function CreatePlan() {
           <CalenderPlanner
             photos={photos}
             generationProps={generationProps}
-            setSelectedDay={(date) => editGenerationProps({ startDate: date })}
+            setSelectedDay={(date) => {
+              alert(date);
+              editGenerationProps({ startDate: new Date(date).getTime() });
+            }}
           />
 
           {/* <p className="text-md text-center font-semibold">

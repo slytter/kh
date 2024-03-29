@@ -3,7 +3,6 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import _ from "lodash";
 import { addSendDatesToPhotos } from "~/utils/planPhotoSchedule";
 
-// todo change to non-pural anme
 export type Photo = {
   id: string;
   url: string;
@@ -13,13 +12,12 @@ export type Photo = {
 
 export type TimeGenerationProps = {
   interval: "weekly" | "daily";
-  startDate: Date | null;
+  startDate: number | null;
   sendHour: number;
 };
 
-type Project = {
+export type Project = {
   id: string;
-  photos: Photo[];
   name: string;
   owner: string | null;
   created_at: number;
@@ -33,14 +31,16 @@ const generateId = () => {
 };
 
 type ProjectStore = {
-  draft: Project;
+  draftProject: Project;
+  draftPhotos: Photo[];
+
   setReceivers: (receivers: string[]) => void;
   setSelfReceive: (selfReceive: boolean) => void;
   setDraftPhotos: (photos: Photo[]) => void;
   isUploading: boolean;
   setIsUploading: (isUploading: boolean) => void;
   setOwner: (owner: string | null) => void;
-  addPhotos: (photos: Photo[]) => void;
+  addDraftPhotos: (photos: Photo[]) => void;
   removePhoto: (id: string) => void;
   editGenerationProps: (
     someGenerationProps: Partial<TimeGenerationProps>,
@@ -50,7 +50,7 @@ type ProjectStore = {
 export const useProjectStore = create(
   persist<ProjectStore>(
     (set) => ({
-      draft: {
+      draftProject: {
         id: generateId(),
         photos: [],
         name: "Project 1",
@@ -64,21 +64,27 @@ export const useProjectStore = create(
         },
         selfReceive: false,
       },
+      draftPhotos: [],
       setDraftPhotos: (photos) => {
         set((state) => {
           return {
-            draft: {
-              ...state.draft,
-              photos: addSendDatesToPhotos(photos, state.draft.generationProps),
+            ...state,
+            draftProject: {
+              ...state.draftProject,
             },
+            draftPhotos: addSendDatesToPhotos(
+              photos,
+              state.draftProject.generationProps,
+            ),
           };
         });
       },
       setSelfReceive: (selfReceive) => {
         set((state) => {
           return {
-            draft: {
-              ...state.draft,
+            ...state,
+            draftProject: {
+              ...state.draftProject,
               selfReceive,
             },
           };
@@ -97,18 +103,17 @@ export const useProjectStore = create(
         // todo: remove photo from server
         set((state) => {
           return {
-            draft: {
-              ...state.draft,
-              photos: state.draft.photos.filter((photo) => photo.id !== id),
-            },
+            ...state,
+            draftPhotos: state.draftPhotos.filter((photo) => photo.id !== id),
           };
         });
       },
       setOwner: (owner) => {
         set((state) => {
           return {
-            draft: {
-              ...state.draft,
+            ...state,
+            draftProject: {
+              ...state.draftProject,
               owner,
             },
           };
@@ -117,43 +122,43 @@ export const useProjectStore = create(
       setReceivers: (receivers) => {
         set((state) => {
           return {
-            draft: {
-              ...state.draft,
+            ...state,
+            draftProject: {
+              ...state.draftProject,
               receivers,
             },
-          };
+          } as ProjectStore;
         });
       },
-      addPhotos: (photos) => {
+      addDraftPhotos: (photos) => {
         set((state) => {
           return {
-            draft: {
-              ...state.draft,
-              photos: _.uniqBy([...state.draft.photos, ...photos], "id"),
-            },
-          };
+            ...state,
+            draftPhotos: _.uniqBy([...state.draftPhotos, ...photos], "id"),
+          } as ProjectStore;
         });
       },
+
       editGenerationProps: (
         someGenerationProps: Partial<TimeGenerationProps>,
       ) => {
         set((state) => {
           const newGenerationProps = {
-            ...state.draft.generationProps,
+            ...state.draftProject.generationProps,
             ...someGenerationProps,
           };
 
           return {
             ...state,
-            draft: {
-              ...state.draft,
+            draftProject: {
+              ...state.draftProject,
               generationProps: newGenerationProps,
-              photos: addSendDatesToPhotos(
-                state.draft.photos,
-                newGenerationProps,
-              ),
             },
-          };
+            draftPhotos: addSendDatesToPhotos(
+              state.draftPhotos,
+              newGenerationProps,
+            ),
+          } as ProjectStore;
         });
       },
     }),

@@ -18,7 +18,7 @@ function PhotoDragItem({
     <Draggable draggableId={photo.id} index={index}>
       {(provided, snapshot) => (
         <div
-          className={`mb-2 rounded-xl bg-white p-2 shadow-${snapshot.isDragging ? "lg" : "sm"} transition-height border transition-shadow ${snapshot.isDropAnimating ? "h-10" : ""} overflow-hidden`}
+          className={`mb-2 rounded-xl bg-white p-2 shadow-${snapshot.isDragging ? "lg" : "sm"} border transition-shadow transition-height ${snapshot.isDropAnimating ? "h-10" : ""} overflow-hidden`}
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
@@ -46,7 +46,7 @@ function PhotoDragItem({
                 </p>
               </div>
               <DragHandleHorizontalIcon
-                className={"text-default-400 h-7 w-7 cursor-move"}
+                className={"h-7 w-7 cursor-move text-default-400"}
               />
             </div>
           </button>
