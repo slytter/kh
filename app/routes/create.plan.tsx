@@ -18,12 +18,6 @@ const weekDays = [
   "lørdag",
 ];
 
-export async function action({ request }: ActionFunctionArgs) {
-  const body = await request.formData();
-
-  return redirect(`/todos/${todo.id}`);
-}
-
 export default function CreatePlan() {
   const generationProps = useProjectStore(
     (store) => store.draftProject.generationProps,
@@ -31,7 +25,7 @@ export default function CreatePlan() {
   const photos = useProjectStore((store) => store.draftPhotos);
   const { editGenerationProps } = useProjectStore();
 
-  const canContinue = generationProps.startDate !== undefined;
+  const canContinue = !!generationProps.startDate;
 
   if (photos.length === 0) {
     return (
@@ -58,7 +52,12 @@ export default function CreatePlan() {
             size="lg"
             selectedKey={generationProps.interval}
             onSelectionChange={(key) => {
-              if (key !== undefined && typeof key === "string") {
+              if (
+                (key !== undefined &&
+                  typeof key === "string" &&
+                  key === "daily") ||
+                key === "weekly"
+              ) {
                 editGenerationProps({ interval: key });
               }
             }}
@@ -103,6 +102,7 @@ export default function CreatePlan() {
       <BottomNav
         // onClick={}
         disabled={!canContinue}
+        disabledReason="Vælg en start dato"
         startContent={<HandHeart />}
         route="/create/receivers"
         title={"Vælg modtagere"}

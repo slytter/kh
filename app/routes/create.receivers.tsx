@@ -119,6 +119,7 @@ export default function CreateReceivers() {
       </div>
       <BottomNav
         disabled={hasInvalidEmail}
+        disabledReason={"Indtast venligst en gyldig email"}
         route="/create/overview"
         title={"Overblik"}
         startContent={<ListChecks />}

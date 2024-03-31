@@ -1,20 +1,31 @@
+import { Button, Tooltip } from "@nextui-org/react";
 import { NavBotton } from "./Button";
 
 type BottomNavProps = {
   route?: string;
   title: string;
   disabled?: boolean;
+  disabledReason?: string;
   onClick?: () => void;
   startContent?: React.ReactNode;
   type?: "button" | "submit";
 };
 
 export const BottomNav = (props: BottomNavProps) => {
-  const { disabled, route, title, onClick, type, startContent } = props;
+  const {
+    disabled,
+    route,
+    title,
+    onClick,
+    type,
+    startContent,
+    disabledReason,
+  } = props;
 
   return (
     <div className="sticky bottom-0 flex w-full p-8">
       <NavBotton
+        disabledReason={disabledReason}
         startContent={startContent}
         disabled={disabled}
         route={route}

@@ -4,7 +4,7 @@ import { LilHeader } from "./LilHeader";
 
 type Props = {
   photos: Photo[];
-  onPhotoPress: (photo: Photo, index: number) => void;
+  onPhotoPress?: (photo: Photo, index: number) => void;
   chosenIndex?: number;
   height?: number;
 };
@@ -25,7 +25,7 @@ export const HorizontalPhotoOverview = (props: Props) => {
         {photos.map((photo, index) => (
           <div
             key={photo.id}
-            onClick={() => onPhotoPress(photo, index)}
+            onClick={() => onPhotoPress?.(photo, index)}
             className={`relative flex-shrink-0 cursor-pointer overflow-hidden
             first:rounded-bl-xl first:rounded-tl-xl last:rounded-br-xl last:rounded-tr-xl
           `}

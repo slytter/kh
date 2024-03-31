@@ -1,28 +1,39 @@
-import { useOutletContext } from "@remix-run/react";
+import { redirect, useNavigate, useOutletContext } from "@remix-run/react";
 import { Container } from "../components/Container";
 import { OutletContext } from "../types";
 import { Login } from "~/components/auth/Login";
+import { useEffect } from "react";
+import { createSupabaseServerClient } from "~/utils/supabase.server";
+import { LoaderFunctionArgs } from "@remix-run/node";
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  const response = new Response();
+  const supabase = createSupabaseServerClient({ request, response });
+  const { data } = await supabase.auth.getUser();
+
+  if (data.user) {
+    return redirect("/projects");
+  }
+
+  return response;
+}
 
 export default function login() {
-  const { session, supabase } = useOutletContext<OutletContext>();
+  const { session } = useOutletContext<OutletContext>();
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (session?.user) {
+      navigate("/projects");
+    }
+  }, [session, navigate]);
 
   return (
     <Container>
-      {!session?.user ? (
-        <div className="max-w-md">
-          <Login />
-        </div>
-      ) : (
-        <>
-          <h1>Welcome to Remix {session.user.user_metadata.name}</h1>
-          <button
-            className="btn btn-secondary btn-wide"
-            onClick={() => supabase.auth.signOut()}
-          >
-            Log ud
-          </button>
-        </>
-      )}
+      <div className="max-w-md">
+        <Login />
+      </div>
     </Container>
   );
 }

@@ -21,7 +21,7 @@ export const ProjectCard = (props: Props) => {
   const { project, photos } = props;
 
   return (
-    <Button>
+    <button className="text-left">
       <Card className="max-w-[400px]">
         <CardHeader className="flex">
           <div className="flex flex-col">
@@ -40,6 +40,6 @@ export const ProjectCard = (props: Props) => {
           {project && <ProjectDescription project={project} photos={photos} />}
         </CardFooter>
       </Card>
-    </Button>
+    </button>
   );
 };

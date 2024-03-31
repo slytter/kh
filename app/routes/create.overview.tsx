@@ -80,6 +80,13 @@ const PostDraftModal = (props: PostModalProps) => {
       resetDraftProject();
       navigate("/projects");
     }
+    if (actionData?.error) {
+      // todo better error handling
+      alert(
+        "Der skete en fejl. Prøv igen senere." +
+          JSON.stringify(actionData.error),
+      );
+    }
   }, [actionData]);
 
   return (
