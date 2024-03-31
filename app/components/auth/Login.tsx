@@ -6,12 +6,19 @@ import { SignInSection } from "./SignInEmail";
 import { SignUpSection } from "./SignUpEmail";
 import { Button } from "@nextui-org/react";
 
-export const Login = () => {
+type Props = {
+  defaultSignState?: "login" | "signup";
+};
+
+export const Login = (props: Props) => {
+  const { defaultSignState } = props;
   const { supabase } = useOutletContext<OutletContext>();
   const [email, setEmail] = useState("");
   const [error, setError] = useState<AuthError | null>(null);
   const [password, setPassword] = useState("");
-  const [signState, setSignState] = useState<"login" | "signup">("login");
+  const [signState, setSignState] = useState<"login" | "signup">(
+    defaultSignState || "login",
+  );
 
   // const googleLogin = () => {
   //   supabase.auth.signInWithOAuth({

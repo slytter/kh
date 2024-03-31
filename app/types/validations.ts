@@ -4,7 +4,7 @@ import { z } from "zod";
 export const PhotoSchema = z.object({
   id: z.string(),
   url: z.string(),
-  project_id: z.string().optional(),
+  project_id: z.number().optional(),
   created_at: z.number(),
   send_at: z.number(),
 });

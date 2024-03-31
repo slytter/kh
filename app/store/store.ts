@@ -2,6 +2,33 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import _ from "lodash";
 import { addSendDatesToPhotos } from "~/utils/planPhotoSchedule";
+import { ProjectSchema } from "~/types/validations";
+import { z } from "zod";
+
+export type DefaultProject = {
+  id?: number; // id is optional because it is generated on backend submission
+  name: string;
+  owner: string | null;
+  created_at: number;
+  receivers: string[];
+  selfReceive: boolean;
+  generationProps: TimeGenerationProps;
+};
+
+export type Project = z.infer<typeof ProjectSchema>;
+
+const defaultProject: DefaultProject = {
+  name: "Project 1",
+  owner: null,
+  created_at: Date.now(),
+  receivers: [""],
+  generationProps: {
+    interval: "daily",
+    startDate: null,
+    sendHour: 8,
+  },
+  selfReceive: false,
+};
 
 export type Photo = {
   id: string;
@@ -17,19 +44,11 @@ export type TimeGenerationProps = {
   sendHour: number;
 };
 
-export type Project = {
-  id?: string; // id is optional because it is generated on backend submission
-  name: string;
-  owner: string | null;
-  created_at: number;
-  receivers: string[];
-  selfReceive: boolean;
-  generationProps: TimeGenerationProps;
-};
-
 type ProjectStore = {
   draftProject: Project;
   draftPhotos: Photo[];
+
+  resetDraftProject: () => void;
 
   setReceivers: (receivers: string[]) => void;
   setSelfReceive: (selfReceive: boolean) => void;
@@ -47,18 +66,7 @@ type ProjectStore = {
 export const useProjectStore = create(
   persist<ProjectStore>(
     (set) => ({
-      draftProject: {
-        name: "Project 1",
-        owner: null,
-        created_at: Date.now(),
-        receivers: [""],
-        generationProps: {
-          interval: "daily",
-          startDate: null,
-          sendHour: 8,
-        },
-        selfReceive: false,
-      },
+      draftProject: { ...defaultProject },
       draftPhotos: [],
       setDraftPhotos: (photos) => {
         set((state) => {
@@ -71,6 +79,14 @@ export const useProjectStore = create(
               photos,
               state.draftProject.generationProps,
             ),
+          };
+        });
+      },
+      resetDraftProject: () => {
+        set((state) => {
+          return {
+            draftProject: { ...defaultProject },
+            draftPhotos: [],
           };
         });
       },

@@ -1,12 +1,17 @@
-import {Outlet} from "@remix-run/react";
+import { Outlet, useOutletContext } from "@remix-run/react";
 import { Container } from "../components/Container.js";
+import { OutletContext } from "~/types.js";
 
-export default function Create () {
-	return (
-		<Container>
-			<div className="flex min-h-dvh flex-col gap-8">
-				<Outlet />
-			</div>
-		</Container>
-	)
+export default function Create() {
+  const { session, supabase } = useOutletContext<OutletContext>();
+
+  // apperently its not possible to pass context to nested routes
+
+  return (
+    <Container>
+      <div className="flex min-h-dvh flex-col gap-8">
+        <Outlet context={{ session, supabase }} />
+      </div>
+    </Container>
+  );
 }

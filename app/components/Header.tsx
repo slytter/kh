@@ -20,6 +20,7 @@ import { LoginModal } from "./auth/LoginModal";
 function DropdownMenuDemo() {
   const { session, supabase } = useOutletContext<OutletContext>();
 
+  const navigate = useNavigate();
   return (
     <Dropdown placement="bottom-end">
       <DropdownTrigger>
@@ -28,15 +29,18 @@ function DropdownMenuDemo() {
           as="button"
           className="transition-transform"
           color="secondary"
-          name="Jason Hughes"
+          name={session.user.user_metadata.name}
           size="sm"
-          src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
         />
       </DropdownTrigger>
       <DropdownMenu aria-label="Profile Actions" variant="flat">
-        <DropdownItem key="profile" className="h-14 gap-2">
+        <DropdownItem
+          key="profile"
+          className="h-14 gap-2"
+          onClick={() => navigate("/projects")}
+        >
           <p className="font-semibold">Signed in as</p>
-          <p className="  ">{session.user.email}</p>
+          <p className="">{session.user.email}</p>
         </DropdownItem>
         <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
         <DropdownItem
