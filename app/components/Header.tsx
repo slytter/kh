@@ -70,7 +70,7 @@ export const Header = () => {
   }, [session?.user]);
 
   return (
-    <Navbar shouldHideOnScroll>
+    <Navbar shouldHideOnScroll maxWidth="md">
       <NavbarBrand onClick={() => navigate("/")} className="cursor-pointer">
         <p className="text-2xl font-bold">kh</p>
       </NavbarBrand>

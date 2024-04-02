@@ -5,6 +5,7 @@ import {
   Form,
   useActionData,
   useNavigate,
+  useNavigation,
   useOutletContext,
 } from "@remix-run/react";
 import { createSupabaseServerClient } from "~/utils/supabase.server";
@@ -73,11 +74,15 @@ const PostDraftModal = (props: PostModalProps) => {
   const navigate = useNavigate();
 
   const actionData = useActionData<typeof action>();
+  const navigation = useNavigation();
+
+  const isSubmitting =
+    navigation.state === "submitting" || navigation.state === "loading";
 
   useEffect(() => {
     if (actionData?.type === "success") {
-      onOpenChange(false);
-      resetDraftProject();
+      // onOpenChange(false);
+      // resetDraftProject();
       navigate("/projects");
     }
     if (actionData?.error) {
@@ -130,9 +135,9 @@ const PostDraftModal = (props: PostModalProps) => {
                   </Button>
                   <Button
                     color="primary"
-                    onPress={onClose}
                     variant="shadow"
                     type="submit"
+                    isLoading={isSubmitting}
                   >
                     Jeg er klar 😍
                   </Button>
