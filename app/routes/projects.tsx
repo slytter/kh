@@ -17,6 +17,7 @@ import {
 import {
   useActionData,
   useLoaderData,
+  useNavigate,
   useNavigation,
   useSubmit,
 } from "@remix-run/react";
@@ -68,13 +69,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const projectData = Object.fromEntries(formData); // Convert formData to a regular object
 
-  const uid = (await supabase.auth.getUser())?.data?.user.id;
-
-  console.log({ projectData });
+  const uid = (await supabase.auth.getUser()).data.user?.id;
 
   // check if input name delete
   if (formData.get("type") === "delete") {
     try {
+      if (!uid) throw new Error("User not authenticated");
+
       const projectId = formData.get("projectId");
       await deleteProject(supabase, Number(projectId), uid);
       return json({
@@ -92,6 +93,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 const PageTopSection = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="mb-4 flex flex-row items-center justify-between space-x-4">
       <LilHeader>kærlige hilsner</LilHeader>
@@ -100,6 +103,7 @@ const PageTopSection = () => {
         color="primary"
         className="font-semibold"
         variant="shadow"
+        onPress={() => navigate("/create/upload")}
         startContent={<Plus />}
       >
         Ny hilsen
@@ -118,6 +122,8 @@ export default function DashBoard() {
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
 
+  const navigate = useNavigate();
+
   const openDeleteModal = (projectId: number) => {
     setProjectToDelete(projectId);
     onOpen();
@@ -133,11 +139,16 @@ export default function DashBoard() {
     submit({ type: "delete", projectId: projectToDelete }, { method: "post" });
   };
 
+  const navigateToEdit = (projectId: number) => {
+    navigate(`/edit/${projectId}`);
+  };
+
   useEffect(() => {
     if (actionData?.type === "success") {
       closeDeleteModal();
       // resetDraftProject();
     }
+
     if (actionData?.type === "error") {
       // todo better error handling
       alert(
@@ -157,6 +168,7 @@ export default function DashBoard() {
         <ul className="flex flex-shrink-0 flex-col gap-4">
           {projects?.map((project, i) => (
             <ProjectCard
+              onEdit={() => project.id && navigateToEdit(project.id)}
               onDelete={(id) => {
                 openDeleteModal(id);
               }}

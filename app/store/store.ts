@@ -45,11 +45,9 @@ export type TimeGenerationProps = {
 };
 
 type ProjectStore = {
-  draftProject: Project;
+  draftProject: DefaultProject;
   draftPhotos: Photo[];
-
   resetDraftProject: () => void;
-
   setReceivers: (receivers: string[]) => void;
   setSelfReceive: (selfReceive: boolean) => void;
   setDraftPhotos: (photos: Photo[]) => void;
@@ -85,6 +83,7 @@ export const useProjectStore = create(
       resetDraftProject: () => {
         set((state) => {
           return {
+            ...state,
             draftProject: { ...defaultProject },
             draftPhotos: [],
           };
@@ -175,7 +174,7 @@ export const useProjectStore = create(
     }),
     {
       name: "kh-project-storage", // name of the item in the storage (must be unique)
-      storage: createJSONStorage(() => sessionStorage), // (optional) by default, 'localStorage' is used
+      storage: createJSONStorage(() => localStorage), // (optional) by default, 'localStorage' is used
     },
   ),
 );

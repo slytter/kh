@@ -14,31 +14,11 @@ function DayImageViewer(props: DayProps) {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const dayRender = useDayRender(props.date, props.displayMonth, buttonRef);
 
-  // console.log(dayRender.selectedDays);
-
   const index = dayRender.selectedDays?.findIndex((date) =>
     dayjs(date).isSame(props.date, "day"),
   );
 
   const photo = useProjectStore((state) => state.draftPhotos[index]);
-
-  // console.log("photo", photo);
-
-  // const [shouldAnimate, setShouldAnimate] = useState(false);
-
-  // useEffect(() => {
-  //   if (index !== -1 && index < 30) {
-  //     setTimeout(
-  //       () => {
-  //         console.log("animate");
-  //         setShouldAnimate(true);
-  //       },
-  //       (index % 42) * 60,
-  //     );
-  //   } else {
-  //     setShouldAnimate(true);
-  //   }
-  // }, [index]);
 
   if (!dayRender.isButton) {
     return <div {...dayRender.divProps} />;

@@ -72,7 +72,6 @@ export default function CreatePlan() {
             photos={photos}
             generationProps={generationProps}
             setSelectedDay={(date) => {
-              alert(date);
               editGenerationProps({ startDate: new Date(date).getTime() });
             }}
           />

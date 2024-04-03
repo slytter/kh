@@ -16,16 +16,7 @@ import { ProjectDescription } from "./ProjectDescription";
 import dayjs from "dayjs";
 import { HorizontalPhotoOverview } from "./HorizontalPhotoOverview";
 import { useState } from "react";
-import {
-  ArrowRight,
-  CameraIcon,
-  LucideSettings,
-  Settings2,
-  SettingsIcon,
-  Trash,
-} from "lucide-react";
-import { TrashIcon } from "@radix-ui/react-icons";
-import { Form } from "@remix-run/react";
+import { ArrowRight, SettingsIcon } from "lucide-react";
 
 type Props = {
   project: Project;

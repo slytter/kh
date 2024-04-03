@@ -11,7 +11,7 @@ export const LoginModal = (props: Props) => {
 
   return (
     <Modal
-      backdrop={'blur'}
+      backdrop={"blur"}
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       isDismissable={true}
