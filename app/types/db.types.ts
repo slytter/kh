@@ -12,24 +12,30 @@ export type Database = {
       photos: {
         Row: {
           created_at: number
+          did_send: boolean | null
           id: string | null
           key: number
+          message: string | null
           project_id: number | null
           send_at: number | null
           url: string
         }
         Insert: {
           created_at: number
+          did_send?: boolean | null
           id?: string | null
           key?: number
+          message?: string | null
           project_id?: number | null
           send_at?: number | null
           url?: string
         }
         Update: {
           created_at?: number
+          did_send?: boolean | null
           id?: string | null
           key?: number
+          message?: string | null
           project_id?: number | null
           send_at?: number | null
           url?: string
@@ -72,7 +78,15 @@ export type Database = {
           receivers?: string[] | null
           self_receive?: boolean
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "public_projects_owner_fkey"
+            columns: ["owner"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

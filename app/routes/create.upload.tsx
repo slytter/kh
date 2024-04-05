@@ -26,6 +26,8 @@ const ImageUploader = () => {
       const asPhotos: Photo[] = successEntries.map((f) => ({
         id: f.uuid,
         url: f.cdnUrl,
+        did_send: false,
+        message: "",
         created_at: Date.now(),
       }));
 

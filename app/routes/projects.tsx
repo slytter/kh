@@ -52,11 +52,21 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
     const photos = await Promise.all(photoPromises);
 
-    return json({ projects, photos });
+    return json({
+      projects,
+      photos,
+      type: "success",
+      message: "Projects fetched successfully",
+    });
   } catch (error) {
     console.error(error);
     return json(
-      { projects: null, photos: [], error: "Failed to fetch projects" },
+      {
+        projects: null,
+        photos: [],
+        type: "error",
+        message: "Failed to fetch projects",
+      },
       { status: 500 },
     );
   }

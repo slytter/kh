@@ -22,13 +22,15 @@ type Props = {
   project: Project;
   photos: Photo[];
   onDelete: (projectId: number) => void;
-  onEdit: () => void;
+  onEdit: (projectId: number) => void;
 };
 
 export const ProjectCard = (props: Props) => {
   const { project, photos, onDelete, onEdit } = props;
 
   const [hover, setHover] = useState(false);
+
+  const projectId = project.id;
 
   return (
     <Card className="">
@@ -46,13 +48,17 @@ export const ProjectCard = (props: Props) => {
             </Button>
           </DropdownTrigger>
           <DropdownMenu>
-            <DropdownItem onClick={() => onEdit(props.project.id)}>
+            <DropdownItem
+              onClick={() => {
+                projectId && onEdit(projectId);
+              }}
+            >
               <button type="submit">Rediger projekt</button>
             </DropdownItem>
             <DropdownItem
               color={"danger"}
               className={"text-danger"}
-              onClick={() => onDelete(props.project.id)}
+              onClick={() => projectId && onDelete(projectId)}
             >
               <button type="submit">Slet projekt</button>
             </DropdownItem>
@@ -79,7 +85,7 @@ export const ProjectCard = (props: Props) => {
           size="sm"
           variant="solid"
           // color="secondary"
-          onClick={() => props.onEdit()}
+          onClick={() => props.project.id && props.onEdit(props.project.id)}
           endContent={<ArrowRight size={16} />}
         >
           Rediger

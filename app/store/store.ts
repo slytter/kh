@@ -34,6 +34,8 @@ export type Photo = {
   id: string;
   url: string;
   created_at: number;
+  did_send: boolean;
+  message: string;
   send_at?: number;
   project_id?: number;
 };

@@ -7,6 +7,8 @@ export const PhotoSchema = z.object({
   project_id: z.number().optional(),
   created_at: z.number(),
   send_at: z.number(),
+  did_send: z.boolean(),
+  message: z.string(),
 });
 
 export const PhotoArraySchema = z.array(PhotoSchema);
