@@ -1,3 +1,4 @@
+import { ProjectSchema } from "~/types/validations";
 import { createSupabaseServerClient } from "~/utils/supabase.server";
 
 export const getProjectById = async (
@@ -15,5 +16,9 @@ export const getProjectById = async (
     throw error;
   }
 
-  return project;
+  console.log(project);
+
+  const validProject = ProjectSchema.parse(project);
+
+  return validProject;
 };

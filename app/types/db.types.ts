@@ -12,30 +12,30 @@ export type Database = {
       photos: {
         Row: {
           created_at: number
-          did_send: boolean | null
-          id: string | null
+          did_send: boolean
+          id: string
           key: number
-          message: string | null
+          message: string
           project_id: number | null
           send_at: number | null
           url: string
         }
         Insert: {
           created_at: number
-          did_send?: boolean | null
-          id?: string | null
+          did_send?: boolean
+          id: string
           key?: number
-          message?: string | null
+          message?: string
           project_id?: number | null
           send_at?: number | null
           url?: string
         }
         Update: {
           created_at?: number
-          did_send?: boolean | null
-          id?: string | null
+          did_send?: boolean
+          id?: string
           key?: number
-          message?: string | null
+          message?: string
           project_id?: number | null
           send_at?: number | null
           url?: string

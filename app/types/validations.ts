@@ -26,6 +26,6 @@ export const ProjectSchema = z.object({
   owner: z.string(),
   created_at: z.number(),
   receivers: z.array(z.string()),
-  selfReceive: z.boolean(),
-  generationProps: TimeGenerationPropsSchema,
+  self_receive: z.boolean(),
+  generation_props: TimeGenerationPropsSchema,
 });

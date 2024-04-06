@@ -21,7 +21,7 @@ export const ProjectDescription = (props: Props) => {
       <br />
       Ét foto{" "}
       <b>
-        hver {project.generationProps?.interval === "weekly" ? "uge" : "dag"}
+        hver {project.generation_props?.interval === "weekly" ? "uge" : "dag"}
       </b>{" "}
       {firstPhoto && (
         <>

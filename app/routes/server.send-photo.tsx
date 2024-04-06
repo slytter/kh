@@ -1,36 +1,38 @@
 import { LoaderFunctionArgs, json } from "@remix-run/node";
 import dayjs from "dayjs";
 import { getProjectById } from "~/controllers/getProjectById";
-import { createSupabaseServerClient } from "~/utils/supabase.server";
+import { sendEmailToProject } from "~/controllers/server.sendEmail";
+import { createSuperbaseAdmin } from "~/utils/supabase.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   try {
     // Make request for every photo (in photos) there has not been sent (photo.did_sent = false) using supabase
     // Only photos with send_date < now should be sent (using dayjs)
-    const response = new Response();
-    const supabase = createSupabaseServerClient({ request, response });
+    const supabase = createSuperbaseAdmin();
     const now = dayjs().add(1, "minute");
 
-    let { data: photos, error } = await supabase.from("photos").select("*");
-    // .eq("did_send", false)
-    // .lte("send_at", now.valueOf());
+    let { data: photos, error } = await supabase
+      .from("photos")
+      .select("*")
+      .eq("did_send", false)
+      .lte("send_at", now.valueOf());
 
     // fetch the corrasponding project (using getProjectById) and send it to the emails in the photos
 
-    console.log({ photos, error });
+    // console.log({ photos, error });
     if (error) throw new Error(`Failed to fetch photos: ${error.message}`);
     if (!photos || photos.length === 0) {
       return json({ type: "success", message: "No photos to process" });
     }
 
     for (const photo of photos) {
-      const project =
-        photo.project_id && (await getProjectById(supabase, photo.project_id));
+      const projectId = photo.project_id;
+      const project = projectId && (await getProjectById(supabase, projectId));
       if (!project) continue; // Skip if project not found
 
       // Assuming sendEmailToProject is an async function you've defined
       // that takes project details and the photo to send emails.
-      // await sendEmailToProject(project, photo);
+      await sendEmailToProject(project, photo);
 
       // Mark the photo as sent by updating 'did_send' to true
       const { error: updateError } = await supabase

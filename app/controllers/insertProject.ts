@@ -15,7 +15,7 @@ export const insertProjectAndPhotos = async (
     .insert({
       name: project.name,
       owner: project.owner,
-      generation_props: project.generationProps,
+      generation_props: project.generation_props,
       receivers: project.receivers,
       self_receive: project.selfReceive,
     })

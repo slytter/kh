@@ -5,29 +5,29 @@ import { addSendDatesToPhotos } from "~/utils/planPhotoSchedule";
 import { ProjectSchema } from "~/types/validations";
 import { z } from "zod";
 
-export type DefaultProject = {
+export type DraftProject = {
   id?: number; // id is optional because it is generated on backend submission
   name: string;
   owner: string | null;
   created_at: number;
   receivers: string[];
-  selfReceive: boolean;
-  generationProps: TimeGenerationProps;
+  self_receive: boolean;
+  generation_props: TimeGenerationProps;
 };
 
 export type Project = z.infer<typeof ProjectSchema>;
 
-const defaultProject: DefaultProject = {
+const defaultProject: DraftProject = {
   name: "Project 1",
   owner: null,
   created_at: Date.now(),
   receivers: [""],
-  generationProps: {
+  generation_props: {
     interval: "daily",
     startDate: null,
     sendHour: 8,
   },
-  selfReceive: false,
+  self_receive: false,
 };
 
 export type Photo = {
@@ -47,7 +47,7 @@ export type TimeGenerationProps = {
 };
 
 type ProjectStore = {
-  draftProject: DefaultProject;
+  draftProject: DraftProject;
   draftPhotos: Photo[];
   resetDraftProject: () => void;
   setReceivers: (receivers: string[]) => void;
@@ -77,7 +77,7 @@ export const useProjectStore = create(
             },
             draftPhotos: addSendDatesToPhotos(
               photos,
-              state.draftProject.generationProps,
+              state.draftProject.generation_props,
             ),
           };
         });
@@ -156,7 +156,7 @@ export const useProjectStore = create(
       ) => {
         set((state) => {
           const newGenerationProps = {
-            ...state.draftProject.generationProps,
+            ...state.draftProject.generation_props,
             ...someGenerationProps,
           };
 
@@ -164,7 +164,7 @@ export const useProjectStore = create(
             ...state,
             draftProject: {
               ...state.draftProject,
-              generationProps: newGenerationProps,
+              generation_props: newGenerationProps,
             },
             draftPhotos: addSendDatesToPhotos(
               state.draftPhotos,

@@ -5,7 +5,6 @@ import { CalenderPlanner } from "../components/planning/CalenderPlanner.js";
 import { TimePicker } from "../components/planning/TimePicker.js";
 import { useProjectStore } from "../store/store.js";
 import dayjs from "dayjs";
-import { ActionFunctionArgs, redirect } from "@remix-run/node";
 import { HandHeart } from "lucide-react";
 
 const weekDays = [
@@ -19,13 +18,13 @@ const weekDays = [
 ];
 
 export default function CreatePlan() {
-  const generationProps = useProjectStore(
-    (store) => store.draftProject.generationProps,
+  const generation_props = useProjectStore(
+    (store) => store.draftProject.generation_props,
   );
   const photos = useProjectStore((store) => store.draftPhotos);
   const { editGenerationProps } = useProjectStore();
 
-  const canContinue = !!generationProps.startDate;
+  const canContinue = !!generation_props.startDate;
 
   if (photos.length === 0) {
     return (
@@ -50,7 +49,7 @@ export default function CreatePlan() {
             aria-label="Options"
             color="primary"
             size="lg"
-            selectedKey={generationProps.interval}
+            selectedKey={generation_props.interval}
             onSelectionChange={(key) => {
               if (
                 (key !== undefined &&
@@ -70,7 +69,7 @@ export default function CreatePlan() {
           <LilHeader>Start dato </LilHeader>
           <CalenderPlanner
             photos={photos}
-            generationProps={generationProps}
+            generation_props={generation_props}
             setSelectedDay={(date) => {
               editGenerationProps({ startDate: new Date(date).getTime() });
             }}
@@ -84,13 +83,13 @@ export default function CreatePlan() {
         <div>
           <LilHeader>
             Hver{" "}
-            {generationProps.interval === "daily"
+            {generation_props.interval === "daily"
               ? "dag"
-              : weekDays[dayjs(generationProps.startDate).day()] || "uge"}{" "}
+              : weekDays[dayjs(generation_props.startDate).day()] || "uge"}{" "}
             klokken
           </LilHeader>
           <TimePicker
-            selectedTimeKey={generationProps.sendHour}
+            selectedTimeKey={generation_props.sendHour}
             setSelectedTimeKey={(key) => {
               editGenerationProps({ sendHour: key });
             }}

@@ -42,17 +42,17 @@ function DayImageViewer(props: DayProps) {
 }
 
 type CalenderPlannerProps = {
-  generationProps: TimeGenerationProps;
+  generation_props: TimeGenerationProps;
   setSelectedDay: (date: Date) => void;
   photos: Photo[];
 };
 
 // todo If no photos, show a message to upload photos or go back to upload photos
 export const CalenderPlanner = (props: CalenderPlannerProps) => {
-  const { generationProps, setSelectedDay, photos } = props;
+  const { generation_props, setSelectedDay, photos } = props;
 
-  const { startDate } = generationProps;
-  const plan = planPhotoSchedule(generationProps, photos.length);
+  const { startDate } = generation_props;
+  const plan = planPhotoSchedule(generation_props, photos.length);
 
   const lastDate = plan[plan.length - 1];
 
