@@ -175,7 +175,7 @@ export const useProjectStore = create(
       },
     }),
     {
-      name: "kh-project-storage", // name of the item in the storage (must be unique)
+      name: "kh-project-storage-2", // name of the item in the storage (must be unique)
       storage: createJSONStorage(() => localStorage), // (optional) by default, 'localStorage' is used
     },
   ),
