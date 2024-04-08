@@ -6,6 +6,16 @@ import { createSuperbaseAdmin } from "~/utils/supabase.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   try {
+    // todo block this route from being accessed by unauthorized users
+
+    // if (
+    //   request.headers.get("Authorization") !==
+    //   `Bearer ${process.env.CRON_SECRET}`
+    // ) {
+    //   const res = new Response(null, { status: 401 });
+    //   return res;
+    // }
+
     // Make request for every photo (in photos) there has not been sent (photo.did_sent = false) using supabase
     // Only photos with send_date < now should be sent (using dayjs)
     const supabase = createSuperbaseAdmin();
