@@ -34,12 +34,12 @@ export async function sendEmail(emails: string[], content: string) {
   }
 }
 
-export function sendEmailToProject(project: Project, photo: Photo) {
+export async function sendEmailToProject(project: Project, photo: Photo) {
   const content = `
   <h1>Hej ${project.name}!</h1>
   <p>Her er dit daglige billede fra Niko:</p>
   <img src="${photo.url}" alt="Dit daglige billede fra Niko" />
   `;
 
-  sendEmail(project.receivers, content);
+  await sendEmail(project.receivers, content);
 }

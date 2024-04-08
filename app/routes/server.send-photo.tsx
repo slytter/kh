@@ -42,7 +42,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
       // Assuming sendEmailToProject is an async function you've defined
       // that takes project details and the photo to send emails.
-      await sendEmailToProject(project, photo);
+      try {
+        await sendEmailToProject(project, photo);
+      } catch (error) {
+        console.error(`Failed to send email: ${error}`);
+        // Handle error appropriately
+      }
 
       // Mark the photo as sent by updating 'did_send' to true
       const { error: updateError } = await supabase

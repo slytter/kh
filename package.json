@@ -25,6 +25,7 @@
     "@supabase/auth-helpers-remix": "^0.3.0",
     "@supabase/supabase-js": "^2.39.7",
     "@uploadcare/blocks": "0.35.2",
+    "@vercel/speed-insights": "^1.0.10",
     "axios": "^1.6.8",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",

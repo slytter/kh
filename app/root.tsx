@@ -12,6 +12,7 @@ import {
   useLoaderData,
   useRevalidator,
 } from "@remix-run/react";
+import { SpeedInsights } from "@vercel/speed-insights/remix";
 import { useEffect, useState } from "react";
 import { createBrowserClient } from "@supabase/auth-helpers-remix";
 import stylesheet from "./tailwind.css";
@@ -86,6 +87,7 @@ export default function App() {
         <NextUIProvider>
           <main>
             <Outlet context={{ supabase, session }} />
+            <SpeedInsights />
             <ScrollRestoration />
             <Scripts />
             <LiveReload />
