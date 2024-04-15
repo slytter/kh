@@ -24,7 +24,7 @@ export const ProjectSchema = z.object({
   id: z.number().optional(),
   name: z.string(),
   owner: z.string(),
-  created_at: z.number(),
+  created_at: z.string(),
   receivers: z.array(z.string()),
   self_receive: z.boolean(),
   generation_props: TimeGenerationPropsSchema,

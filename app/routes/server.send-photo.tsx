@@ -4,6 +4,7 @@ import { getProjectById } from "~/controllers/getProjectById";
 import { sendEmailToProject } from "~/controllers/server.sendEmail";
 import { createSuperbaseAdmin } from "~/utils/supabase.server";
 
+// this loader is requested from https://console.cron-job.org/jobs every 1 hour.
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   try {
     // todo block this route from being accessed by unauthorized users
