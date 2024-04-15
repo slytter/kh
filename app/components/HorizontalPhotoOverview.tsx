@@ -1,4 +1,4 @@
-import { ScrollShadow } from "@nextui-org/react";
+import { ScrollShadow, Skeleton } from "@nextui-org/react";
 import { Photo, useProjectStore } from "../store/store";
 import { LilHeader } from "./LilHeader";
 
@@ -30,12 +30,13 @@ export const HorizontalPhotoOverview = (props: Props) => {
             first:rounded-bl-xl first:rounded-tl-xl last:rounded-br-xl last:rounded-tr-xl
           `}
           >
+            {/* <Skeleton className="w-[70px] h-[100px] absolute"></Skeleton> */}
             <img
               src={`${photo.url}/-/preview/-/resize/x200/`}
               width="100"
               height={height || "100"}
               key={photo.id}
-              className={`h-[${height || "100"}px] w-[70px] object-cover transition-all duration-300 ${chosenIndex === index ? "border-4 border-black" : ""}`}
+              className={`h-[${height || "100"}px] w-[70px] bg-gray-100 object-cover transition-all duration-300 ${chosenIndex === index ? "border-4 border-black" : ""}`}
               style={{ height: height || "100px" }}
               alt={"file.fileInfo.originalFilename" || ""}
             />

@@ -64,6 +64,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     return json({ type: "success", message: "Photos processed successfully" });
   } catch (error) {
     console.error(error);
-    return json({ message: "An error occurred" }, { status: 500 });
+    return json({ message: "An error occurred", error }, { status: 500 });
   }
 };

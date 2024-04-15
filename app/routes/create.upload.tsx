@@ -106,6 +106,7 @@ export default function UploadImages() {
         route="/create/plan"
         startContent={<CalendarIcon />}
         title={"Planlæg afsendelse"}
+        disabledReason="Upload billeder først"
       />
     </>
   );

@@ -16,6 +16,7 @@ import { useNavigate, useOutletContext } from "@remix-run/react";
 import { OutletContext } from "../types";
 import { useEffect, useState } from "react";
 import { LoginModal } from "./auth/LoginModal";
+import { Container } from "./Container";
 
 function DropdownMenuDemo() {
   const { session, supabase } = useOutletContext<OutletContext>();
@@ -70,7 +71,7 @@ export const Header = () => {
   }, [session?.user]);
 
   return (
-    <Navbar shouldHideOnScroll maxWidth="md">
+    <Navbar shouldHideOnScroll>
       <NavbarBrand onClick={() => navigate("/")} className="cursor-pointer">
         <p className="text-2xl font-bold">kh</p>
       </NavbarBrand>
