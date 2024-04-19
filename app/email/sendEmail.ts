@@ -29,8 +29,6 @@ export async function sendEmail(emails: string[], content: string) {
         },
       },
     );
-
-    console.log(response.data);
   }
 }
 

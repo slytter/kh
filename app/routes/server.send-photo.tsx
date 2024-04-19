@@ -1,7 +1,9 @@
 import { LoaderFunctionArgs, json } from "@remix-run/node";
 import dayjs from "dayjs";
+import { truncateSync } from "fs";
+import _ from "lodash";
 import { getProjectById } from "~/controllers/getProjectById";
-import { sendEmailToProject } from "~/controllers/server.sendEmail";
+import { sendEmailToProject } from "~/email/sendEmail";
 import { createSuperbaseAdmin } from "~/utils/supabase.server";
 
 // this loader is requested from https://console.cron-job.org/jobs every 1 hour.
@@ -36,6 +38,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       return json({ type: "success", message: "No photos to process" });
     }
 
+    let potentialErrorMessages = [] as string[];
     for (const photo of photos) {
       const projectId = photo.project_id;
       const project = projectId && (await getProjectById(supabase, projectId));
@@ -47,19 +50,32 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         await sendEmailToProject(project, photo);
       } catch (error) {
         console.error(`Failed to send email: ${error}`);
-        // Handle error appropriately
+        potentialErrorMessages.push(`Failed to send email: ${error}`);
       }
 
       // Mark the photo as sent by updating 'did_send' to true
       const { error: updateError } = await supabase
         .from("photos")
-        .update({ did_send: false })
+        .update({ did_send: true })
         .match({ id: photo.id });
 
       if (updateError) {
         console.error(`Failed to update photo status: ${updateError.message}`);
-        // Handle error appropriately
+        potentialErrorMessages.push(
+          `Failed to update photo status: ${updateError.message}`,
+        );
       }
+    }
+
+    if (potentialErrorMessages.length > 0) {
+      return json(
+        {
+          type: "error",
+          message: `Some (${potentialErrorMessages.length}) photos failed to process`,
+          errors: _.uniq(potentialErrorMessages),
+        },
+        { status: 500 },
+      );
     }
 
     return json({ type: "success", message: "Photos processed successfully" });

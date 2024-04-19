@@ -17,7 +17,7 @@ export const insertProjectAndPhotos = async (
       owner: project.owner,
       generation_props: project.generation_props,
       receivers: project.receivers,
-      self_receive: project.selfReceive,
+      self_receive: project.self_receive,
     })
     .select("id")
     .single();
