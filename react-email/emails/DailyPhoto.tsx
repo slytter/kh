@@ -1,6 +1,7 @@
 import {
   Body,
   Button,
+  Column,
   Container,
   Font,
   Head,
@@ -9,11 +10,44 @@ import {
   Img,
   Link,
   Preview,
+  Row,
   Section,
   Text,
 } from "@react-email/components";
 import { Tailwind } from "@react-email/tailwind";
 import * as React from "react";
+
+const main: React.CSSProperties = {
+  backgroundColor: "#ffffff",
+};
+
+const link: React.CSSProperties = {
+  color: "#2754C5",
+  fontFamily:
+    "-apple-system, BlinkMacSystemFont,'inter' 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
+  fontSize: "12px",
+  textDecoration: "underline",
+};
+
+const text: React.CSSProperties = {
+  color: "#333",
+  fontFamily:
+    "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
+  fontSize: "16px",
+  textAlign: "center",
+  margin: "0",
+};
+
+const footer: React.CSSProperties = {
+  textAlign: "center",
+  color: "#898989",
+  fontFamily:
+    "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
+  fontSize: "12px",
+  lineHeight: "22px",
+  marginTop: "12px",
+  marginBottom: "24px",
+};
 
 interface PhotoEmailProps {
   imageSource: string;
@@ -52,7 +86,7 @@ export const PhotoEmail = ({
     <Preview>Dit daglige minde fra kh.dk</Preview>
     <Tailwind>
       <Body style={main}>
-        <Container style={container}>
+        <Container className="px-3 mx-auto">
           <Link href="https://kh-eta.vercel.app/" target="_blank">
             <Img
               src={`${baseUrl}/static/kh.png`}
@@ -87,11 +121,24 @@ export const PhotoEmail = ({
           </Section>
 
           <Link href="https://kh-eta.vercel.app/" target="_blank">
-            <Img
-              src={`${baseUrl}/static/kh.png`}
-              width="32"
-              alt="Notion's Logo"
-            />
+            <div className="flex flex-col items-center pt-2">
+              <Img
+                src={`${baseUrl}/static/kh.png`}
+                height="16"
+                alt="Notion's Logo"
+              />
+              <Text
+                style={{
+                  ...text,
+                  color: "black",
+                  opacity: 0.8,
+                  fontSize: "12px",
+                  fontWeight: 400,
+                }}
+              >
+                {senderName}
+              </Text>
+            </div>
           </Link>
           <Text style={footer}>
             <Link
@@ -120,40 +167,3 @@ PhotoEmail.PreviewProps = {
 } as PhotoEmailProps;
 
 export default PhotoEmail;
-
-const main: React.CSSProperties = {
-  backgroundColor: "#ffffff",
-};
-
-const container: React.CSSProperties = {
-  paddingLeft: "12px",
-  paddingRight: "12px",
-  margin: "0 auto",
-};
-
-const link: React.CSSProperties = {
-  color: "#2754C5",
-  fontFamily:
-    "-apple-system, BlinkMacSystemFont,'inter' 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
-  fontSize: "12px",
-  textDecoration: "underline",
-};
-
-const text: React.CSSProperties = {
-  color: "#333",
-  fontFamily:
-    "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
-  fontSize: "16px",
-  textAlign: "center",
-  margin: "0",
-};
-
-const footer: React.CSSProperties = {
-  color: "#898989",
-  fontFamily:
-    "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
-  fontSize: "12px",
-  lineHeight: "22px",
-  marginTop: "12px",
-  marginBottom: "24px",
-};
