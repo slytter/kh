@@ -13,6 +13,8 @@ export type DraftProject = {
   receivers: string[];
   self_receive: boolean;
   generation_props: TimeGenerationProps;
+  photos_count: number;
+  sent_photos_count: number;
 };
 
 export type Project = z.infer<typeof ProjectSchema>;
@@ -28,6 +30,8 @@ const defaultProject: DraftProject = {
     sendHour: 8,
   },
   self_receive: false,
+  photos_count: 0,
+  sent_photos_count: 0,
 };
 
 export type Photo = {

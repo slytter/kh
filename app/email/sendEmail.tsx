@@ -1,5 +1,8 @@
 import { Photo, Project } from "~/store/store";
 import axios from "axios";
+import PhotoEmail from "../../react-email/emails/DailyPhoto";
+import { renderEmail } from "./renderEmail";
+import { render } from "@react-email/render";
 
 const brevoKey = process.env.BREVO_API_KEY;
 
@@ -33,11 +36,15 @@ export async function sendEmail(emails: string[], content: string) {
 }
 
 export async function sendEmailToProject(project: Project, photo: Photo) {
-  const content = `
-  <h1>Hej ${project.name}!</h1>
-  <p>Her er dit daglige billede fra Niko:</p>
-  <img src="${photo.url}" alt="Dit daglige billede fra Niko" />
-  `;
+  const emailHtml = render(
+    <PhotoEmail
+      imageNumber={0}
+      imageSource={""}
+      numImages={23}
+      senderName={project.owner}
+      userMail=""
+    />,
+  );
 
-  await sendEmail(project.receivers, content);
+  await sendEmail(project.receivers, emailHtml);
 }

@@ -1,16 +1,13 @@
 import {
   Body,
   Button,
-  Column,
   Container,
   Font,
   Head,
-  Heading,
   Html,
   Img,
   Link,
   Preview,
-  Row,
   Section,
   Text,
 } from "@react-email/components";
@@ -142,7 +139,7 @@ export const PhotoEmail = ({
           </Link>
           <Text style={footer}>
             <Link
-              href="https://kh-eta.vercel.app/"
+              href={"https://kh-eta.vercel.app/?mail=" + userMail}
               target="_blank"
               style={{ ...link, color: "#898989" }}
             >

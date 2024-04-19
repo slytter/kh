@@ -44,10 +44,10 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       const project = projectId && (await getProjectById(supabase, projectId));
       if (!project) continue; // Skip if project not found
 
-      // Assuming sendEmailToProject is an async function you've defined
-      // that takes project details and the photo to send emails.
       try {
         await sendEmailToProject(project, photo);
+        // add +1 to the project's sent_photos_count
+        // todo
       } catch (error) {
         console.error(`Failed to send email: ${error}`);
         potentialErrorMessages.push(`Failed to send email: ${error}`);

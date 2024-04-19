@@ -57,8 +57,10 @@ export type Database = {
           id: number
           name: string | null
           owner: string | null
+          photos_count: number | null
           receivers: string[] | null
           self_receive: boolean
+          sent_photos_count: number | null
         }
         Insert: {
           created_at?: string
@@ -66,8 +68,10 @@ export type Database = {
           id?: number
           name?: string | null
           owner?: string | null
+          photos_count?: number | null
           receivers?: string[] | null
           self_receive?: boolean
+          sent_photos_count?: number | null
         }
         Update: {
           created_at?: string
@@ -75,8 +79,10 @@ export type Database = {
           id?: number
           name?: string | null
           owner?: string | null
+          photos_count?: number | null
           receivers?: string[] | null
           self_receive?: boolean
+          sent_photos_count?: number | null
         }
         Relationships: [
           {

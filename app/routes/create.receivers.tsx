@@ -61,7 +61,7 @@ export default function CreateReceivers() {
   const receivers = useProjectStore((state) => state.draftProject.receivers);
   const setReceivers = useProjectStore((state) => state.setReceivers);
   const selfReceive = useProjectStore(
-    (state) => state.draftProject.selfReceive,
+    (state) => state.draftProject.self_receive,
   );
   const setSelfReceive = useProjectStore((state) => state.setSelfReceive);
 
