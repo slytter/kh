@@ -18,6 +18,8 @@ export const insertProjectAndPhotos = async (
       generation_props: project.generation_props,
       receivers: project.receivers,
       self_receive: project.self_receive,
+      sent_photos_count: project.sent_photos_count,
+      photos_count: project.photos_count,
     })
     .select("id")
     .single();

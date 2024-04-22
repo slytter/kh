@@ -28,4 +28,6 @@ export const ProjectSchema = z.object({
   receivers: z.array(z.string()),
   self_receive: z.boolean(),
   generation_props: TimeGenerationPropsSchema,
+  photos_count: z.number(),
+  sent_photos_count: z.number(),
 });

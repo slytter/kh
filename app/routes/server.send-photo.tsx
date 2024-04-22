@@ -1,6 +1,5 @@
 import { LoaderFunctionArgs, json } from "@remix-run/node";
 import dayjs from "dayjs";
-import { truncateSync } from "fs";
 import _ from "lodash";
 import { getProjectById } from "~/controllers/getProjectById";
 import { sendEmailToProject } from "~/email/sendEmail";
@@ -45,8 +44,14 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       if (!project) continue; // Skip if project not found
 
       try {
-        await sendEmailToProject(project, photo);
+        await sendEmailToProject(supabase, project, photo.url);
         // add +1 to the project's sent_photos_count
+        supabase
+          .from("projects")
+          .update({
+            sent_photos_count: project.sent_photos_count + 1,
+          })
+          .match({ id: project.id });
         // todo
       } catch (error) {
         console.error(`Failed to send email: ${error}`);
@@ -54,17 +59,17 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       }
 
       // Mark the photo as sent by updating 'did_send' to true
-      const { error: updateError } = await supabase
-        .from("photos")
-        .update({ did_send: true })
-        .match({ id: photo.id });
+      // const { error: updateError } = await supabase
+      //   .from("photos")
+      //   .update({ did_send: true })
+      //   .match({ id: photo.id });
 
-      if (updateError) {
-        console.error(`Failed to update photo status: ${updateError.message}`);
-        potentialErrorMessages.push(
-          `Failed to update photo status: ${updateError.message}`,
-        );
-      }
+      // if (updateError) {
+      //   console.error(`Failed to update photo status: ${updateError.message}`);
+      //   potentialErrorMessages.push(
+      //     `Failed to update photo status: ${updateError.message}`,
+      //   );
+      // }
     }
 
     if (potentialErrorMessages.length > 0) {

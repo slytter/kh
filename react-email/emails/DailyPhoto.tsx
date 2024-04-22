@@ -97,7 +97,7 @@ export const PhotoEmail = ({
           >
             Billede {imageNumber} af {numImages}
           </Text>
-          <Text style={{ ...text, marginBottom: "8px" }}>"{message}"</Text>
+          {message && <Text style={{ ...text }}>"{message}"</Text>}
           <Img
             src={imageSource}
             alt="Dagens billede"
@@ -106,6 +106,7 @@ export const PhotoEmail = ({
             className="rounded-xl"
             style={{
               marginBottom: "16px",
+              marginTop: "8px",
             }}
           />
           <Section className="text-center mt-[16px] mb-[16px]">

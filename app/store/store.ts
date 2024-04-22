@@ -55,7 +55,7 @@ type ProjectStore = {
   draftPhotos: Photo[];
   resetDraftProject: () => void;
   setReceivers: (receivers: string[]) => void;
-  setSelfReceive: (selfReceive: boolean) => void;
+  setSelfReceive: (self_receive: boolean) => void;
   setDraftPhotos: (photos: Photo[]) => void;
   isUploading: boolean;
   setIsUploading: (isUploading: boolean) => void;
@@ -95,13 +95,13 @@ export const useProjectStore = create(
           };
         });
       },
-      setSelfReceive: (selfReceive) => {
+      setSelfReceive: (self_receive) => {
         set((state) => {
           return {
             ...state,
             draftProject: {
               ...state.draftProject,
-              selfReceive,
+              self_receive,
             },
           };
         });

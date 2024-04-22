@@ -88,7 +88,7 @@ export const ProjectCard = (props: Props) => {
           onClick={() => props.project.id && props.onEdit(props.project.id)}
           endContent={<ArrowRight size={16} />}
         >
-          Rediger
+          Oversigt
         </Button>
       </CardFooter>
     </Card>
