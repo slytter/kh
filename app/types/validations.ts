@@ -5,7 +5,8 @@ export const PhotoSchema = z.object({
   id: z.string(),
   url: z.string(),
   project_id: z.number().optional(),
-  created_at: z.number(),
+  // either string or number HOTFIX: todo
+  created_at: z.union([z.string(), z.number()]),
   send_at: z.number(),
   did_send: z.boolean(),
   message: z.string(),

@@ -9,7 +9,6 @@ export type DraftProject = {
   id?: number; // id is optional because it is generated on backend submission
   name: string;
   owner: string | null;
-  created_at: number;
   receivers: string[];
   self_receive: boolean;
   generation_props: TimeGenerationProps;
@@ -22,7 +21,6 @@ export type Project = z.infer<typeof ProjectSchema>;
 const defaultProject: DraftProject = {
   name: "Project 1",
   owner: null,
-  created_at: Date.now(),
   receivers: [""],
   generation_props: {
     interval: "daily",
