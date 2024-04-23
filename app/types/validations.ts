@@ -4,9 +4,8 @@ import { z } from "zod";
 export const PhotoSchema = z.object({
   id: z.string(),
   url: z.string(),
+  created_at: z.string(),
   project_id: z.number().optional(),
-  // either string or number HOTFIX: todo
-  created_at: z.union([z.string(), z.number()]),
   send_at: z.number(),
   did_send: z.boolean(),
   message: z.string(),
@@ -25,7 +24,8 @@ export const ProjectSchema = z.object({
   id: z.number().optional(),
   name: z.string(),
   owner: z.string(),
-  created_at: z.string(),
+  // either string or number HOTFIX:
+  created_at: z.union([z.string(), z.number()]),
   receivers: z.array(z.string()),
   self_receive: z.boolean(),
   generation_props: TimeGenerationPropsSchema,
