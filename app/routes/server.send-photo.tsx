@@ -75,17 +75,17 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       }
 
       // Mark the photo as sent by updating 'did_send' to true
-      const { error: updateError } = await supabase
-        .from("photos")
-        .update({ did_send: true })
-        .match({ id: photo.id });
+      // const { error: updateError } = await supabase
+      //   .from("photos")
+      //   .update({ did_send: true })
+      //   .match({ id: photo.id });
 
-      if (updateError) {
-        console.error(`Failed to update photo status: ${updateError.message}`);
-        potentialErrorMessages.push(
-          `Failed to update photo status: ${updateError.message}`,
-        );
-      }
+      // if (updateError) {
+      //   console.error(`Failed to update photo status: ${updateError.message}`);
+      //   potentialErrorMessages.push(
+      //     `Failed to update photo status: ${updateError.message}`,
+      //   );
+      // }
     }
 
     if (potentialErrorMessages.length > 0) {

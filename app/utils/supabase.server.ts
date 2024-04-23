@@ -8,10 +8,10 @@ const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
 export const createSupabaseServerClient = ({
   request,
-  response,
+  response = new Response(null, { status: 200 }),
 }: {
   request: Request;
-  response: Response;
+  response?: Response;
 }) =>
   createServerClient<Database>(supabaseUrl, supabasePublicKey, {
     request,

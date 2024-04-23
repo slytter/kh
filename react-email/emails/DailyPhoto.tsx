@@ -83,7 +83,7 @@ export const PhotoEmail = ({
     <Preview>Dit daglige minde fra kh.dk</Preview>
     <Tailwind>
       <Body style={main}>
-        <Container className="px-3 mx-auto">
+        <Container className="px-2 mx-auto">
           <Link href="https://kh-eta.vercel.app/" target="_blank">
             <Img
               src={`https://ucarecdn.com/934da8c8-6a2e-4ff6-a86b-2f4fa6fe6872/kh.png`}
@@ -150,6 +150,17 @@ export const PhotoEmail = ({
             </Link>{" "}
             – et minde hver dag, til en du holder af 💘
             <br />
+          </Text>
+          <Text style={footer}>
+            <Link
+              href={
+                "https://kh-eta.vercel.app/email/unsubscribe?email=" + userMail
+              }
+              target="_blank"
+              style={link}
+            >
+              Afmeld kh
+            </Link>
           </Text>
         </Container>
       </Body>

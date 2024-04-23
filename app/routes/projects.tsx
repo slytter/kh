@@ -7,7 +7,6 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
-import { PlusIcon } from "@radix-ui/react-icons";
 import {
   ActionFunctionArgs,
   LoaderFunctionArgs,
@@ -21,7 +20,7 @@ import {
   useNavigation,
   useSubmit,
 } from "@remix-run/react";
-import { NetworkIcon, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Container } from "~/components/Container";
 import { LilHeader } from "~/components/LilHeader";

@@ -1,4 +1,4 @@
-import { Photo, Project } from "~/store/store";
+import { Project } from "~/store/store";
 import axios from "axios";
 import PhotoEmail from "../../react-email/emails/DailyPhoto";
 import { render } from "@react-email/render";
