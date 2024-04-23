@@ -47,7 +47,7 @@ export async function sendEmail(emailsAndContent: EmailAndContent[]) {
     } catch (error) {
       console.log(error);
 
-      throw new Error("Failed to send email");
+      throw error;
     }
   }
 }
