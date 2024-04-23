@@ -1,9 +1,29 @@
 import { LoaderFunctionArgs, json } from "@remix-run/node";
+import { SupabaseClient } from "@supabase/supabase-js";
 import dayjs from "dayjs";
 import _ from "lodash";
 import { getProjectById } from "~/controllers/getProjectById";
 import { sendEmailToProject } from "~/email/sendEmail";
 import { createSuperbaseAdmin } from "~/utils/supabase.server";
+
+async function incrementPhotoCount(
+  supabase: SupabaseClient,
+  projectId: number,
+  previousCount: number,
+) {
+  // Increment and update the count
+  const updatedCount = previousCount + 1;
+  const { error: updateError } = await supabase
+    .from("projects")
+    .update({ sent_photos_count: updatedCount })
+    .match({ id: projectId });
+
+  if (updateError) {
+    throw new Error(
+      `Failed to update the project sent count: ${updateError.message}`,
+    );
+  }
+}
 
 // this loader is requested from https://console.cron-job.org/jobs every 1 hour.
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -30,8 +50,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       .lte("send_at", now.valueOf());
 
     // fetch the corrasponding project (using getProjectById) and send it to the emails in the photos
-
-    // console.log({ photos, error });
     if (error) throw new Error(`Failed to fetch photos: ${error.message}`);
     if (!photos || photos.length === 0) {
       return json({ type: "success", message: "No photos to process" });
@@ -46,30 +64,28 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       try {
         await sendEmailToProject(supabase, project, photo.url);
         // add +1 to the project's sent_photos_count
-        supabase
-          .from("projects")
-          .update({
-            sent_photos_count: project.sent_photos_count + 1,
-          })
-          .match({ id: project.id });
-        // todo
+        await incrementPhotoCount(
+          supabase,
+          project.id,
+          project.sent_photos_count,
+        );
       } catch (error) {
         console.error(`Failed to send email: ${error}`);
         potentialErrorMessages.push(`Failed to send email: ${error}`);
       }
 
       // Mark the photo as sent by updating 'did_send' to true
-      // const { error: updateError } = await supabase
-      //   .from("photos")
-      //   .update({ did_send: true })
-      //   .match({ id: photo.id });
+      const { error: updateError } = await supabase
+        .from("photos")
+        .update({ did_send: true })
+        .match({ id: photo.id });
 
-      // if (updateError) {
-      //   console.error(`Failed to update photo status: ${updateError.message}`);
-      //   potentialErrorMessages.push(
-      //     `Failed to update photo status: ${updateError.message}`,
-      //   );
-      // }
+      if (updateError) {
+        console.error(`Failed to update photo status: ${updateError.message}`);
+        potentialErrorMessages.push(
+          `Failed to update photo status: ${updateError.message}`,
+        );
+      }
     }
 
     if (potentialErrorMessages.length > 0) {

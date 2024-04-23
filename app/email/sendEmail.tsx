@@ -16,30 +16,39 @@ type EmailAndContent = {
 
 export async function sendEmail(emailsAndContent: EmailAndContent[]) {
   for (const emailAndContent of emailsAndContent) {
-    await axios.post(
-      "https://api.brevo.com/v3/smtp/email",
-      {
-        sender: {
-          name: "Kh",
-          email: "nikolaj@heymor.dk",
-        },
-        to: [
-          {
-            email: emailAndContent.email,
-            name: "Mama",
+    try {
+      const res = await axios.post(
+        "https://api.brevo.com/v3/smtp/email",
+        {
+          sender: {
+            name: emailAndContent.senderName,
+            email: emailAndContent.sender,
           },
-        ],
-        subject: "Dit daglige billede fra Niko 💘",
-        htmlContent: emailAndContent.content,
-      },
-      {
-        headers: {
-          Accept: "application/json",
-          "api-key": brevoKey,
-          "Content-Type": "application/json",
+          to: [
+            {
+              email: emailAndContent.email,
+              name: emailAndContent.email,
+            },
+          ],
+          subject: `Dit daglige billede fra ${emailAndContent.senderName}`,
+          htmlContent: emailAndContent.content,
         },
-      },
-    );
+        {
+          headers: {
+            Accept: "application/json",
+            "api-key": brevoKey,
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      console.log({ tex: res.statusText });
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+
+      throw new Error("Failed to send email");
+    }
   }
 }
 

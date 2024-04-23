@@ -86,10 +86,11 @@ export const PhotoEmail = ({
         <Container className="px-3 mx-auto">
           <Link href="https://kh-eta.vercel.app/" target="_blank">
             <Img
-              src={`${baseUrl}/static/kh.png`}
+              src={`https://ucarecdn.com/934da8c8-6a2e-4ff6-a86b-2f4fa6fe6872/kh.png`}
+              // src={`${baseUrl}/static/kh.png`}
               width="32"
               style={{ marginTop: 16 }}
-              alt="Notion's Logo"
+              alt="Kh's Logo"
             />
           </Link>
           <Text
@@ -121,9 +122,10 @@ export const PhotoEmail = ({
           <Link href="https://kh-eta.vercel.app/" target="_blank">
             <div className="flex flex-col items-center pt-2">
               <Img
-                src={`${baseUrl}/static/kh.png`}
+                // src={`${baseUrl}/static/kh.png`}
+                src={`https://ucarecdn.com/934da8c8-6a2e-4ff6-a86b-2f4fa6fe6872/kh.png`}
                 height="16"
-                alt="Notion's Logo"
+                alt="Kh's Logo"
               />
               <Text
                 style={{

@@ -1,3 +1,4 @@
+import assert from "assert";
 import { ProjectSchema } from "~/types/validations";
 import { createSupabaseServerClient } from "~/utils/supabase.server";
 
@@ -19,6 +20,8 @@ export const getProjectById = async (
   console.log(project);
 
   const validProject = ProjectSchema.parse(project);
+  // asset validProject.id is a number
+  assert(validProject.id === projectId);
 
   return validProject;
 };
