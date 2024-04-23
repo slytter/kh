@@ -110,14 +110,14 @@ export const PhotoEmail = ({
               marginTop: "8px",
             }}
           />
-          <Section className="text-center mt-[16px] mb-[16px]">
+          {/* <Section className="text-center mt-[16px] mb-[16px]">
             <Button
               className="bg-[#000000] rounded-xl text-white text-[14px] font-semibold no-underline text-center px-8 py-3"
               href={"https://kh-eta.vercel.app/projects"}
             >
               Se alle fotos
             </Button>
-          </Section>
+          </Section> */}
 
           <Link href="https://kh-eta.vercel.app/" target="_blank">
             <div className="flex flex-col items-center pt-2">

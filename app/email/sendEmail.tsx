@@ -41,12 +41,8 @@ export async function sendEmail(emailsAndContent: EmailAndContent[]) {
           },
         },
       );
-
-      console.log({ tex: res.statusText });
-      console.log(res.data);
     } catch (error) {
       console.log(error);
-
       throw error;
     }
   }

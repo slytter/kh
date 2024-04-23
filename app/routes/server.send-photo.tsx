@@ -1,43 +1,44 @@
 import { LoaderFunctionArgs, json } from "@remix-run/node";
-import { SupabaseClient } from "@supabase/supabase-js";
 import dayjs from "dayjs";
 import _ from "lodash";
 import { getProjectById } from "~/controllers/getProjectById";
 import { sendEmailToProject } from "~/email/sendEmail";
 import { createSuperbaseAdmin } from "~/utils/supabase.server";
+import { incrementProjectSentPhotoCount } from "../controllers/incrementProjectSentPhotoCount";
+import { Photo } from "~/store/store";
+import { SupabaseClient } from "@supabase/supabase-js";
+import pLimit from "p-limit";
 
-async function incrementPhotoCount(
-  supabase: SupabaseClient,
-  projectId: number,
-  previousCount: number,
-) {
-  // Increment and update the count
-  const updatedCount = previousCount + 1;
+const markPhotoSent = async (supabase: SupabaseClient, photoId: string) => {
+  // Mark the photo as sent by updating 'did_send' to true
   const { error: updateError } = await supabase
-    .from("projects")
-    .update({ sent_photos_count: updatedCount })
-    .match({ id: projectId });
+    .from("photos")
+    .update({ did_send: true })
+    .match({ id: photoId });
 
   if (updateError) {
-    throw new Error(
-      `Failed to update the project sent count: ${updateError.message}`,
-    );
+    console.error(`Failed to update photo status: ${updateError.message}`);
+    throw new Error(`Failed to update photo status: ${updateError.message}`);
   }
-}
+};
+
+const sendPhoto = async (supabase: SupabaseClient, photo: Photo) => {
+  const projectId = photo.project_id;
+  const project = projectId && (await getProjectById(supabase, projectId));
+  if (!project || !project.id) return; // Skip if project not found
+  await sendEmailToProject(supabase, project, photo.url);
+  // add +1 to the project's sent_photos_count
+  await incrementProjectSentPhotoCount(
+    supabase,
+    project.id,
+    project.sent_photos_count,
+  );
+};
 
 // this loader is requested from https://console.cron-job.org/jobs every 1 hour.
 export const loader = async ({ request }: LoaderFunctionArgs) => {
+  console.time("cron-job");
   try {
-    // todo block this route from being accessed by unauthorized users
-
-    // if (
-    //   request.headers.get("Authorization") !==
-    //   `Bearer ${process.env.CRON_SECRET}`
-    // ) {
-    //   const res = new Response(null, { status: 401 });
-    //   return res;
-    // }
-
     // Make request for every photo (in photos) there has not been sent (photo.did_sent = false) using supabase
     // Only photos with send_date < now should be sent (using dayjs)
     const supabase = createSuperbaseAdmin();
@@ -55,38 +56,28 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       return json({ type: "success", message: "No photos to process" });
     }
 
-    let potentialErrorMessages = [] as string[];
-    for (const photo of photos) {
-      const projectId = photo.project_id;
-      const project = projectId && (await getProjectById(supabase, projectId));
-      if (!project) continue; // Skip if project not found
+    const limit = pLimit(5); // Set concurrency limit to 5
+    let potentialErrorMessages: string[] = [];
 
-      try {
-        await sendEmailToProject(supabase, project, photo.url);
-        // add +1 to the project's sent_photos_count
-        await incrementPhotoCount(
-          supabase,
-          project.id,
-          project.sent_photos_count,
-        );
-      } catch (error) {
-        console.error(`Failed to send email: ${error}`);
-        potentialErrorMessages.push(`Failed to send email: ${error}`);
+    const sendTasks = photos.map((photo) => {
+      return limit(async () => {
+        try {
+          await sendPhoto(supabase, photo);
+          await markPhotoSent(supabase, photo.id);
+        } catch (error) {
+          console.error(`Failed to send photo: ${error}`);
+          potentialErrorMessages.push(`Failed to send photo: ${error}`);
+        }
+      });
+    });
+
+    // Wait for all the send tasks to complete
+    await Promise.all(sendTasks).then(() => {
+      console.log("All photos processed");
+      if (potentialErrorMessages.length > 0) {
+        console.log("Some errors occurred:", potentialErrorMessages);
       }
-
-      // Mark the photo as sent by updating 'did_send' to true
-      // const { error: updateError } = await supabase
-      //   .from("photos")
-      //   .update({ did_send: true })
-      //   .match({ id: photo.id });
-
-      // if (updateError) {
-      //   console.error(`Failed to update photo status: ${updateError.message}`);
-      //   potentialErrorMessages.push(
-      //     `Failed to update photo status: ${updateError.message}`,
-      //   );
-      // }
-    }
+    });
 
     if (potentialErrorMessages.length > 0) {
       return json(
@@ -103,5 +94,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   } catch (error) {
     console.error(error);
     return json({ message: "An error occurred", error }, { status: 500 });
+  } finally {
+    console.timeEnd("cron-job");
   }
 };
