@@ -19,7 +19,7 @@ export const insertProjectAndPhotos = async (
       receivers: project.receivers,
       self_receive: project.self_receive,
       sent_photos_count: project.sent_photos_count,
-      photos_count: project.photos_count,
+      photos_count: photos.length,
     })
     .select("id")
     .single();
