@@ -12,10 +12,19 @@ type EmailAndContent = {
   content: string;
   sender: string;
   senderName: string;
+  isReceipt: boolean;
+  interval: "weekly" | "daily";
 };
 
 export async function sendEmail(emailsAndContent: EmailAndContent[]) {
   for (const emailAndContent of emailsAndContent) {
+    const intervalText =
+      emailAndContent.interval === "daily" ? "daglige" : "ugentlige";
+
+    const subject = emailAndContent.isReceipt
+      ? `Bekræftelse for billede afsendelse`
+      : `Dit ${intervalText} billede fra ${emailAndContent.senderName}`;
+
     try {
       const res = await axios.post(
         "https://api.brevo.com/v3/smtp/email",
@@ -59,6 +68,8 @@ export async function sendEmailToProject(
     (receiver) => {
       const emailHtml = render(
         <PhotoEmail
+          isReceipt={false}
+          projectId={project.id || -1}
           imageNumber={project.sent_photos_count + 1}
           numImages={project.photos_count}
           imageSource={photoUrl}
@@ -72,9 +83,36 @@ export async function sendEmailToProject(
         sender: sender?.email || "kh@kh.dk",
         senderName: sender.user_metadata.name || "Kh",
         content: emailHtml,
+        interval: project.generation_props.interval,
+        isReceipt: false,
       } as EmailAndContent;
     },
   );
 
   await sendEmail(emailsAndContent);
+
+  if (project.self_receive) {
+    const emailHtml = render(
+      <PhotoEmail
+        isReceipt={true}
+        projectId={project.id || -1}
+        imageNumber={project.sent_photos_count + 1}
+        numImages={project.photos_count}
+        imageSource={photoUrl}
+        senderName={sender.user_metadata.name}
+        userMail={sender.email || ""}
+      />,
+    );
+
+    const selfEmail = {
+      email: sender.email,
+      sender: sender.email,
+      senderName: sender.user_metadata.name,
+      content: emailHtml,
+      interval: project.generation_props.interval,
+      isReceipt: false,
+    } as EmailAndContent;
+
+    await sendEmail([selfEmail]);
+  }
 }

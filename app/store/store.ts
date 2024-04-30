@@ -20,7 +20,7 @@ export type DraftProject = {
 export type Project = z.infer<typeof ProjectSchema>;
 
 const defaultProject: DraftProject = {
-  name: "Project 1",
+  name: "",
   owner: null,
   created_at: Date.now(),
   receivers: [""],

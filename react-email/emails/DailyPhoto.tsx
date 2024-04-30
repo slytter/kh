@@ -52,6 +52,9 @@ interface PhotoEmailProps {
   numImages: number;
   userMail: string;
   senderName: string;
+  isReceipt: boolean;
+  projectId: number;
+  originalRecipient?: string;
   message?: string;
 }
 
@@ -66,51 +69,66 @@ export const PhotoEmail = ({
   senderName,
   userMail,
   message,
-}: PhotoEmailProps) => (
-  <Html>
-    <Head>
-      <Font
-        fontFamily="inter"
-        fallbackFontFamily="Helvetica"
-        webFont={{
-          url: "https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap",
-          format: "woff2",
-        }}
-        fontWeight={400}
-        fontStyle="normal"
-      />
-    </Head>
-    <Preview>Dit daglige minde fra kh.dk</Preview>
-    <Tailwind>
-      <Body style={main}>
-        <Container className="px-2 mx-auto">
-          <Link href="https://kh-eta.vercel.app/" target="_blank">
+  isReceipt,
+  originalRecipient,
+}: PhotoEmailProps) => {
+  const unSubscribeUrl =
+    "https://kh-eta.vercel.app/email/unsubscribe?email=" + userMail;
+
+  return (
+    <Html>
+      <Head>
+        <Font
+          fontFamily="inter"
+          fallbackFontFamily="Helvetica"
+          webFont={{
+            url: "https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap",
+            format: "woff2",
+          }}
+          fontWeight={400}
+          fontStyle="normal"
+        />
+      </Head>
+      <Preview>Dit daglige minde fra kh.dk</Preview>
+      <Tailwind>
+        <Body style={main}>
+          <Container className="px-2 mx-auto">
+            <Link href="https://kh-eta.vercel.app/" target="_blank">
+              <Img
+                src={`https://ucarecdn.com/934da8c8-6a2e-4ff6-a86b-2f4fa6fe6872/kh.png`}
+                // src={`${baseUrl}/static/kh.png`}
+                width="32"
+                style={{ marginTop: 16 }}
+                alt="Kh's Logo"
+              />
+            </Link>
+            {isReceipt && originalRecipient && (
+              <Text
+                className="pt-6"
+                style={{ ...text, fontWeight: 600, margin: "0", fontSize: 20 }}
+              >
+                Dette billede er blevet sendt til {originalRecipient}
+              </Text>
+            )}
+            <Text
+              style={{ ...text, fontWeight: 600, margin: "0", marginTop: 16 }}
+            >
+              Billede {imageNumber} af {numImages}
+            </Text>
+
+            {message && <Text style={{ ...text }}>"{message}"</Text>}
             <Img
-              src={`https://ucarecdn.com/934da8c8-6a2e-4ff6-a86b-2f4fa6fe6872/kh.png`}
-              // src={`${baseUrl}/static/kh.png`}
-              width="32"
-              style={{ marginTop: 16 }}
-              alt="Kh's Logo"
+              src={imageSource}
+              alt="Dagens billede"
+              width="100%"
+              height="auto"
+              className="rounded-xl"
+              style={{
+                marginBottom: "16px",
+                marginTop: "8px",
+              }}
             />
-          </Link>
-          <Text
-            style={{ ...text, fontWeight: 600, margin: "0", marginTop: 16 }}
-          >
-            Billede {imageNumber} af {numImages}
-          </Text>
-          {message && <Text style={{ ...text }}>"{message}"</Text>}
-          <Img
-            src={imageSource}
-            alt="Dagens billede"
-            width="100%"
-            height="auto"
-            className="rounded-xl"
-            style={{
-              marginBottom: "16px",
-              marginTop: "8px",
-            }}
-          />
-          {/* <Section className="text-center mt-[16px] mb-[16px]">
+            {/* <Section className="text-center mt-[16px] mb-[16px]">
             <Button
               className="bg-[#000000] rounded-xl text-white text-[14px] font-semibold no-underline text-center px-8 py-3"
               href={"https://kh-eta.vercel.app/projects"}
@@ -119,59 +137,56 @@ export const PhotoEmail = ({
             </Button>
           </Section> */}
 
-          <Link href="https://kh-eta.vercel.app/" target="_blank">
-            <div className="flex flex-col items-center pt-2">
-              <Img
-                // src={`${baseUrl}/static/kh.png`}
-                src={`https://ucarecdn.com/934da8c8-6a2e-4ff6-a86b-2f4fa6fe6872/kh.png`}
-                height="16"
-                alt="Kh's Logo"
-              />
-              <Text
-                style={{
-                  ...text,
-                  color: "black",
-                  opacity: 0.8,
-                  fontSize: "12px",
-                  fontWeight: 400,
-                }}
-              >
-                {senderName}
-              </Text>
-            </div>
-          </Link>
-          <Text style={footer}>
-            <Link
-              href={"https://kh-eta.vercel.app/?mail=" + userMail}
-              target="_blank"
-              style={{ ...link, color: "#898989" }}
-            >
-              kh.dk
-            </Link>{" "}
-            – et minde hver dag, til en du holder af 💘
-            <br />
-          </Text>
-          <Text style={footer}>
-            <Link
-              href={
-                "https://kh-eta.vercel.app/email/unsubscribe?email=" + userMail
-              }
-              target="_blank"
-              style={link}
-            >
-              Afmeld kh
+            <Link href="https://kh-eta.vercel.app/" target="_blank">
+              <div className="flex flex-col items-center pt-2">
+                <Img
+                  // src={`${baseUrl}/static/kh.png`}
+                  src={`https://ucarecdn.com/934da8c8-6a2e-4ff6-a86b-2f4fa6fe6872/kh.png`}
+                  height="16"
+                  alt="Kh's Logo"
+                />
+                <Text
+                  style={{
+                    ...text,
+                    color: "black",
+                    opacity: 0.8,
+                    fontSize: "12px",
+                    fontWeight: 400,
+                  }}
+                >
+                  {senderName}
+                </Text>
+              </div>
             </Link>
-          </Text>
-        </Container>
-      </Body>
-    </Tailwind>
-  </Html>
-);
+            <Text style={footer}>
+              <Link
+                href={"https://kh-eta.vercel.app/?email=" + userMail}
+                target="_blank"
+                style={{ ...link, color: "#898989" }}
+              >
+                kh.dk
+              </Link>{" "}
+              – et minde hver dag, til en du holder af 💘
+              <br />
+            </Text>
+            <Text style={footer}>
+              <Link href={unSubscribeUrl} target="_blank" style={link}>
+                Afmeld kh
+              </Link>
+            </Text>
+          </Container>
+        </Body>
+      </Tailwind>
+    </Html>
+  );
+};
 
 PhotoEmail.PreviewProps = {
   imageSource: "https://images.unsplash.com/photo-1713288971538-80084dbfc161",
   imageNumber: 1,
   numImages: 52,
+  isReceipt: true,
+  originalRecipient: "dinmor@gmail.com",
   userMail: "ns@wayer.io",
   senderName: "Nikolaj Schlüter",
   message: "Dengang vi var i Italien",
