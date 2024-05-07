@@ -94,7 +94,8 @@ export async function sendEmailToProject(
   if (project.self_receive) {
     const emailHtml = render(
       <PhotoEmail
-        isReceipt={true}
+        isReceipt
+        originalRecipient={project.receivers.map((r) => r).join(", ")}
         projectId={project.id || -1}
         imageNumber={project.sent_photos_count + 1}
         numImages={project.photos_count}
