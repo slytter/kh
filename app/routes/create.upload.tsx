@@ -54,7 +54,7 @@ const ImageUploader = () => {
       <div className="flex w-full flex-grow flex-row">
         <lr-config
           ctx-name="my-uploader"
-          pubkey="3b9243eaa4a4ae623c19"
+          pubkey="fd19e269dbf2d1933345"
           maxLocalFileSizeBytes={10000000}
           imgOnly={true}
           sourceList="local, dropbox, gdrive, gphotos"

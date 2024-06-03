@@ -74,7 +74,7 @@ export default function CreateOverview() {
             onClick={randomizePhotos}
             variant="flat"
             radius="sm"
-            startContent={<ShuffleIcon />}
+            startContent={<ShuffleIcon width={18} />}
             className="flex"
           >
             Bland fotos
