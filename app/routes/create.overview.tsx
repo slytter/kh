@@ -9,6 +9,8 @@ import { Send } from "lucide-react";
 import { PhotoArraySchema, ProjectSchema } from "~/types/validations";
 import { insertProjectAndPhotos } from "~/controllers/insertProject";
 import { SubmitDraftModal } from "../components/SubmitDraftModal";
+import { Button } from "@nextui-org/react";
+import { ShuffleIcon } from "@radix-ui/react-icons";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const response = new Response();
@@ -44,6 +46,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export default function CreateOverview() {
   const photos = useProjectStore((state) => state.draftPhotos);
   const setDraftPhotos = useProjectStore((state) => state.setDraftPhotos);
+  const randomizePhotos = useProjectStore(
+    (state) => state.randomizeDraftPhotos,
+  );
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -56,10 +61,25 @@ export default function CreateOverview() {
   return (
     <>
       <div className={"flex flex-1 flex-shrink-0 flex-col"}>
-        <LilHeader>Overblik</LilHeader>
-        <p className={"mb-2 px-2 text-sm text-default-500"}>
-          Her kan du se og sortere dine fotos
-        </p>
+        <div className="flex flex-row justify-between">
+          <div>
+            <LilHeader>Overblik</LilHeader>
+            <p className={"mb-2 px-2 text-sm text-default-500"}>
+              Her kan du se og sortere dine fotos
+            </p>
+          </div>
+          <Button
+            color="default"
+            size="sm"
+            onClick={randomizePhotos}
+            variant="flat"
+            radius="sm"
+            startContent={<ShuffleIcon />}
+            className="flex"
+          >
+            Bland fotos
+          </Button>
+        </div>
         <DragAndDropPhotos photos={photos} setPhotos={setDraftPhotos} />
         <SubmitDraftModal isOpen={isModalOpen} onOpenChange={setIsModalOpen} />
       </div>

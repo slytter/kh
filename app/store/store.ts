@@ -53,6 +53,7 @@ export type TimeGenerationProps = {
 type ProjectStore = {
   draftProject: DraftProject;
   draftPhotos: Photo[];
+  randomizeDraftPhotos: () => void;
   resetDraftProject: () => void;
   setReceivers: (receivers: string[]) => void;
   setSelfReceive: (self_receive: boolean) => void;
@@ -83,6 +84,14 @@ export const useProjectStore = create(
               photos,
               state.draftProject.generation_props,
             ),
+          };
+        });
+      },
+      randomizeDraftPhotos: () => {
+        set((state) => {
+          return {
+            ...state,
+            draftPhotos: _.shuffle(state.draftPhotos),
           };
         });
       },
