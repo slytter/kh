@@ -3,6 +3,7 @@ import { Container } from "../components/Container";
 import Notification from "../assets/email.noti.svg";
 import { NavBotton } from "../components/Button";
 import { ImagePlus } from "lucide-react";
+import { Background } from "../components/shared/Background";
 
 export const meta: MetaFunction = () => {
   return [
@@ -14,13 +15,16 @@ export const meta: MetaFunction = () => {
 export default function Index() {
   return (
     <div className="">
-      <div className="absolute top-0 -z-10 h-full w-full bg-white">
-        <div className="absolute bottom-auto left-auto right-0 top-0 h-[500px] w-[500px] -translate-x-[30%] translate-y-[20%] rounded-full bg-[rgba(173,109,244,0.5)] opacity-50 blur-[80px]"></div>
-      </div>{" "}
-      <Container>
+      <Background />
+      <Container transparentHeader>
         <div className="flex h-full flex-1 flex-col content-center justify-between pb-8">
           <div />
-          <h1 className="text-center text-4xl font-bold md:text-7xl">
+          <h1
+            className="text-center text-4xl font-bold md:text-7xl outline-1"
+            style={{
+              textShadow: "0px 0px 60px rgba(255, 255, 255, 1)",
+            }}
+          >
             Ét minde hver dag <br /> til én du holder af
           </h1>
           <div className="flex flex-col gap-6">

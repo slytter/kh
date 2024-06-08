@@ -1,4 +1,3 @@
-import { Button, Tooltip } from "@nextui-org/react";
 import { NavBotton } from "./Button";
 
 type BottomNavProps = {

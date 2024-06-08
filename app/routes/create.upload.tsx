@@ -7,6 +7,7 @@ import { BottomNav } from "../components/BottomNav";
 import { LilHeader } from "../components/LilHeader.js";
 import { PhotoSlider } from "../components/PhotoSlider.js";
 import { CalendarIcon } from "lucide-react";
+import Dropzone, { useDropzone } from "react-dropzone";
 
 const ImageUploader = () => {
   const ctxProviderRef = useRef<InstanceType<LR.UploadCtxProvider>>(null);
@@ -74,6 +75,27 @@ const ImageUploader = () => {
   );
 };
 
+const UploadZone = () => {
+  return (
+    <Dropzone
+      onDrop={(acceptedFiles) => console.log(acceptedFiles)}
+      onDragOver={() => {}}
+    >
+      {({ getRootProps, getInputProps }) => (
+        <div className="">
+          <div
+            {...getRootProps()}
+            className=" min-h-40 rounded-xl border-1 content-center justify-center flex flex-1"
+          >
+            <input {...getInputProps()} />
+            <p>Upload</p>
+          </div>
+        </div>
+      )}
+    </Dropzone>
+  );
+};
+
 export default function UploadImages() {
   const isUploading = useProjectStore((store) => store.isUploading);
   const photos = useProjectStore((store) => store.draftPhotos);
@@ -100,7 +122,8 @@ export default function UploadImages() {
           isOpen={isPhotoSliderOpen}
         />
       </div>
-      <ImageUploader />
+      <UploadZone />
+      {/* <ImageUploader /> */}
       <BottomNav
         disabled={isUploading || numPhotos === 0}
         route="/create/plan"

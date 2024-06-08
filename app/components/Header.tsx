@@ -56,7 +56,9 @@ function DropdownMenuDemo() {
   );
 }
 
-export const Header = () => {
+export const Header = (props: { transparrent?: boolean }) => {
+  const { transparrent } = props;
+
   const { session } = useOutletContext<OutletContext>();
   const isAuthed = !!session?.user;
 
@@ -71,7 +73,11 @@ export const Header = () => {
   }, [session?.user]);
 
   return (
-    <Navbar shouldHideOnScroll>
+    <Navbar
+      shouldHideOnScroll
+      isBlurred={!transparrent}
+      className={transparrent ? "bg-transparent" : ""}
+    >
       <NavbarBrand onClick={() => navigate("/")} className="cursor-pointer">
         <p className="text-2xl font-bold">kh</p>
       </NavbarBrand>

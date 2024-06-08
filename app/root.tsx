@@ -77,7 +77,26 @@ export default function App() {
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1"
         />
+        <script src="https://cdn.jsdelivr.net/npm/grained@0.0.2/grained.min.js"></script>
+        {/*
+        <script
+          src="https://cdn.jsdelivr.net/npm/grained@0.0.2/grained.min.js"
+          onError={() => console.log("error loading")}
+          onLoad={() => {
+            var options = {
+              animate: true,
+              patternWidth: 100,
+              patternHeight: 100,
+              grainOpacity: 0.5,
+              grainDensity: 1,
+              grainWidth: 1,
+              grainHeight: 1,
+            };
+            console.log("grained", options);
 
+            grained("#grained", options);
+          }}
+        /> */}
         <Meta />
         <Links />
       </head>
@@ -90,6 +109,7 @@ export default function App() {
             <SpeedInsights />
             <ScrollRestoration />
             <Scripts />
+
             <LiveReload />
           </main>
         </NextUIProvider>

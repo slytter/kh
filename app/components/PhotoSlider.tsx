@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { memo } from "react";
 import { useProjectStore } from "../store/store";
-import Flicking, { MoveEvent } from "@egjs/react-flicking";
+import Flicking from "@egjs/react-flicking";
 import "@egjs/react-flicking/dist/flicking.css";
 import { Modal, ModalBody, ModalContent } from "@nextui-org/react";
 import { HorizontalPhotoOverview } from "./HorizontalPhotoOverview";
 
-const handleDragStart = (e) => e.preventDefault();
+const handleDragStart = (e: React.DragEvent<HTMLImageElement>) =>
+  e.preventDefault();
 
 type Props = {
   initialIndex: number;
