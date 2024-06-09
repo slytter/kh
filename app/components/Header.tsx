@@ -79,7 +79,7 @@ export const Header = (props: { transparrent?: boolean }) => {
       className={transparrent ? "bg-transparent" : ""}
     >
       <NavbarBrand onClick={() => navigate("/")} className="cursor-pointer">
-        <p className="text-2xl font-bold neulis">kh</p>
+        <p className="text-2xl neulis">kh.</p>
       </NavbarBrand>
       <NavbarContent justify="end">
         <NavbarItem>
