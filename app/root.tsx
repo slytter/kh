@@ -77,6 +77,7 @@ export default function App() {
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1"
         />
+
         <script src="https://cdn.jsdelivr.net/npm/grained@0.0.2/grained.min.js"></script>
         {/*
         <script

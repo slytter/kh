@@ -33,3 +33,12 @@
     background-color: rgba(0, 0, 0, 0);
     outline: 2px solid rgba(0, 0, 0, 1);
 }
+
+@font-face {
+    font-family: "neulis";
+    src: url("/Neulis.otf");
+}
+
+.neulis {
+    font-family: "neulis";
+}

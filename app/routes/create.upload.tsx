@@ -122,8 +122,8 @@ export default function UploadImages() {
           isOpen={isPhotoSliderOpen}
         />
       </div>
-      <UploadZone />
-      {/* <ImageUploader /> */}
+      {/* <UploadZone /> */}
+      <ImageUploader />
       <BottomNav
         disabled={isUploading || numPhotos === 0}
         route="/create/plan"
