@@ -25,7 +25,7 @@ export default function Index() {
       <Container transparentHeader>
         <section className="flex h-full flex-1 flex-col content-center justify-between pb-8 items-center">
           <div />
-          <div className="flex flex-col items-center space-y-4">
+          <div className="flex flex-col items-center space-y-4 dark:text-white">
             {/* <RiveAnimation /> */}
             <h1
               className="text-center text-4xl font-bold sm:text-4xl md:text-7xl "
@@ -39,7 +39,7 @@ export default function Index() {
               }}
             >
               {/* Ét minde hver dag <br /> til én du holder af */}
-              Giv et foto hver dag <br /> til én du holder af
+              Giv et foto hver dag <br /> til en du holder af
             </h1>
             {/* </div>
           <div className="flex flex-col gap-6 items-center"> */}
@@ -51,9 +51,11 @@ export default function Index() {
             <p className="text-lg text-balance text-center md:text-2xl max-w-82 mix-blend-luminosity">
               {/* Med <span className="neulis">kh</span>, kan du planlægge daglige
               eller ugentlige billedeoverraskelser til dine nærmeste. */}
-              Gaven der bliver ved med at give–
-              <span className="neulis">kh</span> afsender automatisk dine fotos
-              afsted til en email, hver dag eller uge
+              Gaven der bliver ved med at give –
+              <span className="neulis"> kh</span> afsender automatisk gode
+              billeder afsted til en email hver dag.
+              {/* som en
+              julekalender uanset årstid. */}
             </p>
           </div>
           {/* <NavBotton
