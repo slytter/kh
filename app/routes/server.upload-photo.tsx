@@ -8,12 +8,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         return undefined;
       }
 
-      console.log(filename, contentType);
-
       const accessKey = '177a49dd-3e51-4a53-9fbf3900363a-8b7c-4562';
       const storageZoneName = 'kh-assets';
       const uniqueFilename = `${Date.now()}-${filename}`; // Ensure unique filenames
-      const postUrl = `https://storage.bunnycdn.com/${storageZoneName}/${uniqueFilename}`;
+      // Add a dev path for development environment
+      const filePath = process.env.NODE_ENV === 'development' ? `dev/${uniqueFilename}` : uniqueFilename;
+      const postUrl = `https://storage.bunnycdn.com/${storageZoneName}/${filePath}`;
 
       try {
         const chunks = [];
@@ -31,8 +31,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           },
         });
 
-        const cdnUrl = `https://kh-assets.b-cdn.net/${uniqueFilename}`;
-        
+        const cdnUrl = `https://kh-assets.b-cdn.net/${filePath}`;
+
         if (!response.ok) {
           throw new Error(`Upload failed: ${response.statusText}`);
         }

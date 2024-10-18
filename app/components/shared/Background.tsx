@@ -3,26 +3,22 @@ import { MeshGradientRenderer } from "@johnn-e/react-mesh-gradient";
 import { useEffect, useState } from "react";
 
 export const Background = () => {
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {
       setIsPlaying(true);
-    }, 4000);
+    }, 400);
   }, []);
 
-  const bgColor = "#000000";
+  const bgColor = "#ffffff";
 
   return (
-    <div className={`absolute top-0 -z-10 h-full w-full`}>
+    <div className={`absolute top-0 -z-10 h-full w-full transition-opacity duration-1000`} style={{ opacity: isPlaying ? 1 : 0, transitionDuration: "1500ms" }}>
       <MeshGradientRenderer
-        // on={() => {
-        //   setIsPlaying(true);
-        //   alert("Playing");
-        // }}
         colors={[bgColor, "#ff00c9", bgColor, "#7022ff", bgColor]}
-        speed={0.006}
-        className={`absolute h-full w-full z-0 transition-all duration-1000 opacity-${isPlaying ? "1" : "0"}`}
+        speed={0.008}
+        className={`absolute h-full w-full z-0 `}
         wireframe={false}
         backgroundColor={"#FFFFFF"}
       />

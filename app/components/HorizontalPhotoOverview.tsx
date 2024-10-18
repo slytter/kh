@@ -1,7 +1,7 @@
-import { ScrollShadow, Skeleton } from "@nextui-org/react";
+import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, ScrollShadow, Skeleton } from "@nextui-org/react";
 import { Photo, useProjectStore } from "../store/store";
-import { LilHeader } from "./LilHeader";
-
+import { useEffect, useRef } from "react";
+import {Image} from '../components/shared/Image'
 type Props = {
   photos: Photo[];
   numLoadingPhotos?: number;
@@ -15,26 +15,39 @@ export const HorizontalPhotoOverview = (props: Props) => {
   // const photos = useProjectStore((store) => store.draft.photos);
   const removePhoto = useProjectStore((store) => store.removePhoto);
 
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo({
+        left: 0,
+        behavior: 'smooth'
+      });
+    }
+  }, [chosenIndex, height]);
+
   return (
     <div>
-      <ScrollShadow
+      <ScrollShadow ref={scrollRef}
         hideScrollBar
         offset={10}
         orientation="horizontal"
         className="flex space-x-1 overflow-x-auto"
       >
         {photos.map((photo, index) => (
-          <div
+          <button
             key={photo.id}
-            onClick={() => onPhotoPress?.(photo, index)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onPhotoPress?.(photo, index)
+            }}
             className={`relative flex-shrink-0 cursor-pointer overflow-hidden
             first:rounded-bl-xl first:rounded-tl-xl last:rounded-br-xl last:rounded-tr-xl
           `}
           >
-            <Skeleton className="w-[70px] h-[100px] absolute z-[-1]"></Skeleton>
-            <img
-              //
-              src={`${photo.url}?w=200&h=200`}
+            <Image 
+              size="xs"
+              src={`${photo.url}`}
               width="100"
               height={height || "100"}
               key={photo.id}
@@ -42,23 +55,39 @@ export const HorizontalPhotoOverview = (props: Props) => {
               style={{ height: height || "100px" }}
               alt={"file.fileInfo.originalFilename" || ""}
             />
-            <div className="absolute right-2 top-2">
-              <button
-                onClick={() => removePhoto(photo.id)}
-                className="h-8 w-8 rounded-lg bg-white p-1"
-              >
-                🗑
-              </button>
+            <div className="absolute right-1 top-1">
+              <Dropdown placement="bottom-end">
+                <DropdownTrigger>
+                  <button
+                    className="h-6 w-6 rounded-lg bg-white p-0 opacity-80 hover:opacity-100"
+                    type="button"
+                  >
+                    ···
+                  </button>
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Profile Actions" variant="flat">
+                <DropdownItem
+                  key="profile"
+                  className="h-8 gap-2"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removePhoto(photo.id);
+                  }}
+                >
+                  <p className="font-semibold">Slet billede</p>
+                </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
             </div>
+          </button>
+        ))}
+      </ScrollShadow>
+      {numLoadingPhotos &&
+        Array.from({ length: 4 }).map((_, index) => (
+          <div key={index} className="flex-shrink-0 w-70 h-100 bg-gray-100">
+            <Skeleton className="w-full h-full" />
           </div>
         ))}
-        {numLoadingPhotos &&
-          Array.from({ length: 4 }).map((_, index) => (
-            <div key={index} className="flex-shrink-0 w-70 h-100 bg-gray-100">
-              <Skeleton className="w-full h-full" />
-            </div>
-          ))}
-      </ScrollShadow>
     </div>
   );
 };

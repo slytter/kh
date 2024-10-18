@@ -4,6 +4,8 @@ import { LilHeader } from "~/components/LilHeader";
 import { PhotoSlider } from "~/components/PhotoSlider";
 import { Photo, useProjectStore } from "~/store/store";
 import { DragDropUpload } from "~/components/DragDropUpload";
+import { Loader, LoaderCircle } from "lucide-react";
+import { Spinner } from "@nextui-org/react";
 
 
 const photoFactory = (url: string) => ({
@@ -15,11 +17,9 @@ const photoFactory = (url: string) => ({
 } as Photo);
 
 export default function Upload() {
-  const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useState(null as null | number );
   const [error, setError] = useState<string | null>(null);
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
   const photos = useProjectStore((store) => store.draftPhotos);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
@@ -28,31 +28,30 @@ export default function Upload() {
   const addPhotos = useProjectStore((store) => store.addDraftPhotos);
   const removePhoto = useProjectStore((store) => store.removePhoto);
   const setIsUploading = useProjectStore((store) => store.setIsUploading);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
 
-  const handleUpload = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleUpload = async (files: File[]) => {
     setIsUploading(true);
-    event.preventDefault();
     setError(null);
     setUploading(true);
     setProgress(0);
-    setUploadedImageUrls([]);
 
-    if (selectedFiles.length === 0) {
+    if (files.length === 0) {
       setError("Please select at least one file to upload.");
       setUploading(false);
       return;
     }
 
     const concurrentUploads = 4;
-    const totalFiles = selectedFiles.length;
+    const totalFiles = files.length;
     let uploadedFiles = 0;
     const allImageUrls: string[] = [];
 
     try {
       for (let i = 0; i < totalFiles; i += concurrentUploads) {
         console.log(`Processing batch ${Math.floor(i / concurrentUploads) + 1}`);
-        const uploadBatch = selectedFiles.slice(i, i + concurrentUploads);
+        const uploadBatch = files.slice(i, i + concurrentUploads);
         const formData = new FormData();
         uploadBatch.forEach(file => formData.append('img', file));
 
@@ -76,7 +75,6 @@ export default function Upload() {
         const newProgress = Math.round((uploadedFiles / totalFiles) * 100);
         console.log(`Progress: ${newProgress}%`);
         setProgress(newProgress);
-        setUploadedImageUrls(allImageUrls);
 
         const photos = allImageUrls.map(photoFactory);
         addPhotos(photos);
@@ -87,27 +85,33 @@ export default function Upload() {
       setError(err.message || "An error occurred during upload. Please try again.");
     } finally {
       setIsUploading(false);
+      setSelectedFiles([]);
       setUploading(false);
+      setProgress(null);
     }
 
     console.log("Upload completed");
   };
 
+  const onFilesSelected = (files: File[]) => {
+    handleUpload(files);
+  }
+
   return (
-    <div className="mb-2">
-      {photos.length > 0 && <LilHeader>Uploadede fotos</LilHeader>}
+    <div className="mb-2 items-center justify-center w-full">
+      {photos.length > 0 && <LilHeader>Uploadede fotos ({photos.length})</LilHeader>}
       <PhotoSlider
         onOpenChange={setIsPhotoSliderOpen}
         initialIndex={currentPhotoIndex}
         isOpen={isPhotoSliderOpen}
       />
-
-      <h1>Upload Images</h1>
-      <DragDropUpload
-        onFilesSelected={setSelectedFiles}
+      <DragDropUpload 
+        progress={progress}
+        onFilesSelected={onFilesSelected}
         uploading={uploading}
-        onUpload={handleUpload}
-      >
+        selectedFiles={selectedFiles}
+        setSelectedFiles={setSelectedFiles}
+      > 
         <HorizontalPhotoOverview 
           numLoadingPhotos={3}
           chosenIndex={currentPhotoIndex}
@@ -119,20 +123,7 @@ export default function Upload() {
         />
 
       </DragDropUpload>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {uploadedImageUrls.length > 0 && (
-        <div>
-          <h2>Uploaded Images:</h2>
-          {uploadedImageUrls.map((url, index) => (
-            <img
-              key={index}
-              src={url}
-              alt={`Uploaded ${index + 1}`}
-              style={{ maxWidth: '300px', margin: '10px' }}
-            />
-          ))}
-        </div>
-      )}
+      {error && <p className="text-red-500 text-center">{error}</p>}
     </div>
   );
 }

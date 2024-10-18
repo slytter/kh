@@ -25,10 +25,10 @@ export default function Index() {
       <Container transparentHeader>
         <section className="flex h-full flex-1 flex-col content-center justify-between pb-8 items-center">
           <div />
-          <div className="flex flex-col items-center space-y-4 dark:text-white">
+          <div className="flex flex-col items-center space-y-4 ">
             {/* <RiveAnimation /> */}
             <h1
-              className="text-center text-4xl font-bold sm:text-4xl md:text-7xl "
+              className="text-center text-4xl font-bold sm:text-4xl md:text-7xl dark:text-white "
               style={{
                 // textShadow: "0px 0px 20px rgba(255, 255, 255, 0.6)",
                 // filter: "drop-shadow(0px 4px 20px rgba(255, 255, 255, 1)",

@@ -3,7 +3,7 @@ import * as LR from "@uploadcare/blocks";
 import { Photo, useProjectStore } from "../store/store.js";
 import { HorizontalPhotoOverview } from "../components/HorizontalPhotoOverview.js";
 import { Card } from "@nextui-org/react";
-import { BottomNav } from "../components/BottomNav";
+import { BottomNav } from "../components/BottomNav.js";
 import { LilHeader } from "../components/LilHeader.js";
 import { PhotoSlider } from "../components/PhotoSlider.js";
 import { CalendarIcon } from "lucide-react";
