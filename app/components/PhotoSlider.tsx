@@ -4,6 +4,7 @@ import Flicking from "@egjs/react-flicking";
 import "@egjs/react-flicking/dist/flicking.css";
 import { Modal, ModalBody, ModalContent } from "@nextui-org/react";
 import { HorizontalPhotoOverview } from "./HorizontalPhotoOverview";
+import { Image } from "./shared/Image";
 
 const handleDragStart = (e: React.DragEvent<HTMLImageElement>) =>
   e.preventDefault();
@@ -55,10 +56,11 @@ export const PhotoSlider = (props: Props) => {
                   alignItems: "center",
                 }}
               >
-                <img
+                <Image
                   className="panel inher border-r-20 w-full object-contain outline-1"
                   style={{ height: "inherit" }}
-                  src={`${photo.url}/-/preview/-/resize/x1280/`}
+                  src={photo.url}
+                  size="lg"
                   alt={"Photo " + index}
                   onDragStart={handleDragStart}
                 />

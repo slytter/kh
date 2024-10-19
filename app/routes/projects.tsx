@@ -170,6 +170,18 @@ export default function DashBoard() {
   const isSubmitting =
     navigation.state === "submitting" || navigation.state === "loading";
 
+  // Add this check for the loading state
+  if (navigation.state === "loading") {
+    return (
+      <Container>
+        <div className="flex items-center justify-center h-screen">
+          <p className="text-lg">Loading projects...</p>
+          {/* You can replace this with a spinner or any other loading indicator */}
+        </div>
+      </Container>
+    );
+  }
+
   return (
     <Container>
       <PageTopSection />

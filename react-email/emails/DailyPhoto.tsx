@@ -13,6 +13,7 @@ import {
 } from "@react-email/components";
 import { Tailwind } from "@react-email/tailwind";
 import * as React from "react";
+import { transformSrc } from "~/components/shared/Image";
 
 const main: React.CSSProperties = {
   backgroundColor: "#ffffff",
@@ -118,7 +119,7 @@ export const PhotoEmail = ({
 
             {message && <Text style={{ ...text }}>"{message}"</Text>}
             <Img
-              src={imageSource}
+              src={transformSrc(imageSource, 'lg')}
               alt="Dagens billede"
               width="100%"
               height="auto"

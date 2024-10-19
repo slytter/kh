@@ -2,6 +2,7 @@ import { Draggable } from "@hello-pangea/dnd";
 import { DragHandleHorizontalIcon } from "@radix-ui/react-icons";
 import dayjs from "dayjs";
 import { Photo } from "~/store/store";
+import { Image } from "../shared/Image";
 
 function PhotoDragItem({
   photo,
@@ -28,9 +29,10 @@ function PhotoDragItem({
             className={"flex w-full flex-row items-center align-middle"}
             onClick={() => onClick(photo.id)}
           >
-            <img
+            <Image
               className={"h-16 w-16 rounded-md object-cover shadow-sm"}
-              src={`${photo.url}/-/preview/-/resize/x200/`}
+              src={photo.url} 
+              size="sm"
               alt={photo.id}
             />
 

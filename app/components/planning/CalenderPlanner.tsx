@@ -9,6 +9,7 @@ import {
   useProjectStore,
 } from "../../store/store.js";
 import { planPhotoSchedule } from "../../utils/planPhotoSchedule.js";
+import { Image } from "../shared/Image.js";
 
 function DayImageViewer(props: DayProps) {
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -27,13 +28,13 @@ function DayImageViewer(props: DayProps) {
   return (
     <div className="relative">
       {dayRender.activeModifiers.selected && (
-        <img
-          src={photo?.url + "/-/preview/100x100/"}
+        <Image
+          src={photo.url}
           alt=""
           className={`absolute left-0 top-0 h-10 w-10 rounded-full object-cover brightness-75 filter transition-opacity duration-300
             ${index === 0 ? "ring-2 ring-black brightness-90" : ""}
-            `}
-          // ${shouldAnimate ? "opacity-1" : "opacity-0"}
+          `}
+          size="xs"
         />
       )}
       <Button {...dayRender.buttonProps} ref={buttonRef} />

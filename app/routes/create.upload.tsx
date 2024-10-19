@@ -4,8 +4,9 @@ import { LilHeader } from "~/components/LilHeader";
 import { PhotoSlider } from "~/components/PhotoSlider";
 import { Photo, useProjectStore } from "~/store/store";
 import { DragDropUpload } from "~/components/DragDropUpload";
-import { Loader, LoaderCircle } from "lucide-react";
 import { Spinner } from "@nextui-org/react";
+import { CalendarIcon, UploadCloudIcon } from "lucide-react";
+import { BottomNav } from "~/components/BottomNav";
 
 
 const photoFactory = (url: string) => ({
@@ -15,6 +16,50 @@ const photoFactory = (url: string) => ({
   message: "",
   created_at: Date.now(),
 } as Photo);
+
+
+
+const uploadPhotos = async (
+  files: File[],
+  onProgress: (progress: number) => void
+): Promise<string[]> => {
+  const concurrentUploads = 4;
+  const totalFiles = files.length;
+  let uploadedFiles = 0;
+  const allImageUrls: string[] = [];
+
+  for (let i = 0; i < totalFiles; i += concurrentUploads) {
+    console.log(`Processing batch ${Math.floor(i / concurrentUploads) + 1}`);
+    const uploadBatch = files.slice(i, i + concurrentUploads);
+    const formData = new FormData();
+    uploadBatch.forEach(file => formData.append('img', file));
+
+    const response = await fetch('/server/upload-photo', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`Upload failed: ${response.status} ${response.statusText}`, errorText);
+      throw new Error(`Upload failed: ${response.statusText}`);
+    }
+
+    const result = await response.json();
+    allImageUrls.push(...result.imageUrls);
+
+    uploadedFiles += uploadBatch.length;
+    const newProgress = Math.round((uploadedFiles / totalFiles) * 100);
+    console.log(`Progress: ${newProgress}%`);
+    onProgress(newProgress);
+  }
+
+  return allImageUrls;
+};
+
+
+
+
 
 export default function Upload() {
   const [uploading, setUploading] = useState(false);
@@ -26,7 +71,6 @@ export default function Upload() {
   const [isPhotoSliderOpen, setIsPhotoSliderOpen] = useState(false);
 
   const addPhotos = useProjectStore((store) => store.addDraftPhotos);
-  const removePhoto = useProjectStore((store) => store.removePhoto);
   const setIsUploading = useProjectStore((store) => store.setIsUploading);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
@@ -43,46 +87,13 @@ export default function Upload() {
       return;
     }
 
-    const concurrentUploads = 4;
-    const totalFiles = files.length;
-    let uploadedFiles = 0;
-    const allImageUrls: string[] = [];
-
     try {
-      for (let i = 0; i < totalFiles; i += concurrentUploads) {
-        console.log(`Processing batch ${Math.floor(i / concurrentUploads) + 1}`);
-        const uploadBatch = files.slice(i, i + concurrentUploads);
-        const formData = new FormData();
-        uploadBatch.forEach(file => formData.append('img', file));
-
-        const response = await fetch('/server/upload-photo', {
-          method: 'POST',
-          body: formData,
-        });
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error(`Upload failed: ${response.status} ${response.statusText}`, errorText);
-          throw new Error(`Upload failed: ${response.statusText}`);
-        }
-        console.log({response})
-
-        const result = await response.json();
-
-        allImageUrls.push(...result.imageUrls);
-
-        uploadedFiles += uploadBatch.length;
-        const newProgress = Math.round((uploadedFiles / totalFiles) * 100);
-        console.log(`Progress: ${newProgress}%`);
-        setProgress(newProgress);
-
-        const photos = allImageUrls.map(photoFactory);
-        addPhotos(photos);
-      }
-
+      const uploadedUrls = await uploadPhotos(files, setProgress);
+      const photos = uploadedUrls.map(photoFactory);
+      addPhotos(photos);
     } catch (err: any) {
       console.error("Upload error:", err);
-      setError(err.message || "An error occurred during upload. Please try again.");
+      setError(err.message || "En fejl opstod under upload");
     } finally {
       setIsUploading(false);
       setSelectedFiles([]);
@@ -95,10 +106,11 @@ export default function Upload() {
 
   const onFilesSelected = (files: File[]) => {
     handleUpload(files);
+    setSelectedFiles(files)
   }
 
   return (
-    <div className="mb-2 items-center justify-center w-full">
+    <div className="mb-2 items-center justify-center w-full h-full">
       {photos.length > 0 && <LilHeader>Uploadede fotos ({photos.length})</LilHeader>}
       <PhotoSlider
         onOpenChange={setIsPhotoSliderOpen}
@@ -106,11 +118,7 @@ export default function Upload() {
         isOpen={isPhotoSliderOpen}
       />
       <DragDropUpload 
-        progress={progress}
         onFilesSelected={onFilesSelected}
-        uploading={uploading}
-        selectedFiles={selectedFiles}
-        setSelectedFiles={setSelectedFiles}
       > 
         <HorizontalPhotoOverview 
           numLoadingPhotos={3}
@@ -121,9 +129,23 @@ export default function Upload() {
             setIsPhotoSliderOpen(true)
           }}
         />
-
-      </DragDropUpload>
+        <div className="flex flex-col items-center justify-center p-4 py-16">
+          {uploading ? <Spinner /> : <UploadCloudIcon className="w-10 h-10 text-gray-500" />}
+          <p className="text-gray-500">{progress !== null ? `${progress}%` : 'Træk fotos hertil, eller klik for at vælge'}</p>
+        </div>
+        {selectedFiles.length > 0 && (
+          <p>Uploader {selectedFiles.length} foto{selectedFiles.length > 1 ? 's' : ''}</p>
+        )}
       {error && <p className="text-red-500 text-center">{error}</p>}
+      </DragDropUpload>
+      <BottomNav
+        disabled={uploading || photos.length === 0}
+        route="/create/plan"
+        startContent={<CalendarIcon />}
+        title={"Planlæg afsendelse"}
+        disabledReason="Upload billeder først"
+      />
+
     </div>
   );
 }

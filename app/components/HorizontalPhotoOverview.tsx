@@ -20,7 +20,7 @@ export const HorizontalPhotoOverview = (props: Props) => {
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTo({
-        left: 0,
+        right: 0,
         behavior: 'smooth'
       });
     }
@@ -46,7 +46,7 @@ export const HorizontalPhotoOverview = (props: Props) => {
           `}
           >
             <Image 
-              size="xs"
+              size="sm"
               src={`${photo.url}`}
               width="100"
               height={height || "100"}
