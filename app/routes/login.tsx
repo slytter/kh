@@ -18,14 +18,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return response;
 }
 
-export default function login() {
+export default function LoginScreen() {
   const { session } = useOutletContext<OutletContext>();
 
   const navigate = useNavigate();
 
   useEffect(() => {
     if (session?.user) {
-      navigate("/projects");
+      navigate("/projects/overview");
     }
   }, [session, navigate]);
 

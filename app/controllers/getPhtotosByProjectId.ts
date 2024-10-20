@@ -1,10 +1,12 @@
+import { Photo } from "~/store/store";
+import { PhotoSchema } from "~/types/validations";
 import { createSupabaseServerClient } from "~/utils/supabase.server";
 
 export const getPhotosByProjectId = async (
   supabase: ReturnType<typeof createSupabaseServerClient>,
   projectId: number,
 ) => {
-  const { data: photos, error } = await supabase
+  const { data, error } = await supabase
     .from("photos")
     .select("*")
     .eq("project_id", projectId);
@@ -14,5 +16,7 @@ export const getPhotosByProjectId = async (
     throw error;
   }
 
-  return photos;
+  const photos = PhotoSchema.array().parse(data);
+
+  return photos
 };

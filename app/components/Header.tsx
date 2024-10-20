@@ -38,7 +38,7 @@ function DropdownMenuDemo() {
         <DropdownItem
           key="profile"
           className="h-14 gap-2"
-          onClick={() => navigate("/projects")}
+          onClick={() => navigate("/projects/overview")}
         >
           <p className="font-semibold">Logget ind som</p>
           <p className="">{session.user.email}</p>

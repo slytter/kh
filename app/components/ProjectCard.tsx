@@ -67,12 +67,14 @@ export const ProjectCard = (props: Props) => {
       </CardHeader>
       <Divider />
       <CardBody aria-label="Dynamic Actions">
-        <button
+        <div 
           onMouseOver={() => setHover(true)}
           onMouseOut={() => setHover(false)}
+          onBlur={() => setHover(false)}
+          onFocus={() => setHover(true)}
         >
           <HorizontalPhotoOverview photos={photos} height={hover ? 100 : 60} />
-        </button>
+        </div>
       </CardBody>
       <Divider />
       <CardFooter className="justify-between">

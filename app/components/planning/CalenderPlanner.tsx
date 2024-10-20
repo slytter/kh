@@ -1,7 +1,7 @@
 import { Card } from "@nextui-org/react";
 import { da } from "date-fns/locale";
 import dayjs from "dayjs";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { Button, DayPicker, DayProps, useDayRender } from "react-day-picker";
 import {
   Photo,

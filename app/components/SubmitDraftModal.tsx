@@ -45,7 +45,7 @@ export const SubmitDraftModal = (props: PostModalProps) => {
     if (actionData?.type === "success") {
       // onOpenChange(false);
       resetDraftProject();
-      navigate("/projects");
+      navigate("/projects/overview");
     }
     if (actionData?.error) {
       // todo better error handling

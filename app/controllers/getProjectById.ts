@@ -6,6 +6,7 @@ export const getProjectById = async (
   supabase: ReturnType<typeof createSupabaseServerClient>,
   projectId: number,
 ) => {
+
   const { data: project, error } = await supabase
     .from("projects")
     .select("*")
@@ -17,7 +18,15 @@ export const getProjectById = async (
     throw error;
   }
 
-  console.log(project);
+
+  // todo make policy in supabase
+  const userData = (await supabase.auth.getUser()).data
+  const uid = userData.user?.id
+  const authedEmail = userData.user?.email
+
+  if (!uid || project.owner !== uid || project.receivers?.includes(authedEmail || "")) {
+    throw new Error("Unauthorized");
+  }
 
   const validProject = ProjectSchema.parse(project);
   // asset validProject.id is a number

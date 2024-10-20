@@ -47,7 +47,7 @@ export const links: LinksFunction = () => [
 export default function App() {
   const { env, session } = useLoaderData<typeof loader>();
   const { revalidate } = useRevalidator();
-
+  
   const [supabase] = useState(() =>
     createBrowserClient(env.SUPABASE_URL, env.SUPABASE_PUBLIC_KEY),
   );
@@ -79,38 +79,16 @@ export default function App() {
         />
 
         <script src="https://cdn.jsdelivr.net/npm/grained@0.0.2/grained.min.js"></script>
-        {/*
-        <script
-          src="https://cdn.jsdelivr.net/npm/grained@0.0.2/grained.min.js"
-          onError={() => console.log("error loading")}
-          onLoad={() => {
-            var options = {
-              animate: true,
-              patternWidth: 100,
-              patternHeight: 100,
-              grainOpacity: 0.5,
-              grainDensity: 1,
-              grainWidth: 1,
-              grainHeight: 1,
-            };
-            console.log("grained", options);
-
-            grained("#grained", options);
-          }}
-        /> */}
         <Meta />
         <Links />
       </head>
-      <body
-      // className="text-foreground bg-background dark"
-      >
+      <body>
         <NextUIProvider>
           <main>
             <Outlet context={{ supabase, session }} />
             <SpeedInsights />
             <ScrollRestoration />
             <Scripts />
-
             <LiveReload />
           </main>
         </NextUIProvider>

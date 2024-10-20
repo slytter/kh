@@ -1,9 +1,8 @@
 import { json, LoaderFunctionArgs } from "@remix-run/node";
-import { Container } from "~/components/Container";
 import { getProjectById } from "~/controllers/getProjectById";
 import { createSupabaseServerClient } from "~/utils/supabase.server";
 import { z } from "zod";
-import { useLoaderData, useSubmit } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const validatedParams = z
@@ -12,19 +11,18 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     })
     .parse(params);
 
-  const projectId = validatedParams.projectId;
-
   const response = new Response();
-
   const supabase = createSupabaseServerClient({ request, response });
+  const projectId = validatedParams.projectId;
+  try {
+    const project = await getProjectById(supabase, Number(projectId));
+    return json({
+      project,
+    });
 
-  console.time("getProjectById");
-  const project = await getProjectById(supabase, Number(projectId));
-  console.timeEnd("getProjectById");
-
-  return json({
-    project,
-  });
+  } catch (error) {
+    return json({ error: error instanceof Error ? error.message : "Unknown error" }, { status: 401 });
+  }
 }
 
 export function action() {
@@ -33,12 +31,11 @@ export function action() {
 
 export default function EditProject() {
   const data = useLoaderData<typeof loader>();
-  const submit = useSubmit();
-
+  
   return (
-    <Container>
-      <h1>Edit Project</h1>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
-    </Container>
+    <>
+      <h1>Edit Project2</h1>
+      <p>{JSON.stringify(data)}</p>
+    </>
   );
 }

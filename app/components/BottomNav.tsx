@@ -1,3 +1,4 @@
+import { PrefetchPageLinks } from "@remix-run/react";
 import { NavBotton } from "./Button";
 
 type BottomNavProps = {
@@ -34,6 +35,7 @@ export const BottomNav = (props: BottomNavProps) => {
       />
       {/* add gradiant */}
       <div className="absolute bottom-0 h-8 w-full bg-gradient-to-t from-white to-transparent"></div>
+      {route && <PrefetchPageLinks page={route}/>}
     </div>
   );
 };

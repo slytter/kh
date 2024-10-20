@@ -6,6 +6,7 @@ export default function Create() {
   const { session, supabase } = useOutletContext<OutletContext>();
 
   // apperently its not possible to pass context to nested routes
+  // update: why do i do it then?
 
   return (
     <Container>

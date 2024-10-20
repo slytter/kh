@@ -51,19 +51,18 @@ export const HorizontalPhotoOverview = (props: Props) => {
               width="100"
               height={height || "100"}
               key={photo.id}
-              className={`z-10 h-[${height || "100"}px] w-[70px] bg-gray-100 object-cover transition-all duration-300 ${chosenIndex === index ? "border-4 border-black" : ""}`}
+              className={`z-10 h-[${height || "100"}px] w-[70px] rounded-lg bg-gray-100 object-cover transition-all duration-200 ${chosenIndex === index ? "border-4 border-black" : ""}`}
               style={{ height: height || "100px" }}
               alt={"file.fileInfo.originalFilename" || ""}
             />
             <div className="absolute right-1 top-1">
               <Dropdown placement="bottom-end">
                 <DropdownTrigger>
-                  <button
-                    className="h-6 w-6 rounded-lg bg-white p-0 opacity-80 hover:opacity-100"
-                    type="button"
+                  <div
+                    className="h-6 w-6 rounded-lg bg-white p-0 opacity-80 hover:opacity-100 text-xs"
                   >
                     ···
-                  </button>
+                  </div>
               </DropdownTrigger>
               <DropdownMenu aria-label="Profile Actions" variant="flat">
                 <DropdownItem

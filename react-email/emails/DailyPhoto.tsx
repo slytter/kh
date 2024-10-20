@@ -116,7 +116,6 @@ export const PhotoEmail = ({
             >
               Billede {imageNumber} af {numImages}
             </Text>
-
             {message && <Text style={{ ...text }}>"{message}"</Text>}
             <Img
               src={transformSrc(imageSource, 'lg')}

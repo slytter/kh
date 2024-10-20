@@ -54,6 +54,8 @@ export default function Index() {
               Gaven der bliver ved med at give –
               <span className="neulis"> kh</span> afsender automatisk gode
               billeder afsted til en email hver dag.
+
+              {/* Sørg for at din nærmeste vågner op glad hver dag. */}
               {/* som en
               julekalender uanset årstid. */}
             </p>
@@ -96,7 +98,7 @@ export default function Index() {
             className="mx-auto disabled:opacity-20 border-black"
             style={{
               // "-webkit-filter": "invert()",
-              "-webkit-backdrop-filter": "invert(1) grayscale(100%)",
+              // "-webkit-backdrop-filter": "invert(1) grayscale(100%)",
               backdropFilter: "invert(1) grayscale(100%)",
               mixBlendMode: "difference",
               // background: "white",

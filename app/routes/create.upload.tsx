@@ -110,34 +110,36 @@ export default function Upload() {
   }
 
   return (
-    <div className="mb-2 items-center justify-center w-full h-full">
-      {photos.length > 0 && <LilHeader>Uploadede fotos ({photos.length})</LilHeader>}
-      <PhotoSlider
-        onOpenChange={setIsPhotoSliderOpen}
-        initialIndex={currentPhotoIndex}
-        isOpen={isPhotoSliderOpen}
-      />
-      <DragDropUpload 
-        onFilesSelected={onFilesSelected}
-      > 
-        <HorizontalPhotoOverview 
-          numLoadingPhotos={3}
-          chosenIndex={currentPhotoIndex}
-          photos={photos}
-          onPhotoPress={(_, index) => {
-            setCurrentPhotoIndex(index);
-            setIsPhotoSliderOpen(true)
-          }}
+    <div className={"flex min-h-dvh flex-col justify-between"}>
+      <div className="flex flex-col">
+        {photos.length > 0 && <LilHeader>Uploadede fotos ({photos.length})</LilHeader>}
+        <PhotoSlider
+          onOpenChange={setIsPhotoSliderOpen}
+          initialIndex={currentPhotoIndex}
+          isOpen={isPhotoSliderOpen}
         />
-        <div className="flex flex-col items-center justify-center p-4 py-16">
-          {uploading ? <Spinner /> : <UploadCloudIcon className="w-10 h-10 text-gray-500" />}
-          <p className="text-gray-500">{progress !== null ? `${progress}%` : 'Træk fotos hertil, eller klik for at vælge'}</p>
-        </div>
-        {selectedFiles.length > 0 && (
-          <p>Uploader {selectedFiles.length} foto{selectedFiles.length > 1 ? 's' : ''}</p>
-        )}
-      {error && <p className="text-red-500 text-center">{error}</p>}
-      </DragDropUpload>
+        <DragDropUpload 
+          onFilesSelected={onFilesSelected}
+        > 
+          <HorizontalPhotoOverview 
+            numLoadingPhotos={3}
+            chosenIndex={currentPhotoIndex}
+            photos={photos}
+            onPhotoPress={(_, index) => {
+              setCurrentPhotoIndex(index);
+              setIsPhotoSliderOpen(true)
+            }}
+          />
+          <div className="flex flex-col items-center justify-center p-4 py-16">
+            {uploading ? <Spinner /> : <UploadCloudIcon className="w-10 h-10 text-gray-500" />}
+            <p className="text-gray-500">{progress !== null ? `${progress}%` : 'Træk fotos hertil, eller klik for at vælge'}</p>
+          </div>
+          {selectedFiles.length > 0 && (
+            <p>Uploader {selectedFiles.length} foto{selectedFiles.length > 1 ? 's' : ''}</p>
+          )}
+        {error && <p className="text-red-500 text-center">{error}</p>}
+        </DragDropUpload>
+      </div>
       <BottomNav
         disabled={uploading || photos.length === 0}
         route="/create/plan"

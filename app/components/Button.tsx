@@ -1,5 +1,5 @@
 import { Button, Tooltip } from "@nextui-org/react";
-import { useNavigate } from "@remix-run/react";
+import { PrefetchPageLinks, useNavigate } from "@remix-run/react";
 
 type NavButtonProps = {
   route?: string;
