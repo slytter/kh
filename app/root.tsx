@@ -12,15 +12,13 @@ import {
   useLoaderData,
   useRevalidator,
 } from "@remix-run/react";
-import { SpeedInsights } from "@vercel/speed-insights/remix";
 import { useEffect, useState } from "react";
 import { createBrowserClient } from "@supabase/auth-helpers-remix";
 import stylesheet from "./tailwind.css";
 import { NextUIProvider } from "@nextui-org/react";
-import * as LR from "@uploadcare/blocks";
 import { useProjectStore } from "./store/store";
 import "react-day-picker/dist/style.css";
-LR.registerBlocks(LR);
+
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const env = {
@@ -86,7 +84,6 @@ export default function App() {
         <NextUIProvider>
           <main>
             <Outlet context={{ supabase, session }} />
-            <SpeedInsights />
             <ScrollRestoration />
             <Scripts />
             <LiveReload />
