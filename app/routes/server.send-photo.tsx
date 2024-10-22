@@ -24,7 +24,7 @@ const markPhotoSent = async (supabase: SupabaseClient, photoId: string) => {
 
 const sendPhoto = async (supabase: SupabaseClient, photo: Photo) => {
   const projectId = photo.project_id;
-  const project = projectId && (await getProjectById(supabase, projectId));
+  const project = projectId && (await getProjectById(supabase, projectId, false));
   if (!project || !project.id) return; // Skip if project not found
   await sendEmailToProject(supabase, project, photo.url);
   // add +1 to the project's sent_photos_count
@@ -44,7 +44,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     const supabase = createSuperbaseAdmin();
     const now = dayjs().add(1, "minute");
 
-    let { data: photos, error } = await supabase
+  
+    const { data: photos, error } = await supabase
       .from("photos")
       .select("*")
       .eq("did_send", false)
@@ -57,9 +58,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     }
 
     const limit = pLimit(5); // Set concurrency limit to 5
-    let potentialErrorMessages: string[] = [];
+    const potentialErrorMessages: string[] = [];
 
-    const sendTasks = photos.map((photo) => {
+    const sendTasks = photos.map((photo) => { 
       return limit(async () => {
         try {
           await sendPhoto(supabase, photo);

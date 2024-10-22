@@ -5,6 +5,7 @@ import { createSupabaseServerClient } from "~/utils/supabase.server";
 export const getProjectById = async (
   supabase: ReturnType<typeof createSupabaseServerClient>,
   projectId: number,
+  accessRestricted = true
 ) => {
 
   const { data: project, error } = await supabase
@@ -24,7 +25,7 @@ export const getProjectById = async (
   const uid = userData.user?.id
   const authedEmail = userData.user?.email
 
-  if (!uid || project.owner !== uid || project.receivers?.includes(authedEmail || "")) {
+  if (accessRestricted && (!uid || project.owner !== uid || project.receivers?.includes(authedEmail || ""))) {
     throw new Error("Unauthorized");
   }
 
