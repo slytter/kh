@@ -64,9 +64,9 @@ export async function sendEmailToProject(
 ) {
   const sender = await getUser(supabase, project.owner);
 
-  const emailsAndContent: EmailAndContent[] = project.receivers.map(
-    (receiver) => {
-      const emailHtml = render(
+  const emailsAndContent: EmailAndContent[] = await Promise.all(project.receivers.map(
+    async (receiver) => {
+      const emailHtml = await render(
         <PhotoEmail
           isReceipt={false}
           projectId={project.id || -1}
@@ -78,21 +78,23 @@ export async function sendEmailToProject(
         />,
       );
 
+      console.log({emailHtml})
+
       return {
         email: receiver,
         sender: sender?.email || "kh@kh.dk",
         senderName: sender.user_metadata.name || "Kh",
-        content: emailHtml,
+        content: emailHtml, // Await the promise
         interval: project.generation_props.interval,
         isReceipt: false,
       } as EmailAndContent;
     },
-  );
+  ));
 
   await sendEmail(emailsAndContent);
 
   if (project.self_receive) {
-    const emailHtml = render(
+    const emailHtml = await render(
       <PhotoEmail
         isReceipt
         originalRecipient={project.receivers.map((r) => r).join(", ")}
@@ -117,3 +119,8 @@ export async function sendEmailToProject(
     await sendEmail([selfEmail]);
   }
 }
+
+
+
+
+

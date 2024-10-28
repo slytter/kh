@@ -33,7 +33,7 @@ const transformBunnyCDN = (src: string, resize: ImageSize) => {
 
 const transformUploadCare = (src: string, resize: ImageSize) => {
   if(src.includes('ucarecdn')) {
-    return src + '/-/preview/-/resize/x' + sizeClasses[resize] + '/'
+    return src + '-/preview/-/resize/x' + sizeClasses[resize] + '/'
   }
   return src;
 }
