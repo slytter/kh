@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { Photo } from "~/store/store";
 import { PhotoSchema } from "~/types/validations";
 import { createSupabaseServerClient } from "~/utils/supabase.server";
@@ -20,3 +21,6 @@ export const getPhotosByProjectId = async (
 
   return photos
 };
+
+
+export type Photo = z.infer<typeof PhotoSchema>;
