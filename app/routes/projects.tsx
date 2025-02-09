@@ -1,9 +1,8 @@
 import { Button, Spinner } from '@nextui-org/react'
 import { Outlet, useMatches, useNavigate, useOutlet } from '@remix-run/react'
-import { ArrowBigLeft, ArrowLeft, Plus } from 'lucide-react'
+import { ArrowLeft, Plus } from 'lucide-react'
 import { Container } from '~/components/Container'
 import { LilHeader } from '~/components/LilHeader'
-import { useNavigation } from '@remix-run/react'
 import { ReactNode, useRef } from 'react'
 
 type PageTopSectionProps = {

@@ -7,13 +7,13 @@ import {
 import { getProjectById } from '~/controllers/getProjectById'
 import { createSupabaseServerClient } from '~/utils/supabase.server'
 import { z } from 'zod'
-import { Await, useLoaderData, useSubmit, useFetcher } from '@remix-run/react'
+import { Await, useLoaderData, useFetcher } from '@remix-run/react'
 import { getPhotosByProjectId } from '~/controllers/getPhtotosByProjectId'
 import { Suspense } from 'react'
 import { Photo } from '~/store/store'
 import { Image } from '~/components/shared/Image'
 import JSZip from 'jszip'
-import { Button, Spinner } from '@nextui-org/react'
+import { Button } from '@nextui-org/react'
 import { useEffect } from 'react'
 import dayjs from 'dayjs'
 import { DownloadIcon, Lock } from 'lucide-react'
@@ -125,8 +125,6 @@ const HiddenImageOverlay = (props: {
 	const { children, unlockDate } = props
 
 	const isLocked = unlockDate && unlockDate > new Date().getTime()
-
-	console.log(unlockDate, new Date().getTime())
 
 	return (
 		<div className="overflow-hidden rounded-md relative">
