@@ -2,43 +2,43 @@
 @tailwind components;
 @tailwind utilities;
 .my-config {
-    --darkmode: 0;
-    --h-accent: 223;
-    --s-accent: 100%;
-    --l-accent: 61%;
-    width: inherit !important;
+	--darkmode: 0;
+	--h-accent: 223;
+	--s-accent: 100%;
+	--l-accent: 61%;
+	width: inherit !important;
 }
 
 .rdp {
-    --rdp-cell-size: 40px; /* Size of the day cells. */
-    --rdp-caption-font-size: 18px; /* Font size for the caption labels. */
-    --rdp-accent-color: #0000ff !important; /* Accent color for the background of selected days. */
-    --rdp-background-color: #e7edff; /* Background color for the hovered/focused elements. */
-    --rdp-accent-color-dark: #3003e1; /* Accent color for the background of selected days (to use in dark-mode). */
-    --rdp-background-color-dark: #180270; /* Background color for the hovered/focused elements (to use in dark-mode). */
-    --rdp-outline: 2px solid var(--rdp-accent-color); /* Outline border for focused elements */
-    --rdp-outline-selected: 3px solid var(--rdp-accent-color); /* Outline border for focused _and_ selected elements */
-    --rdp-selected-color: #fff; /* Color of selected day text */
+	--rdp-cell-size: 40px; /* Size of the day cells. */
+	--rdp-caption-font-size: 18px; /* Font size for the caption labels. */
+	--rdp-accent-color: #ffffff00 !important; /* Accent color for the background of selected days. */
+	--rdp-background-color: #e7edff; /* Background color for the hovered/focused elements. */
+	--rdp-accent-color-dark: #3003e1; /* Accent color for the background of selected days (to use in dark-mode). */
+	--rdp-background-color-dark: #180270; /* Background color for the hovered/focused elements (to use in dark-mode). */
+	--rdp-outline: 2px solid var(--rdp-accent-color); /* Outline border for focused elements */
+	--rdp-outline-selected: 3px solid var(--rdp-accent-color); /* Outline border for focused _and_ selected elements */
+	--rdp-selected-color: #fff; /* Color of selected day text */
 }
 
 .rdp-day_selected {
-    /* background-color: var(--rdp-accent-color); */
+	/* background-color: var(--rdp-accent-color); */
 }
 
 .rdp-cell {
-    padding: 2px;
+	padding: 2px;
 }
 
 .rdp-button:hover:not(:disabled) {
-    background-color: rgba(0, 0, 0, 0);
-    outline: 2px solid rgba(0, 0, 0, 1);
+	background-color: rgba(0, 0, 0, 0);
+	outline: 2px solid rgba(0, 0, 0, 1);
 }
 
 @font-face {
-    font-family: "neulis";
-    src: url("/Neulis.otf");
+	font-family: 'neulis';
+	src: url('/Neulis.otf');
 }
 
 .neulis {
-    font-family: "neulis";
+	font-family: 'neulis';
 }
