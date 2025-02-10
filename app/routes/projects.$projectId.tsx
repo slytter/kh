@@ -127,7 +127,7 @@ const HiddenImageOverlay = (props: {
 	const isLocked = unlockDate && unlockDate > new Date().getTime()
 
 	return (
-		<div className="overflow-hidden rounded-md relative">
+		<div className="overflow-hidden rounded-md relative max-w-screen-sm">
 			{isLocked && (
 				<div className="absolute inset-0 backdrop-blur-lg bg-black/30 flex items-center justify-center flex-col">
 					<Lock size={40} color="white" />
@@ -192,9 +192,12 @@ export default function SeeProject() {
 					{(photos) => (
 						<div className="flex flex-col gap-4">
 							{photos.map((photo, i) => (
-								<div className="w-full mt-4 gap-2 flex flex-col" key={photo.id}>
+								<div
+									className="w-full mt-4 gap-2 flex flex-col items-center"
+									key={photo.id}
+								>
 									<h3 className="flex items-center gap-2 text-md text-gray-600">
-										FOTO {i + 1}
+										<span className="font-bold">FOTO {i + 1}</span>
 										<span className="bg-gray-200 px-2 rounded-md text-xs">
 											{photo.did_send ? 'Sendt ' : 'Sendes '}
 											{dayjs(photo.send_at).format('DD. MMM YY')}

@@ -17,13 +17,13 @@ const PageTopSection = (props: PageTopSectionProps) => {
 	const headerOffset = contentRef.current?.offsetTop || 0
 
 	return (
-		<div ref={contentRef} className="relative w-full">
-			<div className="mx-auto flex flex-1 flex-col px-6 md:w-[800px]">
-				<div style={{ height: headerOffset }}></div>
+		<div ref={contentRef} className="relative w-full ">
+			<div className="py-4">
+				{/* <div style={{ height: headerOffset }}></div> */}
 				<div
 					style={{ top: headerOffset }}
 					// Some stolen style from Container.tsx
-					className="p-2 flex flex-row items-center justify-between space-x-4 left-2 right-2 fixed z-1000 mx-auto flex flex-1 px-6 md:w-[800px] z-10"
+					className="flex flex-row items-center justify-between"
 				>
 					{leftContent}
 					{/* <h1 className="text-lg ">Dine kærlige hilsner</h1> */}
