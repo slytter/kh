@@ -1,5 +1,5 @@
-import { Button, Spinner } from '@nextui-org/react'
-import { Outlet, useMatches, useNavigate, useOutlet } from '@remix-run/react'
+import { Button } from '@nextui-org/react'
+import { useMatches, useNavigate, useOutlet } from '@remix-run/react'
 import { ArrowLeft, Plus } from 'lucide-react'
 import { Container } from '~/components/Container'
 import { LilHeader } from '~/components/LilHeader'

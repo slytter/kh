@@ -19,6 +19,7 @@ import { useNavigate } from '@remix-run/react'
 
 type Props = {
 	project: Project
+	type: 'sending' | 'receiving'
 	photos: Photo[]
 	onDelete: (projectId: number) => void
 	onEdit: (projectId: number) => void

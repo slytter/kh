@@ -17,6 +17,7 @@ import { Button } from '@nextui-org/react'
 import { useEffect } from 'react'
 import dayjs from 'dayjs'
 import { DownloadIcon, Lock } from 'lucide-react'
+import _ from 'lodash'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
 	const validatedParams = z
@@ -127,11 +128,13 @@ const HiddenImageOverlay = (props: {
 	const isLocked = unlockDate && unlockDate > new Date().getTime()
 
 	return (
-		<div className="overflow-hidden rounded-md relative max-w-screen-sm">
+		<div className="overflow-hidden rounded-md relative max-w-screen-sm shadow-md">
 			{isLocked && (
-				<div className="absolute inset-0 backdrop-blur-lg bg-black/30 flex items-center justify-center flex-col">
+				<div className="absolute inset-0 backdrop-blur-2xl bg-black/30 flex items-center justify-center flex-col gap-2">
 					<Lock size={40} color="white" />
-					<p className="text-center text-sm text-white"></p>
+					<p className="text-center text-sm text-white">
+						Sendes den {dayjs(unlockDate).format('D. MMM YY')}
+					</p>
 				</div>
 			)}
 			{children}
@@ -191,7 +194,7 @@ export default function SeeProject() {
 				<Await resolve={photos}>
 					{(photos) => (
 						<div className="flex flex-col gap-4">
-							{photos.map((photo, i) => (
+							{_.orderBy(photos, ['send_at'], ['asc']).map((photo, i) => (
 								<div
 									className="w-full mt-4 gap-2 flex flex-col items-center"
 									key={photo.id}
@@ -200,7 +203,9 @@ export default function SeeProject() {
 										<span className="font-bold">FOTO {i + 1}</span>
 										<span className="bg-gray-200 px-2 rounded-md text-xs">
 											{photo.did_send ? 'Sendt ' : 'Sendes '}
-											{dayjs(photo.send_at).format('DD. MMM YY')}
+											<span className="font-bold">
+												{dayjs(photo.send_at).format('D. MMM YY')}
+											</span>
 										</span>
 									</h3>
 									<HiddenImageOverlay unlockDate={photo.send_at}>
