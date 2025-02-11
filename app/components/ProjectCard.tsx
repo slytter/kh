@@ -16,6 +16,7 @@ import { HorizontalPhotoOverview } from './HorizontalPhotoOverview'
 import { useState } from 'react'
 import { ArrowRight, SettingsIcon } from 'lucide-react'
 import { useNavigate } from '@remix-run/react'
+import _ from 'lodash'
 
 type Props = {
 	project: Project
@@ -26,7 +27,7 @@ type Props = {
 }
 
 export const ProjectCard = (props: Props) => {
-	const { project, photos, onDelete, onEdit } = props
+	const { project, photos, onDelete, onEdit, type } = props
 
 	const [hover, setHover] = useState(false)
 
@@ -82,7 +83,11 @@ export const ProjectCard = (props: Props) => {
 					onBlur={() => setHover(false)}
 					onFocus={() => setHover(true)}
 				>
-					<HorizontalPhotoOverview photos={photos} height={hover ? 100 : 60} />
+					<HorizontalPhotoOverview
+						photos={_.orderBy(photos, ['send_at'], ['asc'])}
+						height={hover ? 100 : 60}
+						hideUnsent={type === 'receiving'}
+					/>
 				</div>
 			</CardBody>
 			<Divider />

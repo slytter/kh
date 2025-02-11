@@ -202,6 +202,7 @@ export default function Overview() {
 						<Await resolve={receivedPhotos}>
 							{(receivedPhotos) => (
 								<ProjectCard
+									hideUnsent={true}
 									type="receiving"
 									key={project.id}
 									onEdit={() => project.id && navigateToEdit(project.id)}
