@@ -13,7 +13,7 @@ import { Suspense } from 'react'
 import { Photo } from '~/store/store'
 import { Image } from '~/components/shared/Image'
 import JSZip from 'jszip'
-import { Button } from '@nextui-org/react'
+import { Button, Tooltip } from '@nextui-org/react'
 import { useEffect } from 'react'
 import dayjs from 'dayjs'
 import { DownloadIcon, Lock } from 'lucide-react'
@@ -167,59 +167,73 @@ export default function SeeProject() {
 	return (
 		<>
 			<h1 className="text-2xl font-bold">{project.name}</h1>
-			<div>
-				<fetcher.Form
-					method="post"
-					className=" p-4 fixed bottom-0 right-0 left-0 items-center flex justify-center bg-gradient-to-t from-white to-transparent z-10"
-				>
-					<Button
-						color="primary"
-						aria-label="Indstillinger"
-						title=""
-						type="submit"
-						name="intent"
-						value="download"
-						startContent={<DownloadIcon />}
-						isLoading={isDownloading}
-					>
-						{isDownloading ? 'Henter' : 'Download alle fotos '}
-					</Button>
-				</fetcher.Form>
-			</div>
+
 			<Suspense fallback={<p>Loading photos...</p>}>
 				<h2 className="text-md mb-4 text-gray-600">
 					{/* <Await resolve={sender}>{(sender) => <>{sender.email}</>}</Await> */}
 					Til {project.receivers.join(', ')}
 				</h2>
 				<Await resolve={photos}>
-					{(photos) => (
-						<div className="flex flex-col gap-4">
-							{_.orderBy(photos, ['send_at'], ['asc']).map((photo, i) => (
-								<div
-									className="w-full mt-4 gap-2 flex flex-col items-center"
-									key={photo.id}
-								>
-									<h3 className="flex items-center gap-2 text-md text-gray-600">
-										<span className="font-bold">FOTO {i + 1}</span>
-										<span className="bg-gray-200 px-2 rounded-md text-xs">
-											{photo.did_send ? 'Sendt ' : 'Sendes '}
-											<span className="font-bold">
-												{dayjs(photo.send_at).format('D. MMM YY')}
+					{(photos) => {
+						const isAllSent = photos.every((photo) => photo.did_send)
+						return (
+							<div className="flex flex-col gap-4">
+								{_.orderBy(photos, ['send_at'], ['asc']).map((photo, i) => (
+									<div
+										className="w-full mt-4 gap-2 flex flex-col items-center"
+										key={photo.id}
+									>
+										<h3 className="flex items-center gap-2 text-md text-gray-600">
+											<span className="font-bold">FOTO {i + 1}</span>
+											<span className="bg-gray-200 px-2 rounded-md text-xs">
+												{photo.did_send ? 'Sendt ' : 'Sendes '}
+												<span className="font-bold">
+													{dayjs(photo.send_at).format('D. MMM YY')}
+												</span>
 											</span>
-										</span>
-									</h3>
-									<HiddenImageOverlay unlockDate={photo.send_at}>
-										<Image
-											className={'w-full object-cover h-full'}
-											src={photo.url}
-											size="lg"
-											alt={photo.id}
-										/>
-									</HiddenImageOverlay>
+										</h3>
+										<HiddenImageOverlay unlockDate={photo.send_at}>
+											<Image
+												className={'w-full object-cover h-full'}
+												src={photo.url}
+												size="lg"
+												alt={photo.id}
+											/>
+										</HiddenImageOverlay>
+									</div>
+								))}
+								<div>
+									<fetcher.Form
+										method="post"
+										className=" p-4 fixed bottom-0 right-0 left-0 items-center flex justify-center bg-gradient-to-t from-white to-transparent z-10"
+									>
+										<Tooltip
+											content={
+												isAllSent
+													? 'Hent alle fotos'
+													: 'Alle fotos skal være sendt før du kan hente dem'
+											}
+											isDisabled={!isAllSent}
+										>
+											<Button
+												color="primary"
+												className="disabled:cursor-not-allowed disabled:opacity-80"
+												aria-label="Download"
+												type="submit"
+												name="intent"
+												value="download"
+												disabled={!isAllSent}
+												startContent={<DownloadIcon />}
+												isLoading={isDownloading}
+											>
+												{isDownloading ? 'Henter' : 'Download alle fotos '}
+											</Button>
+										</Tooltip>
+									</fetcher.Form>
 								</div>
-							))}
-						</div>
-					)}
+							</div>
+						)
+					}}
 				</Await>
 			</Suspense>
 		</>
