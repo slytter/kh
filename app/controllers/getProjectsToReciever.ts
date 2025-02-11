@@ -1,13 +1,13 @@
 import { createSupabaseServerClient } from "~/utils/supabase.server";
 
-export const getProjectsFromOwner = async (
+export const getProjectsToReciever = async (
   supabase: ReturnType<typeof createSupabaseServerClient>,
-  owner: string,
+  reciever: string,
 ) => {
   const { data: projects, error } = await supabase
     .from("projects")
     .select("*")
-    .eq("owner", owner);
+    .contains("receivers", [reciever]);
 
   if (error) {
     console.error(error);

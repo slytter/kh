@@ -28,6 +28,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 			for await (const chunk of part.data) {
 				chunks.push(chunk)
 			}
+
 			const fileBuffer = Buffer.concat(chunks)
 
 			console.log('UPLOADING', { postUrl })
@@ -35,13 +36,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 				method: 'PUT',
 				body: fileBuffer,
 				headers: {
-					AccessKey: accessKey,
+					AccessKey: accessKey ?? '',
 					'Content-Type': part.contentType,
 				},
 			})
 
 			if (!response.ok) {
-				throw new Error(`Upload failed: ${response.statusText}`)
+				throw new Error(`fetch bunnycdn failed: ${response.statusText}`)
 			}
 
 			const cdnUrl = `https://kh-assets.b-cdn.net/${filePath}`

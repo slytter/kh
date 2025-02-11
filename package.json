@@ -38,6 +38,7 @@
     "framer-motion": "^10.12.16",
     "grained": "^0.0.2",
     "isbot": "^4.1.0",
+    "jszip": "^3.10.1",
     "lodash": "^4.17.21",
     "lucide-react": "^0.356.0",
     "p-limit": "^5.0.0",

@@ -25,7 +25,11 @@ export const getProjectById = async (
   const uid = userData.user?.id
   const authedEmail = userData.user?.email
 
-  if (accessRestricted && (!uid || project.owner !== uid || project.receivers?.includes(authedEmail || ""))) {
+
+  console.log("authedEmail", authedEmail)
+  console.log("project.receivers", project.receivers)
+  if (accessRestricted && (!uid || (project.owner !== uid && !project.receivers?.includes(authedEmail || "")))) {
+    console.log("Unauthorized!!!")
     throw new Error("Unauthorized");
   }
 
