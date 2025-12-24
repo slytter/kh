@@ -7,11 +7,23 @@ import {
 
 // todo ups... (generate new key)
 const accessKey = process.env.BUNNY_STORAGE_KEY
-const storageZoneName = 'kh-assets'
+const storageZoneName = 'kh-dk'
 
 const isDev = process.env.NODE_ENV === 'development'
 
 export const action = async ({ request }: ActionFunctionArgs) => {
+	// Validate that the access key is configured
+	if (!accessKey || accessKey.trim() === '') {
+		console.error('BUNNY_STORAGE_KEY is not configured')
+		return json(
+			{
+				error:
+					'BunnyCDN storage key is not configured. Please set BUNNY_STORAGE_KEY environment variable.',
+			},
+			{ status: 500 },
+		)
+	}
+
 	const uploadHandler = unstable_composeUploadHandlers(async (part) => {
 		if (part.name !== 'img' || !part.filename) {
 			return undefined
@@ -36,13 +48,21 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 				method: 'PUT',
 				body: fileBuffer,
 				headers: {
-					AccessKey: accessKey ?? '',
-					'Content-Type': part.contentType,
+					AccessKey: accessKey,
+					'Content-Type': part.contentType || 'application/octet-stream',
 				},
 			})
 
 			if (!response.ok) {
-				throw new Error(`fetch bunnycdn failed: ${response.statusText}`)
+				const errorText = await response.text().catch(() => '')
+				console.error('BunnyCDN upload failed:', {
+					status: response.status,
+					statusText: response.statusText,
+					errorText,
+				})
+				throw new Error(
+					`BunnyCDN upload failed: ${response.status} ${response.statusText}`,
+				)
 			}
 
 			const cdnUrl = `https://kh-assets.b-cdn.net/${filePath}`
@@ -68,9 +88,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 		)
 	} catch (error) {
 		console.error('Upload error:', error)
+		const errorMessage =
+			error instanceof Error ? error.message : 'Unknown error occurred'
 		return json(
 			{
-				error: error,
+				error: errorMessage,
 			},
 			{ status: 500 },
 		)

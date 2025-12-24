@@ -38,15 +38,38 @@ const uploadPhotos = async (
 		})
 
 		if (!response.ok) {
-			const errorText = await response.text()
-			console.error(
-				`Upload failed: ${response.status} ${response.statusText}`,
-				errorText,
-			)
-			throw new Error(`Upload failed: ${response.statusText}`)
+			let errorMessage = `Upload failed: ${response.statusText}`
+			try {
+				const errorData = await response.json()
+				if (errorData.error) {
+					errorMessage = errorData.error
+				}
+			} catch {
+				// If JSON parsing fails, try text
+				try {
+					const errorText = await response.text()
+					if (errorText) {
+						errorMessage = errorText
+					}
+				} catch {
+					// Use default error message
+				}
+			}
+			console.error(`Upload failed: ${response.status} ${response.statusText}`)
+			throw new Error(errorMessage)
 		}
 
 		const result = await response.json()
+
+		// Check if the response contains an error
+		if (result.error) {
+			throw new Error(result.error)
+		}
+
+		if (!result.imageUrls || !Array.isArray(result.imageUrls)) {
+			throw new Error('Invalid response from upload server')
+		}
+
 		allImageUrls.push(...result.imageUrls)
 
 		uploadedFiles += uploadBatch.length
@@ -111,11 +134,11 @@ export default function Upload() {
 				{photos.length > 0 && (
 					<LilHeader>Uploadede fotos ({photos.length})</LilHeader>
 				)}
-				<PhotoSliderModal
+				{/* <PhotoSliderModal
 					onOpenChange={setIsPhotoSliderOpen}
 					initialIndex={currentPhotoIndex}
 					isOpen={isPhotoSliderOpen}
-				/>
+				/> */}
 				<DragDropUpload onFilesSelected={onFilesSelected}>
 					<HorizontalPhotoOverview
 						numLoadingPhotos={3}

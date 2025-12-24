@@ -28,13 +28,15 @@ export const PhotoSliderModal = (props: Props) => {
 		>
 			<ModalContent>
 				<ModalBody className="p-0 pt-10">
-					<PhotoSlider
-						photos={photos}
-						initialIndex={initialIndex}
-						chosenIndex={chosenIndex}
-						setChosenIndex={setChosenIndex}
-						flickingRef={flickingRef}
-					/>
+					{photos && photos.length > 0 && (
+						<PhotoSlider
+							photos={photos}
+							initialIndex={initialIndex}
+							chosenIndex={chosenIndex}
+							setChosenIndex={setChosenIndex}
+							flickingRef={flickingRef}
+						/>
+					)}
 				</ModalBody>
 			</ModalContent>
 		</Modal>
