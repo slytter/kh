@@ -130,7 +130,7 @@ export default function Upload() {
 
 	return (
 		<div className={'flex min-h-dvh flex-col justify-between'}>
-			<div className="flex flex-col">
+			<div className="flex flex-col justify-center flex-1">
 				{photos.length > 0 && (
 					<LilHeader>Uploadede fotos ({photos.length})</LilHeader>
 				)}
