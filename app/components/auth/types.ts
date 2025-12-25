@@ -8,4 +8,5 @@ export type ProviderProps = {
   setEmail: (email: string) => void;
   setPassword: (password: string) => void;
   auth: SupabaseAuthClient;
+  message?: string;
 };

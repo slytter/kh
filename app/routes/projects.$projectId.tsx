@@ -7,17 +7,17 @@ import {
 import { getProjectById } from '~/controllers/getProjectById'
 import { createSupabaseServerClient } from '~/utils/supabase.server'
 import { z } from 'zod'
-import { Await, useLoaderData, useFetcher } from '@remix-run/react'
+import { Await, useLoaderData, useFetcher, useMatches } from '@remix-run/react'
 import { getPhotosByProjectId } from '~/controllers/getPhtotosByProjectId'
-import { Suspense } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 import { Photo } from '~/store/store'
 import { Image } from '~/components/shared/Image'
 import JSZip from 'jszip'
 import { Button, Tooltip } from '@nextui-org/react'
-import { useEffect } from 'react'
 import dayjs from 'dayjs'
 import { DownloadIcon, Lock } from 'lucide-react'
 import _ from 'lodash'
+import { LoginModal } from '~/components/auth/LoginModal'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
 	const validatedParams = z
@@ -29,6 +29,13 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 	const response = new Response()
 	const supabase = createSupabaseServerClient({ request, response })
 	const projectId = validatedParams.projectId
+
+	// Check if user is authenticated
+	const {
+		data: { user },
+	} = await supabase.auth.getUser()
+	const isAuthenticated = !!user
+
 	try {
 		const project = await getProjectById(supabase, Number(projectId))
 		// const senderPromise = getUser(supabase, project.owner)
@@ -39,8 +46,58 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 			// sender: senderPromise,
 		})
 	} catch (error) {
-		const e = error instanceof Error ? error.message : 'Unknown error'
-		return json({ error: e }, { status: 401 })
+		// Check if it's an "Unauthorized" error from getProjectById
+		const errorMessage = error instanceof Error ? error.message : String(error)
+		const isUnauthorized = errorMessage === 'Unauthorized'
+
+		// Return specific error type based on authentication status
+		if (isUnauthorized) {
+			if (!isAuthenticated) {
+				return json(
+					{
+						error:
+							'Du skal være logget ind eller oprettet som bruger for at se denne side',
+						requiresAuth: true,
+						isAuthenticated: false,
+					},
+					{ status: 401 },
+				)
+			} else {
+				return json(
+					{
+						error: 'Du har ikke adgang til dette projekt',
+						requiresAuth: false,
+						isAuthenticated: true,
+					},
+					{ status: 403 },
+				)
+			}
+		}
+
+		// For other errors (e.g., project not found, database errors)
+		// If user is not authenticated, show auth message
+		// Otherwise show the actual error
+		if (!isAuthenticated) {
+			return json(
+				{
+					error:
+						'Du skal være logget ind eller oprettet som bruger for at se denne side',
+					requiresAuth: true,
+					isAuthenticated: false,
+				},
+				{ status: 401 },
+			)
+		}
+
+		// For authenticated users with other errors, show generic error
+		return json(
+			{
+				error: 'Projektet kunne ikke findes eller der opstod en fejl',
+				requiresAuth: false,
+				isAuthenticated: true,
+			},
+			{ status: 404 },
+		)
 	}
 }
 
@@ -145,13 +202,38 @@ const HiddenImageOverlay = (props: {
 export default function SeeProject() {
 	const data = useLoaderData<typeof loader>()
 	const fetcher = useFetcher()
+	const matches = useMatches()
+	const rootData = matches.find((match) => match.id === 'root')?.data as
+		| { session?: { user?: { id: string } } }
+		| undefined
+	const session = rootData?.session
 	const isDownloading = fetcher.state === 'submitting'
+
+	// Auto-open login modal if auth is required
+	const [showLoginModal, setShowLoginModal] = useState(false)
+
+	useEffect(() => {
+		if ('error' in data && data.requiresAuth && !data.isAuthenticated) {
+			setShowLoginModal(true)
+		}
+	}, [data])
+
+	// Close modal when user successfully logs in (revalidation happens automatically in root.tsx)
+	useEffect(() => {
+		if (session?.user && showLoginModal) {
+			setShowLoginModal(false)
+		}
+	}, [session?.user, showLoginModal])
+
 	// Handle the download when data is received
 	useEffect(() => {
-		if (fetcher.data?.downloadUrl) {
+		const data = fetcher.data as
+			| { downloadUrl?: string; filename?: string }
+			| undefined
+		if (data?.downloadUrl && data?.filename) {
 			const link = document.createElement('a')
-			link.href = fetcher.data.downloadUrl
-			link.download = fetcher.data.filename
+			link.href = data.downloadUrl
+			link.download = data.filename
 			document.body.appendChild(link)
 			link.click()
 			document.body.removeChild(link)
@@ -159,7 +241,35 @@ export default function SeeProject() {
 	}, [fetcher.data])
 
 	if ('error' in data) {
-		return <div>Error: {data.error}</div>
+		// If user is logged in but doesn't have access, show error message
+		if (data.isAuthenticated && !data.requiresAuth) {
+			return (
+				<div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+					<p className="text-lg text-gray-700 text-center px-4">{data.error}</p>
+					<Button
+						onClick={() => window.history.back()}
+						color="default"
+						variant="flat"
+					>
+						Tilbage
+					</Button>
+				</div>
+			)
+		}
+
+		// If user needs to authenticate, show modal with error message
+		return (
+			<>
+				{data.requiresAuth && !data.isAuthenticated && (
+					<LoginModal
+						isOpen={showLoginModal}
+						onOpenChange={setShowLoginModal}
+						isDismissable={false}
+						message={data.error}
+					/>
+				)}
+			</>
+		)
 	}
 
 	const { project, photos } = data

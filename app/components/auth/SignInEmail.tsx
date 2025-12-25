@@ -4,7 +4,7 @@ import { Form } from "@remix-run/react";
 import { Button, Input } from "@nextui-org/react";
 
 export const SignInSection = (props: ProviderProps) => {
-  const { setError, email, password, setEmail, setPassword, auth } = props;
+  const { setError, email, password, setEmail, setPassword, auth, message } = props;
 
   const emailSignIn = async (email: string, password: string) => {
     try {
@@ -38,6 +38,11 @@ export const SignInSection = (props: ProviderProps) => {
     <Form onSubmit={handleSubmit}>
       <div className="flex w-full flex-col gap-4 md:flex-nowrap">
         <h1 className="text-2xl font-bold">Log ind</h1>
+        {message && (
+          <p className="text-sm text-gray-600 text-left -mt-2 mb-2">
+            {message}
+          </p>
+        )}
         <Input
           size="md"
           type="email"
