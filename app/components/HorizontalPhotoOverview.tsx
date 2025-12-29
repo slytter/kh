@@ -42,13 +42,13 @@ export const HorizontalPhotoOverview = (props: Props) => {
 	}, [chosenIndex, height])
 
 	return (
-		<div>
+		<div className="w-full flex justify-center">
 			<ScrollShadow
 				ref={scrollRef}
 				hideScrollBar
 				offset={10}
 				orientation="horizontal"
-				className="flex space-x-1 overflow-x-auto"
+				className="flex space-x-1 overflow-x-auto justify-center"
 			>
 				{photos.map((photo, index) => {
 					const hidden = hideUnsent && !photo.did_send

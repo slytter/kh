@@ -131,15 +131,17 @@ export default function Upload() {
 	return (
 		<div className={'flex min-h-dvh flex-col justify-between'}>
 			<div className="flex flex-col">
-				{photos.length > 0 && (
-					<LilHeader>Uploadede fotos ({photos.length})</LilHeader>
-				)}
-				{/* <PhotoSliderModal
+				<PhotoSliderModal
 					onOpenChange={setIsPhotoSliderOpen}
 					initialIndex={currentPhotoIndex}
 					isOpen={isPhotoSliderOpen}
-				/> */}
+				/>
 				<DragDropUpload onFilesSelected={onFilesSelected}>
+					{photos.length > 0 && (
+						<div className="w-full text-left">
+							<LilHeader>Uploadede fotos ({photos.length})</LilHeader>
+						</div>
+					)}
 					<HorizontalPhotoOverview
 						numLoadingPhotos={3}
 						chosenIndex={currentPhotoIndex}

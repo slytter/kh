@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Modal, ModalBody, ModalContent } from '@nextui-org/react'
 import { useProjectStore } from '../store/store'
 import { PhotoSlider } from './PhotoSlider'
@@ -15,6 +15,17 @@ export const PhotoSliderModal = (props: Props) => {
 	const [chosenIndex, setChosenIndex] = useState(initialIndex)
 	const photos = useProjectStore((state) => state.draftPhotos)
 	const flickingRef = React.useRef<Flicking>(null)
+
+	// Sync the chosenIndex and move the carousel when initialIndex changes or modal opens
+	useEffect(() => {
+		if (isOpen) {
+			setChosenIndex(initialIndex)
+			// Small delay to ensure Flicking is mounted
+			setTimeout(() => {
+				flickingRef.current?.moveTo(initialIndex)
+			}, 0)
+		}
+	}, [initialIndex, isOpen])
 
 	return (
 		<Modal
