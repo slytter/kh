@@ -61,13 +61,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
 			getPhotosByProjectId(supabase, project.id),
 		)
 
-		const photos = Promise.all(photoPromises)
+		const sendingPhotos = Promise.all(photoPromises)
 		const receivedPhotos = Promise.all(receivedPhotosPromises)
 
 		return defer({
 			projects: sendingProjects,
 			recievingProjects,
-			photos,
+			sendingPhotos,
 			receivedPhotos,
 			type: 'success',
 			message: 'Projects fetched successfully',
@@ -78,7 +78,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 			{
 				projects: null,
 				recievingProjects: [],
-				photos: [],
+				sendingPhotos: [],
 				receivedPhotosPromises: [],
 				type: 'error',
 				message: 'Failed to fetch projects',
@@ -118,7 +118,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 // this
 export default function Overview() {
-	const { projects, photos, recievingProjects, receivedPhotos } =
+	const { projects, sendingPhotos, recievingProjects, receivedPhotos } =
 		useLoaderData<typeof loader>()
 	const { isOpen, onOpen, onOpenChange } = useDisclosure()
 	const [projectToDelete, setProjectToDelete] = useState<number | null>(null)
@@ -168,6 +168,12 @@ export default function Overview() {
 
 	return (
 		<>
+			<div className="flex flex-col gap-4 items-center">
+				<div className="h-[1px] w-full bg-gray-200 my-4"></div>
+				<h2 className="text-lg font-bold items-center">Afsender</h2>
+				<div className="h-[1px] w-full bg-gray-200 my-4"></div>
+			</div>
+
 			<div className="space-y-2">
 				<ul className="flex flex-shrink-0 flex-col gap-4">
 					{projects?.map((project, i) => (
@@ -175,7 +181,7 @@ export default function Overview() {
 							key={project.id}
 							fallback={<Skeleton className="w-full h-[140px] rounded-lg" />}
 						>
-							<Await resolve={photos}>
+							<Await resolve={sendingPhotos}>
 								{(photos) => (
 									<ProjectCard
 										type="sending"
@@ -193,29 +199,39 @@ export default function Overview() {
 					))}
 				</ul>
 
-				<h2 className="text-lg font-bold">Projekter jeg modtager</h2>
-				{recievingProjects?.map((project, i) => (
-					<Suspense
-						fallback={<Skeleton className="w-full h-[140px] rounded-lg" />}
-						key={project.id}
-					>
-						<Await resolve={receivedPhotos}>
-							{(receivedPhotos) => (
-								<ProjectCard
-									hideUnsent={true}
-									type="receiving"
-									key={project.id}
-									onEdit={() => project.id && navigateToEdit(project.id)}
-									onDelete={(id) => {
-										openDeleteModal(id)
-									}}
-									project={{ ...project, name: `Projekt ${i + 1}` }}
-									photos={receivedPhotos[i]}
-								/>
-							)}
-						</Await>
-					</Suspense>
-				))}
+				<div className="flex flex-col gap-4 items-center">
+					<div className="h-[1px] w-full bg-gray-200 my-4"></div>
+					<h2 className="text-lg font-bold items-center">
+						Projekter jeg modtager
+					</h2>
+					<div className="h-[1px] w-full bg-gray-200 my-4"></div>
+				</div>
+
+				{recievingProjects?.map(
+					(project, i) =>
+						project && (
+							<Suspense
+								fallback={<Skeleton className="w-full h-[140px] rounded-lg" />}
+								key={project.id}
+							>
+								<Await resolve={receivedPhotos}>
+									{(receivedPhotos) => (
+										<ProjectCard
+											hideUnsent={true}
+											type="receiving"
+											key={project.id}
+											onEdit={() => project.id && navigateToEdit(project.id)}
+											onDelete={(id) => {
+												openDeleteModal(id)
+											}}
+											project={{ ...project, name: `Projekt ${i + 1}` }}
+											photos={receivedPhotos[i]}
+										/>
+									)}
+								</Await>
+							</Suspense>
+						),
+				)}
 			</div>
 			<Modal isOpen={isOpen} onOpenChange={onOpenChange}>
 				<ModalContent>

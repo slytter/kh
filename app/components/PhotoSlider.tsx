@@ -20,6 +20,10 @@ export const PhotoSlider = (props: Props) => {
 	const { photos, initialIndex, chosenIndex, setChosenIndex, flickingRef } =
 		props
 
+	if (!photos || photos.length === 0) {
+		return null
+	}
+
 	return (
 		<>
 			<Flicking

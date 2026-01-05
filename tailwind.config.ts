@@ -27,6 +27,19 @@ export default {
       },
     },
   },
+  theme: {
+    extend: {
+      keyframes: {
+        animateGlow: {
+          '0%': { backgroundPosition: '0% 50%' },
+          '100%': { backgroundPosition: '200% 50%' },
+        },
+      },
+      animation: {
+        'glow': 'animateGlow 1.25s linear infinite',
+      },
+    },
+  },
 
   darkMode: "class",
 } satisfies Config;
