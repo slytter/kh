@@ -52,6 +52,24 @@ const uploadPhotos = async (
 		if (!response.ok) {
 			let errorMessage = `Upload fejlede (${response.status})`
 
+			// Handle common infrastructure errors with user-friendly messages
+			if (
+				response.status === 503 ||
+				responseText.includes('SERVICE_UNAVAILABLE')
+			) {
+				console.error('Service unavailable:', responseText)
+				throw new Error(
+					'Serveren er midlertidigt utilgængelig. Prøv igen om lidt.',
+				)
+			}
+
+			if (response.status === 504 || responseText.includes('GATEWAY_TIMEOUT')) {
+				console.error('Gateway timeout:', responseText)
+				throw new Error(
+					'Upload tog for lang tid. Prøv med færre billeder ad gangen.',
+				)
+			}
+
 			// Try to parse as JSON
 			if (responseText) {
 				try {
@@ -60,8 +78,8 @@ const uploadPhotos = async (
 						errorMessage = errorData.error
 					}
 				} catch {
-					// Not JSON, use the text directly if it's not HTML
-					if (!responseText.startsWith('<!')) {
+					// Not JSON, use the text directly if it's not HTML and not infra error
+					if (!responseText.startsWith('<!') && !responseText.includes('::')) {
 						errorMessage = responseText
 					}
 				}
