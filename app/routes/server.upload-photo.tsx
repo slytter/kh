@@ -1,14 +1,7 @@
-import {
-	ActionFunctionArgs,
-	json,
-	unstable_parseMultipartFormData,
-	unstable_composeUploadHandlers,
-} from '@remix-run/node'
+import { ActionFunctionArgs, json } from '@remix-run/node'
 
-// todo ups... (generate new key)
 const accessKey = process.env.BUNNY_STORAGE_KEY
 const storageZoneName = 'kh-dk'
-
 const isDev = process.env.NODE_ENV === 'development'
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -24,33 +17,37 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 		)
 	}
 
-	const uploadHandler = unstable_composeUploadHandlers(async (part) => {
-		// Skip non-image parts (return undefined to let other handlers process them)
-		if (part.name !== 'img' || !part.filename) {
-			return undefined
+	try {
+		const formData = await request.formData()
+		const files = formData.getAll('img') as File[]
+
+		if (!files || files.length === 0) {
+			return json({ error: 'No files uploaded' }, { status: 400 })
 		}
 
-		const uniqueFilename = `${Date.now()}-${part.filename}` // Ensure unique filenames
+		const imageUrls: string[] = []
 
-		const filePath = isDev ? `dev/${uniqueFilename}` : uniqueFilename
-		const postUrl = `https://storage.bunnycdn.com/${storageZoneName}/${filePath}`
-
-		try {
-			// Accumulate all chunks into a single buffer
-			const chunks: Uint8Array[] = []
-			for await (const chunk of part.data) {
-				chunks.push(chunk)
+		for (const file of files) {
+			if (!(file instanceof File) || !file.name) {
+				console.log('Skipping non-file entry')
+				continue
 			}
 
-			const fileBuffer = Buffer.concat(chunks)
+			const uniqueFilename = `${Date.now()}-${file.name}`
+			const filePath = isDev ? `dev/${uniqueFilename}` : uniqueFilename
+			const postUrl = `https://storage.bunnycdn.com/${storageZoneName}/${filePath}`
 
-			console.log('UPLOADING', { postUrl })
+			// Convert File to ArrayBuffer
+			const arrayBuffer = await file.arrayBuffer()
+
+			console.log('UPLOADING', { postUrl, size: arrayBuffer.byteLength })
+
 			const response = await fetch(postUrl, {
 				method: 'PUT',
-				body: fileBuffer,
+				body: arrayBuffer,
 				headers: {
 					AccessKey: accessKey,
-					'Content-Type': part.contentType || 'application/octet-stream',
+					'Content-Type': file.type || 'application/octet-stream',
 				},
 			})
 
@@ -67,35 +64,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 			}
 
 			const cdnUrl = `https://kh-assets.b-cdn.net/${filePath}`
-			return cdnUrl
-		} catch (error) {
-			console.error('Upload error:', error)
-			throw error
+			imageUrls.push(cdnUrl)
 		}
-	})
 
-	try {
-		const formData = await unstable_parseMultipartFormData(
-			request,
-			uploadHandler,
-		)
-		const imageUrls = formData.getAll('img')
 		console.log({ imageUrls })
-		return json(
-			{
-				imageUrls,
-			},
-			{ status: 200 },
-		)
+		return json({ imageUrls }, { status: 200 })
 	} catch (error) {
 		console.error('Upload error:', error)
 		const errorMessage =
 			error instanceof Error ? error.message : 'Unknown error occurred'
-		return json(
-			{
-				error: errorMessage,
-			},
-			{ status: 500 },
-		)
+		return json({ error: errorMessage }, { status: 500 })
 	}
 }
