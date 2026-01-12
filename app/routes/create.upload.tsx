@@ -32,34 +32,52 @@ const uploadPhotos = async (
 		const formData = new FormData()
 		uploadBatch.forEach((file) => formData.append('img', file))
 
-		const response = await fetch('/server/upload-photo', {
-			method: 'POST',
-			body: formData,
-		})
+		let response: Response
+		try {
+			response = await fetch('/server/upload-photo', {
+				method: 'POST',
+				body: formData,
+			})
+		} catch (networkError) {
+			// Network error (no internet, CORS, timeout, etc.)
+			console.error('Network error during upload:', networkError)
+			throw new Error(
+				`Netværksfejl: ${networkError instanceof Error ? networkError.message : 'Kunne ikke forbinde til serveren'}`,
+			)
+		}
+
+		// Read body as text first (can only read once)
+		const responseText = await response.text().catch(() => '')
 
 		if (!response.ok) {
-			let errorMessage = `Upload failed: ${response.statusText}`
-			try {
-				const errorData = await response.json()
-				if (errorData.error) {
-					errorMessage = errorData.error
-				}
-			} catch {
-				// If JSON parsing fails, try text
+			let errorMessage = `Upload fejlede (${response.status})`
+
+			// Try to parse as JSON
+			if (responseText) {
 				try {
-					const errorText = await response.text()
-					if (errorText) {
-						errorMessage = errorText
+					const errorData = JSON.parse(responseText)
+					if (errorData.error) {
+						errorMessage = errorData.error
 					}
 				} catch {
-					// Use default error message
+					// Not JSON, use the text directly if it's not HTML
+					if (!responseText.startsWith('<!')) {
+						errorMessage = responseText
+					}
 				}
 			}
-			console.error(`Upload failed: ${response.status} ${response.statusText}`)
+
+			console.error(`Upload failed: ${response.status}`, responseText)
 			throw new Error(errorMessage)
 		}
 
-		const result = await response.json()
+		let result: { imageUrls?: string[]; error?: string }
+		try {
+			result = JSON.parse(responseText)
+		} catch {
+			console.error('Failed to parse response:', responseText)
+			throw new Error('Ugyldigt svar fra server')
+		}
 
 		// Check if the response contains an error
 		if (result.error) {

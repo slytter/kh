@@ -25,6 +25,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 	}
 
 	const uploadHandler = unstable_composeUploadHandlers(async (part) => {
+		// Skip non-image parts (return undefined to let other handlers process them)
 		if (part.name !== 'img' || !part.filename) {
 			return undefined
 		}
