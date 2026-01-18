@@ -1,4 +1,9 @@
-import { ActionFunctionArgs, json } from '@remix-run/node'
+import {
+	ActionFunctionArgs,
+	json,
+	unstable_parseMultipartFormData,
+	unstable_composeUploadHandlers,
+} from '@remix-run/node'
 
 const accessKey = process.env.BUNNY_STORAGE_KEY
 const storageZoneName = 'kh-dk'
@@ -17,37 +22,32 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 		)
 	}
 
-	try {
-		const formData = await request.formData()
-		const files = formData.getAll('img') as File[]
-
-		if (!files || files.length === 0) {
-			return json({ error: 'No files uploaded' }, { status: 400 })
+	const uploadHandler = unstable_composeUploadHandlers(async (part) => {
+		// Skip non-image parts (return undefined to let other handlers process them)
+		if (part.name !== 'img' || !part.filename) {
+			return undefined
 		}
 
-		const imageUrls: string[] = []
+		const uniqueFilename = `${Date.now()}-${part.filename}`
+		const filePath = isDev ? `dev/${uniqueFilename}` : uniqueFilename
+		const postUrl = `https://storage.bunnycdn.com/${storageZoneName}/${filePath}`
 
-		for (const file of files) {
-			if (!(file instanceof File) || !file.name) {
-				console.log('Skipping non-file entry')
-				continue
+		try {
+			// Accumulate all chunks into a single buffer
+			const chunks: Uint8Array[] = []
+			for await (const chunk of part.data) {
+				chunks.push(chunk)
 			}
 
-			const uniqueFilename = `${Date.now()}-${file.name}`
-			const filePath = isDev ? `dev/${uniqueFilename}` : uniqueFilename
-			const postUrl = `https://storage.bunnycdn.com/${storageZoneName}/${filePath}`
+			const fileBuffer = Buffer.concat(chunks)
 
-			// Convert File to ArrayBuffer
-			const arrayBuffer = await file.arrayBuffer()
-
-			console.log('UPLOADING', { postUrl, size: arrayBuffer.byteLength })
-
+			console.log('UPLOADING', { postUrl, size: fileBuffer.length })
 			const response = await fetch(postUrl, {
 				method: 'PUT',
-				body: arrayBuffer,
+				body: fileBuffer,
 				headers: {
 					AccessKey: accessKey,
-					'Content-Type': file.type || 'application/octet-stream',
+					'Content-Type': part.contentType || 'application/octet-stream',
 				},
 			})
 
@@ -64,9 +64,19 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 			}
 
 			const cdnUrl = `https://kh-assets.b-cdn.net/${filePath}`
-			imageUrls.push(cdnUrl)
+			return cdnUrl
+		} catch (error) {
+			console.error('Upload error:', error)
+			throw error
 		}
+	})
 
+	try {
+		const formData = await unstable_parseMultipartFormData(
+			request,
+			uploadHandler,
+		)
+		const imageUrls = formData.getAll('img')
 		console.log({ imageUrls })
 		return json({ imageUrls }, { status: 200 })
 	} catch (error) {

@@ -21,7 +21,7 @@ const uploadPhotos = async (
 	files: File[],
 	onProgress: (progress: number) => void,
 ): Promise<string[]> => {
-	const concurrentUploads = 2
+	const concurrentUploads = 4
 	const totalFiles = files.length
 	let uploadedFiles = 0
 	const allImageUrls: string[] = []
